@@ -1,0 +1,41 @@
+[
+    {
+      "strand": "strand1",
+      "strandName": "1: AI in the Classroom", 
+      "type": "type-workshop",
+      "typeName": "Workshop",
+      "title": "Expanding Inquiry: Using AI Tools to Create Simulations and Investigations",
+      "presenter": "Melissa Poole - St. Paul's School",
+      "email": "mpoole@sps.edu",
+      "preview": "AI-powered tools offer new possibilities for engaging students in inquiry-based learning across disciplines. This session will explore how educators can use AI to create immersive simulations and investigations that go beyond passive digital interactions...",
+      "description": "<p>AI-powered tools offer new possibilities for engaging students in inquiry-based learning across disciplines. This session will explore how educators can use AI to create immersive simulations and investigations that go beyond passive digital interactions. While AI can generate interactive, on-screen experiences—such as historical dialogues, scientific explorations, or real-time problem-solving scenarios—it can also be used to design rich, off-screen activities, including role-playing exercises, structured debates, and hands-on investigative tasks.</p><p>Drawing from classroom-tested examples of AI-driven historical simulations, this session will demonstrate how these strategies can be adapted for subjects ranging from humanities to STEM. Participants will leave with practical approaches to designing AI-enhanced simulations that foster critical thinking, deepen content understanding, and bring learning to life—both on and off the screen.</p>",
+      "time": "TBD",
+      "location": "TBD"
+    },
+    {
+      "strand": "strand2",
+      "strandName": "2: Human-Centered Innovation",
+      "type": "type-workshop", 
+      "typeName": "Workshop",
+      "title": "Digital Dependency vs. Human Connection: Educational Strategies for the AI Character Era",
+      "presenter": "Suzanne Ellinwood - St. Paul's School",
+      "email": "sellinwood@sps.edu",
+      "preview": "This interactive workshop presents a transferable educational model for addressing AI character risks across grades 9-12, offering practical strategies for strengthening human connection as a counterbalance to artificial relationships...",
+      "description": "<p>This interactive workshop presents a transferable educational model for addressing AI character risks across grades 9-12, offering practical strategies for strengthening human connection as a counterbalance to artificial relationships. The explosive growth of AI character apps presents an urgent risk to adolescents: emotionally manipulative relationships with digital \"pals\" designed to seem perfectly understanding and always available. These AI relationships create powerful dependencies that directly compete with real human connections, particularly during vulnerable late-night hours in residential settings.</p>",
+      "time": "TBD",
+      "location": "TBD"
+    },
+    {
+      "strand": "strand2",
+      "strandName": "2: Human-Centered Innovation",
+      "type": "type-presentation", 
+      "typeName": "Presentation and Q&A",
+      "title": "Student Buy-In and \"Ungrading\" in the Humanities Classroom",
+      "presenter": "Caitie Cotton - Loomis Chaffee",
+      "email": "caitie_cotton@loomis.org",
+      "preview": "A challenge posed by AI is how to grade given the concern that students are not submitting their own work. One way to combat this is by deemphasizing student grades and focusing students on their genuine learning...",
+      "description": "<p>A challenges posed by AI is how to grade given the concern that students are not submitting their own work. One way to combat this is by deemphasizing student grades and focusing students on their genuine learning. In this presentation, we will look at ways to first create student buy-in to class activities and assessments. Then, we will talk about how systems of \"ungrading\" can further emphasize student learning and decrease student interest in AI tools. Specific approaches to ungrading will be discussed.</p>",
+      "time": "TBD",
+      "location": "TBD"
+    }
+  ]

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Paths Forward: AI, Humanity, and the Next Era of Education</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        /* Loomis Chaffee Brand Colors */
+        :root {
+            --lc-red: #98252b;
+            --lc-gray: #323e47;
+            --cupola: #5CB8B7;
+            --river: #4E738A;
+            --meadow: #FFDD7F;
+            --brick: #C25131;
+            --accent-red: #FC5A5C;
+        }
+
+        body {
+            font-family: 'Proxima Nova', Arial, sans-serif;
+            color: var(--lc-gray);
+            background-color: #f9f9f9;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Financier Display', serif;
+        }
+
+        .lc-header {
+            background-color: var(--lc-red);
+            color: white;
+            padding: 2rem 0;
+        }
+
+        .header-red {
+            color: var(--lc-red);
+        }
+
+        .session-card {
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: opacity 0.3s ease-in-out; /* Add transition for smooth hide/show */
+            background-color: white; /* Ensure card background is white */
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .strand-ai-classroom {
+            background-color: var(--cupola);
+            color: white;
+        }
+
+        .strand-human-centered {
+            background-color: var(--river);
+            color: white;
+        }
+
+        /* Type Indicator Borders (optional visual cue) */
+        .type-workshop .card-body { border-left: 5px solid var(--lc-red); padding-left: 1rem; }
+        .type-presentation .card-body { border-left: 5px solid var(--meadow); padding-left: 1rem; }
+        .type-discussion .card-body { border-left: 5px solid var(--brick); padding-left: 1rem; }
+
+
+        .filter-group {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            position: sticky; /* Make filters stick */
+            top: 20px;       /* Adjust top offset as needed */
+        }
+
+        .filter-title {
+            color: var(--lc-red);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .btn-filter {
+            color: var(--lc-gray);
+            border: none;
+            transition: all 0.2s;
+            margin-bottom: 0.5rem; /* Ensure consistent spacing */
+            text-align: left; /* Align text left for better readability */
+            padding: 0.5rem 0.75rem; /* Adjust padding */
+        }
+
+        .btn-filter:hover, .btn-filter.active {
+            color: white;
+        }
+
+        .btn-strand-all { background-color: #f0f0f0; }
+        .btn-strand-all:hover, .btn-strand-all.active { background-color: var(--lc-gray); }
+
+        .btn-strand-1 { background-color: #A0D2D1; /* Cupola 60% */ }
+        .btn-strand-1:hover, .btn-strand-1.active { background-color: var(--cupola); }
+
+        .btn-strand-2 { background-color: #92A6B5; /* River 60% */ }
+        .btn-strand-2:hover, .btn-strand-2.active { background-color: var(--river); }
+
+        .btn-type-all { background-color: #f0f0f0; }
+        .btn-type-all:hover, .btn-type-all.active { background-color: var(--lc-gray); }
+
+        .btn-type-workshop { background-color: #C77C77; /* LC Red 60% */ }
+        .btn-type-workshop:hover, .btn-type-workshop.active { background-color: var(--lc-red); }
+
+        .btn-type-presentation { background-color: #FFE8B0; /* Meadow 60% */ }
+        .btn-type-presentation:hover, .btn-type-presentation.active { background-color: var(--meadow); color: var(--lc-gray); }
+
+        .btn-type-discussion { background-color: #E1947D; /* Brick 60% */ }
+        .btn-type-discussion:hover, .btn-type-discussion.active { background-color: var(--brick); }
+
+        footer {
+            background-color: var(--lc-gray);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .hidden {
+            display: none !important;
+            /* Optional: Animate hiding */
+            /* opacity: 0;
+            height: 0;
+            margin-bottom: 0;
+            overflow: hidden;
+            padding-top: 0;
+            padding-bottom: 0; */
+        }
+
+        .session-description {
+            display: none;
+        }
+
+        .session-description.show {
+            display: block;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 3px solid var(--lc-red);
+        }
+
+        .session-badge {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Session details styles */
+        .session-details {
+            margin-top: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .session-details .badge {
+            font-weight: normal;
+            font-size: 0.85rem;
+            padding: 6px 10px;
+            background-color: #f0f0f0;
+            color: var(--lc-gray);
+            border: 1px solid #ddd;
+        }
+        
+        .session-details .badge i {
+            margin-right: 4px;
+        }
+        
+        /* Loading indicator styles */
+        #loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2rem;
+            color: var(--lc-red);
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="lc-header">
+        <div class="container">
+            <div class="col-12 text-center">
+                <h1>New Paths Forward</h1>
+                <h2>AI, Humanity, and the Next Era of Education</h2>
+            </div>
+        </div>
+    </header>
+
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="filter-group-wrapper" style="position: sticky; top: 20px;">
+                    <div class="filter-group">
+                        <h4 class="filter-title">Filter by Strand</h4>
+                        <div class="d-grid gap-1" id="strand-filters"> <button class="btn btn-filter btn-strand-all active" data-filter="all" onclick="setActiveFilter('strand', 'all', this)">All Strands</button>
+                            <button class="btn btn-filter btn-strand-1" data-filter="strand1" onclick="setActiveFilter('strand', 'strand1', this)">Strand 1: AI in the Classroom</button>
+                            <button class="btn btn-filter btn-strand-2" data-filter="strand2" onclick="setActiveFilter('strand', 'strand2', this)">Strand 2: Human-Centered Innovation</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4 class="filter-title">Filter by Type</h4>
+                        <div class="d-grid gap-1" id="type-filters"> <button class="btn btn-filter btn-type-all active" data-filter="all" onclick="setActiveFilter('type', 'all', this)">All Types</button>
+                            <button class="btn btn-filter btn-type-workshop" data-filter="type-workshop" onclick="setActiveFilter('type', 'type-workshop', this)">Workshop</button>
+                            <button class="btn btn-filter btn-type-presentation" data-filter="type-presentation" onclick="setActiveFilter('type', 'type-presentation', this)">Presentation and Q&A</button>
+                            <button class="btn btn-filter btn-type-discussion" data-filter="type-discussion" onclick="setActiveFilter('type', 'type-discussion', this)">Facilitated Discussion</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4 class="filter-title">Search</h4>
+                        <div class="input-group mb-3">
+                            <input type="text" id="search-input" class="form-control" placeholder="Search sessions...">
+                            <button class="btn btn-outline-secondary btn-type-all" type="button" onclick="applyFilters()">Search</button> </div>
+                        <button class="btn btn-outline-secondary w-100 btn-type-all" onclick="resetAllFilters()">Clear All Filters</button>
+                    </div>
+                </div> </div>
+
+            <div class="col-lg-9">
+                <h2 class="mb-4 header-red">Conference Sessions</h2>
+                <div id="sessions-container">
+                    <!-- Loading indicator -->
+                    <div id="loading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Loading session data...</p>
+                    </div>
+                    
+                    <!-- Sessions will be dynamically inserted here -->
+                    
+                    <div id="no-results" class="alert alert-warning hidden">
+                        No sessions match your criteria. Please adjust your filters or search term.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h4>Loomis Chaffee</h4>
+                    <p>4 Batchelder Road, Windsor, CT 06095</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <p>&copy; 2025 Loomis Chaffee School</p> </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sessionsContainer = document.getElementById('sessions-container');
+            const loadingElement = document.getElementById('loading');
+            const noResultsDiv = document.getElementById('no-results');
+            const searchInput = document.getElementById('search-input');
+            
+            // Function to create a session card from session data
+            function createSessionCard(session, index) {
+                // Determine strand class and tag text
+                const strandClass = session.strand === "strand1" ? "strand-ai-classroom" : "strand-human-centered";
+                
+                // Create the HTML for the session card
+                const cardHtml = `
+                    <div class="card session-card mb-4 ${session.type} ${session.strand}">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span class="tag ${strandClass}">${session.strandName}</span>
+                            <div class="session-badge">
+                                <span class="badge bg-secondary">${session.typeName}</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${session.title}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">${session.presenter}</h6>
+                            <div class="session-details mb-2">
+                                <span class="badge bg-secondary me-2"><i class="bi bi-clock"></i> Time: ${session.time || 'TBD'}</span>
+                                <span class="badge bg-secondary"><i class="bi bi-geo-alt"></i> Location: ${session.location || 'TBD'}</span>
+                            </div>
+                            <p class="card-text card-text-preview">${session.preview}</p>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="toggleDescription(event, 'desc${index}')">Read More</button>
+                            <div id="desc${index}" class="session-description">
+                                ${session.description}
+                                <p><strong>Presenter:</strong> ${session.presenter}</p>
+                                <p><strong>Email:</strong> ${session.email}</p>
+                                <p><strong>Time:</strong> ${session.time || 'TBD'}</p>
+                                <p><strong>Location:</strong> ${session.location || 'TBD'}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return cardHtml;
+            }
+            
+            // Function to load session data from JSON file
+            async function loadSessionData() {
+                try {
+                    const response = await fetch('sessions.json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const sessionData = await response.json();
+                    
+                    // Remove loading indicator
+                    if (loadingElement) {
+                        loadingElement.remove();
+                    }
+                    
+                    // Create and append session cards
+                    sessionData.forEach((session, index) => {
+                        const sessionCard = createSessionCard(session, index);
+                        // Insert the HTML before the no-results div
+                        noResultsDiv.insertAdjacentHTML('beforebegin', sessionCard);
+                    });
+                    
+                    // After loading data, apply initial filters if needed
+                    applyFilters();
+                    
+                } catch (error) {
+                    console.error('Error loading session data:', error);
+                    loadingElement.innerHTML = `
+                        <div class="alert alert-danger">
+                            Error loading session data. Please try refreshing the page.
+                        </div>
+                    `;
+                }
+            }
+            
+            // Call function to load session data
+            loadSessionData();
+            
+            // --- Function to toggle session descriptions ---
+            window.toggleDescription = function(event, id) {
+                const desc = document.getElementById(id);
+                const button = event.currentTarget; // Get the button that was clicked
+
+                if (desc) {
+                    if (desc.classList.contains('show')) {
+                        desc.classList.remove('show');
+                        button.textContent = 'Read More';
+                    } else {
+                        desc.classList.add('show');
+                        button.textContent = 'Show Less';
+                    }
+                }
+            }
+
+            // --- Function to set the active filter button ---
+            window.setActiveFilter = function(group, value, element) {
+                const filterGroup = document.getElementById(`${group}-filters`);
+                if (filterGroup) {
+                    // Remove 'active' class from all buttons in the group
+                    filterGroup.querySelectorAll('.btn-filter').forEach(button => {
+                        button.classList.remove('active');
+                    });
+                    // Add 'active' class to the clicked button
+                    if (element) {
+                        element.classList.add('active');
+                    } else {
+                         // Fallback if element is not passed (e.g., for reset)
+                        const buttonToActivate = filterGroup.querySelector(`[data-filter="${value}"]`);
+                        if (buttonToActivate) buttonToActivate.classList.add('active');
+                    }
+                }
+                // Apply all filters after changing state
+                applyFilters();
+            }
+
+            // --- Function to apply all active filters and search ---
+            window.applyFilters = function() {
+                const activeStrandFilter = document.querySelector('#strand-filters .btn-filter.active')?.getAttribute('data-filter') || 'all';
+                const activeTypeFilter = document.querySelector('#type-filters .btn-filter.active')?.getAttribute('data-filter') || 'all';
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                let visibleCount = 0;
+
+                // Get all session cards (need to query again in case new ones were added)
+                const allSessionCards = sessionsContainer.querySelectorAll('.session-card');
+
+                allSessionCards.forEach(card => {
+                    const cardStrand = Array.from(card.classList).find(cls => cls.startsWith('strand'));
+                    const cardType = Array.from(card.classList).find(cls => cls.startsWith('type-'));
+                    const cardText = card.textContent.toLowerCase();
+
+                    let showCard = true;
+
+                    // Check Strand Filter
+                    if (activeStrandFilter !== 'all' && cardStrand !== activeStrandFilter) {
+                        showCard = false;
+                    }
+
+                    // Check Type Filter (only if strand filter passed)
+                    if (showCard && activeTypeFilter !== 'all' && cardType !== activeTypeFilter) {
+                        showCard = false;
+                    }
+
+                    // Check Search Term (only if other filters passed)
+                    if (showCard && searchTerm !== '') {
+                         // Include title, subtitle, preview text, and full description in search
+                         const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
+                         const subtitle = card.querySelector('.card-subtitle')?.textContent.toLowerCase() || '';
+                         const preview = card.querySelector('.card-text-preview')?.textContent.toLowerCase() || '';
+                         const fullDesc = card.querySelector('.session-description')?.textContent.toLowerCase() || '';
+                         const combinedText = `${title} ${subtitle} ${preview} ${fullDesc}`;
+
+                        if (!combinedText.includes(searchTerm)) {
+                            showCard = false;
+                        }
+                    }
+
+                    // Show or Hide Card
+                    if (showCard) {
+                        card.classList.remove('hidden');
+                        visibleCount++;
+                    } else {
+                        card.classList.add('hidden');
+                        // Hide description if card is hidden
+                        const desc = card.querySelector('.session-description');
+                        if (desc && desc.classList.contains('show')) {
+                            desc.classList.remove('show');
+                            const button = card.querySelector('button[onclick^="toggleDescription"]');
+                            if (button) button.textContent = 'Read More';
+                        }
+                    }
+                });
+
+                // Show/Hide "No Results" Message
+                if (visibleCount === 0) {
+                    noResultsDiv.classList.remove('hidden');
+                } else {
+                    noResultsDiv.classList.add('hidden');
+                }
+            }
+
+            // --- Function to reset all filters and search ---
+            window.resetAllFilters = function() {
+                // Reset active buttons visually (will trigger applyFilters via setActiveFilter)
+                setActiveFilter('strand', 'all', document.querySelector('#strand-filters [data-filter="all"]'));
+                setActiveFilter('type', 'all', document.querySelector('#type-filters [data-filter="all"]'));
+
+                // Clear search input
+                searchInput.value = '';
+
+                // Re-apply filters (might be redundant if setActiveFilter already did, but ensures state)
+                applyFilters();
+            }
+
+            // --- Event Listeners ---
+            // Search on input change (live search)
+            searchInput.addEventListener('input', applyFilters);
+
+            // Search on Enter key press in the search input
+            searchInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent potential form submission
+                    applyFilters();
+                }
+            });
+        }); // End DOMContentLoaded
+    </script>
+</body>
+</html>
