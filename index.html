@@ -12,10 +12,15 @@
             --lc-red: #98252b;
             --lc-gray: #323e47;
             --cupola: #5CB8B7;
+            --cupola-light: #A0D2D1; /* 60% version */
             --river: #4E738A;
+            --river-light: #92A6B5; /* 60% version */
             --meadow: #FFDD7F;
+            --meadow-light: #FFE8B0; /* 60% version */
             --brick: #C25131;
+            --brick-light: #E1947D; /* 60% version */
             --accent-red: #FC5A5C;
+            --pelican: #d1d5d8; /* 90% pelican color for badges */
         }
 
         body {
@@ -66,7 +71,21 @@
             color: white;
         }
 
-        /* Type Indicator Borders (optional visual cue) */
+        /* Type Indicator Badges - Match filter button colors */
+        .badge.type-workshop { 
+            background-color: var(--lc-red) !important; 
+            color: white !important;
+        }
+        .badge.type-presentation { 
+            background-color: var(--meadow) !important; 
+            color: var(--lc-gray) !important;
+        }
+        .badge.type-discussion { 
+            background-color: var(--brick) !important; 
+            color: white !important;
+        }
+
+        /* Type Indicator Borders */
         .type-workshop .card-body { border-left: 5px solid var(--lc-red); padding-left: 1rem; }
         .type-presentation .card-body { border-left: 5px solid var(--meadow); padding-left: 1rem; }
         .type-discussion .card-body { border-left: 5px solid var(--brick); padding-left: 1rem; }
@@ -88,39 +107,49 @@
             font-weight: 500;
         }
 
+        /* Updated filter button styles for multi-select */
         .btn-filter {
             color: var(--lc-gray);
-            border: none;
+            border: 1px solid #ddd;
             transition: all 0.2s;
-            margin-bottom: 0.5rem; /* Ensure consistent spacing */
-            text-align: left; /* Align text left for better readability */
-            padding: 0.5rem 0.75rem; /* Adjust padding */
+            margin-bottom: 0.5rem;
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            opacity: 0.7; /* Start with slightly faded look */
         }
 
-        .btn-filter:hover, .btn-filter.active {
-            color: white;
+        .btn-filter:hover {
+            opacity: 0.9;
         }
 
+        .btn-filter.active {
+            opacity: 1;
+            font-weight: 500;
+            transform: scale(1.02);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Filter button colors - lighter when not selected */
         .btn-strand-all { background-color: #f0f0f0; }
-        .btn-strand-all:hover, .btn-strand-all.active { background-color: var(--lc-gray); }
+        .btn-strand-all.active { background-color: var(--lc-gray); color: white; }
 
-        .btn-strand-1 { background-color: #A0D2D1; /* Cupola 60% */ }
-        .btn-strand-1:hover, .btn-strand-1.active { background-color: var(--cupola); }
+        .btn-strand-1 { background-color: var(--cupola-light); }
+        .btn-strand-1.active { background-color: var(--cupola); color: white; }
 
-        .btn-strand-2 { background-color: #92A6B5; /* River 60% */ }
-        .btn-strand-2:hover, .btn-strand-2.active { background-color: var(--river); }
+        .btn-strand-2 { background-color: var(--river-light); }
+        .btn-strand-2.active { background-color: var(--river); color: white; }
 
         .btn-type-all { background-color: #f0f0f0; }
-        .btn-type-all:hover, .btn-type-all.active { background-color: var(--lc-gray); }
+        .btn-type-all.active { background-color: var(--lc-gray); color: white; }
 
         .btn-type-workshop { background-color: #C77C77; /* LC Red 60% */ }
-        .btn-type-workshop:hover, .btn-type-workshop.active { background-color: var(--lc-red); }
+        .btn-type-workshop.active { background-color: var(--lc-red); color: white; }
 
-        .btn-type-presentation { background-color: #FFE8B0; /* Meadow 60% */ }
-        .btn-type-presentation:hover, .btn-type-presentation.active { background-color: var(--meadow); color: var(--lc-gray); }
+        .btn-type-presentation { background-color: var(--meadow-light); }
+        .btn-type-presentation.active { background-color: var(--meadow); color: var(--lc-gray); }
 
-        .btn-type-discussion { background-color: #E1947D; /* Brick 60% */ }
-        .btn-type-discussion:hover, .btn-type-discussion.active { background-color: var(--brick); }
+        .btn-type-discussion { background-color: var(--brick-light); }
+        .btn-type-discussion.active { background-color: var(--brick); color: white; }
 
         footer {
             background-color: var(--lc-gray);
@@ -131,26 +160,23 @@
 
         .hidden {
             display: none !important;
-            /* Optional: Animate hiding */
-            /* opacity: 0;
-            height: 0;
-            margin-bottom: 0;
-            overflow: hidden;
-            padding-top: 0;
-            padding-bottom: 0; */
         }
 
+        /* Updated session description styles */
         .session-description {
-            display: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
         }
 
         .session-description.show {
-            display: block;
+            max-height: 1000px; /* Large enough to show all content */
             margin-top: 15px;
             padding: 10px;
             background-color: #f8f9fa;
             border-radius: 5px;
             border-left: 3px solid var(--lc-red);
+            transition: max-height 0.5s ease-in;
         }
 
         .session-badge {
@@ -159,7 +185,7 @@
             align-items: center;
         }
         
-        /* Session details styles */
+        /* Session details styles - Updated for better readability */
         .session-details {
             margin-top: 8px;
             margin-bottom: 12px;
@@ -169,8 +195,8 @@
             font-weight: normal;
             font-size: 0.85rem;
             padding: 6px 10px;
-            background-color: #A4A9AD;
-            color: var(--lc-gray);
+            background-color: var(--pelican) !important; /* Using pelican color */
+            color: var(--lc-gray) !important;
             border: 1px solid #ddd;
         }
         
@@ -191,6 +217,14 @@
             height: 3rem;
             margin-bottom: 1rem;
         }
+        
+        /* For expanded text functionality */
+        .card-text-preview.collapsed {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -209,18 +243,20 @@
                 <div class="filter-group-wrapper" style="position: sticky; top: 20px;">
                     <div class="filter-group">
                         <h4 class="filter-title">Filter by Strand</h4>
-                        <div class="d-grid gap-1" id="strand-filters"> <button class="btn btn-filter btn-strand-all active" data-filter="all" onclick="setActiveFilter('strand', 'all', this)">All Strands</button>
-                            <button class="btn btn-filter btn-strand-1" data-filter="strand1" onclick="setActiveFilter('strand', 'strand1', this)">Strand 1: AI in the Classroom</button>
-                            <button class="btn btn-filter btn-strand-2" data-filter="strand2" onclick="setActiveFilter('strand', 'strand2', this)">Strand 2: Human-Centered Innovation</button>
+                        <div class="d-grid gap-1" id="strand-filters"> 
+                            <button class="btn btn-filter btn-strand-all active" data-filter="all" onclick="toggleFilter('strand', 'all', this)">All Strands</button>
+                            <button class="btn btn-filter btn-strand-1" data-filter="strand1" onclick="toggleFilter('strand', 'strand1', this)">Strand 1: AI in the Classroom</button>
+                            <button class="btn btn-filter btn-strand-2" data-filter="strand2" onclick="toggleFilter('strand', 'strand2', this)">Strand 2: Human-Centered Innovation</button>
                         </div>
                     </div>
 
                     <div class="filter-group">
                         <h4 class="filter-title">Filter by Type</h4>
-                        <div class="d-grid gap-1" id="type-filters"> <button class="btn btn-filter btn-type-all active" data-filter="all" onclick="setActiveFilter('type', 'all', this)">All Types</button>
-                            <button class="btn btn-filter btn-type-workshop" data-filter="type-workshop" onclick="setActiveFilter('type', 'type-workshop', this)">Workshop</button>
-                            <button class="btn btn-filter btn-type-presentation" data-filter="type-presentation" onclick="setActiveFilter('type', 'type-presentation', this)">Presentation and Q&A</button>
-                            <button class="btn btn-filter btn-type-discussion" data-filter="type-discussion" onclick="setActiveFilter('type', 'type-discussion', this)">Facilitated Discussion</button>
+                        <div class="d-grid gap-1" id="type-filters"> 
+                            <button class="btn btn-filter btn-type-all active" data-filter="all" onclick="toggleFilter('type', 'all', this)">All Types</button>
+                            <button class="btn btn-filter btn-type-workshop" data-filter="type-workshop" onclick="toggleFilter('type', 'type-workshop', this)">Workshop</button>
+                            <button class="btn btn-filter btn-type-presentation" data-filter="type-presentation" onclick="toggleFilter('type', 'type-presentation', this)">Presentation and Q&A</button>
+                            <button class="btn btn-filter btn-type-discussion" data-filter="type-discussion" onclick="toggleFilter('type', 'type-discussion', this)">Facilitated Discussion</button>
                         </div>
                     </div>
 
@@ -228,10 +264,12 @@
                         <h4 class="filter-title">Search</h4>
                         <div class="input-group mb-3">
                             <input type="text" id="search-input" class="form-control" placeholder="Search sessions...">
-                            <button class="btn btn-outline-secondary btn-type-all" type="button" onclick="applyFilters()">Search</button> </div>
+                            <button class="btn btn-outline-secondary btn-type-all" type="button" onclick="applyFilters()">Search</button> 
+                        </div>
                         <button class="btn btn-outline-secondary w-100 btn-type-all" onclick="resetAllFilters()">Clear All Filters</button>
                     </div>
-                </div> </div>
+                </div> 
+            </div>
 
             <div class="col-lg-9">
                 <h2 class="mb-4 header-red">Conference Sessions</h2>
@@ -262,7 +300,8 @@
                     <p>4 Batchelder Road, Windsor, CT 06095</p>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <p>&copy; 2025 Loomis Chaffee School</p> </div>
+                    <p>&copy; 2025 Loomis Chaffee School</p> 
+                </div>
             </div>
         </div>
     </footer>
@@ -276,18 +315,24 @@
             const noResultsDiv = document.getElementById('no-results');
             const searchInput = document.getElementById('search-input');
             
+            // Track active filters
+            const activeFilters = {
+                strand: ['all'],
+                type: ['all']
+            };
+            
             // Function to create a session card from session data
             function createSessionCard(session, index) {
                 // Determine strand class and tag text
                 const strandClass = session.strand === "strand1" ? "strand-ai-classroom" : "strand-human-centered";
                 
-                // Create the HTML for the session card
+                // Create the HTML for the session card with expanded text functionality
                 const cardHtml = `
                     <div class="card session-card mb-4 ${session.type} ${session.strand}">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <span class="tag ${strandClass}">${session.strandName}</span>
                             <div class="session-badge">
-                                <span class="badge bg-secondary">${session.typeName}</span>
+                                <span class="badge ${session.type}">${session.typeName}</span>
                             </div>
                         </div>
                         <div class="card-body">
@@ -297,14 +342,20 @@
                                 <span class="badge bg-secondary me-2"><i class="bi bi-clock"></i> Time: ${session.time || 'TBD'}</span>
                                 <span class="badge bg-secondary"><i class="bi bi-geo-alt"></i> Location: ${session.location || 'TBD'}</span>
                             </div>
-                            <p class="card-text card-text-preview">${session.preview}</p>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="toggleDescription(event, 'desc${index}')">Read More</button>
+                            
+                            <!-- For expanding text, we keep it all in one element -->
+                            <p class="card-text card-text-preview collapsed">${session.preview}</p>
+                            
+                            <button class="btn btn-sm btn-outline-secondary toggle-description" 
+                                   onclick="toggleDescription(event, 'preview${index}', 'desc${index}')">Read More</button>
+                            
                             <div id="desc${index}" class="session-description">
-                                ${session.description}
+                                <!-- Additional details shown when expanded -->
                                 <p><strong>Presenter:</strong> ${session.presenter}</p>
                                 <p><strong>Email:</strong> ${session.email}</p>
                                 <p><strong>Time:</strong> ${session.time || 'TBD'}</p>
                                 <p><strong>Location:</strong> ${session.location || 'TBD'}</p>
+                                ${session.description ? `<div class="mt-3"><strong>Additional Information:</strong><br>${session.description}</div>` : ''}
                             </div>
                         </div>
                     </div>
@@ -351,78 +402,103 @@
             // Call function to load session data
             loadSessionData();
             
-            // --- Function to toggle session descriptions ---
-            window.toggleDescription = function(event, id) {
-                const desc = document.getElementById(id);
-                const button = event.currentTarget; // Get the button that was clicked
+            // --- Updated function to toggle session descriptions ---
+            window.toggleDescription = function(event, previewId, descId) {
+                event.preventDefault();
+                const preview = document.querySelector(`.card-text-preview`);
+                const desc = document.getElementById(descId);
+                const button = event.currentTarget;
 
-                if (desc) {
+                if (preview && desc) {
                     if (desc.classList.contains('show')) {
+                        // Collapse
+                        preview.classList.add('collapsed');
                         desc.classList.remove('show');
                         button.textContent = 'Read More';
                     } else {
+                        // Expand
+                        preview.classList.remove('collapsed');
                         desc.classList.add('show');
                         button.textContent = 'Show Less';
                     }
                 }
             }
 
-            // --- Function to set the active filter button ---
-            window.setActiveFilter = function(group, value, element) {
-                const filterGroup = document.getElementById(`${group}-filters`);
-                if (filterGroup) {
-                    // Remove 'active' class from all buttons in the group
-                    filterGroup.querySelectorAll('.btn-filter').forEach(button => {
-                        button.classList.remove('active');
-                    });
-                    // Add 'active' class to the clicked button
-                    if (element) {
+            // --- Updated function for multi-select filtering ---
+            window.toggleFilter = function(group, value, element) {
+                // Special handling for 'all' filter
+                if (value === 'all') {
+                    // If 'all' is clicked and not already active, make it the only active filter
+                    if (!element.classList.contains('active')) {
+                        document.querySelectorAll(`#${group}-filters .btn-filter`).forEach(button => {
+                            button.classList.remove('active');
+                        });
                         element.classList.add('active');
+                        activeFilters[group] = ['all'];
+                    }
+                } else {
+                    // If a specific filter is clicked
+                    const allButton = document.querySelector(`#${group}-filters [data-filter="all"]`);
+                    
+                    // Remove 'all' from active filters
+                    if (allButton.classList.contains('active')) {
+                        allButton.classList.remove('active');
+                        activeFilters[group] = [];
+                    }
+                    
+                    // Toggle this specific filter
+                    if (element.classList.contains('active')) {
+                        // Remove this filter
+                        element.classList.remove('active');
+                        activeFilters[group] = activeFilters[group].filter(f => f !== value);
+                        
+                        // If no filters are active, activate 'all'
+                        if (activeFilters[group].length === 0) {
+                            allButton.classList.add('active');
+                            activeFilters[group] = ['all'];
+                        }
                     } else {
-                         // Fallback if element is not passed (e.g., for reset)
-                        const buttonToActivate = filterGroup.querySelector(`[data-filter="${value}"]`);
-                        if (buttonToActivate) buttonToActivate.classList.add('active');
+                        // Add this filter
+                        element.classList.add('active');
+                        activeFilters[group].push(value);
                     }
                 }
+                
                 // Apply all filters after changing state
                 applyFilters();
             }
 
-            // --- Function to apply all active filters and search ---
+            // --- Updated function to apply multi-select filters ---
             window.applyFilters = function() {
-                const activeStrandFilter = document.querySelector('#strand-filters .btn-filter.active')?.getAttribute('data-filter') || 'all';
-                const activeTypeFilter = document.querySelector('#type-filters .btn-filter.active')?.getAttribute('data-filter') || 'all';
                 const searchTerm = searchInput.value.toLowerCase().trim();
                 let visibleCount = 0;
 
-                // Get all session cards (need to query again in case new ones were added)
+                // Get all session cards
                 const allSessionCards = sessionsContainer.querySelectorAll('.session-card');
 
                 allSessionCards.forEach(card => {
                     const cardStrand = Array.from(card.classList).find(cls => cls.startsWith('strand'));
                     const cardType = Array.from(card.classList).find(cls => cls.startsWith('type-'));
-                    const cardText = card.textContent.toLowerCase();
-
                     let showCard = true;
 
-                    // Check Strand Filter
-                    if (activeStrandFilter !== 'all' && cardStrand !== activeStrandFilter) {
-                        showCard = false;
+                    // Check if we should apply strand filtering
+                    if (!activeFilters.strand.includes('all')) {
+                        showCard = activeFilters.strand.includes(cardStrand);
                     }
 
-                    // Check Type Filter (only if strand filter passed)
-                    if (showCard && activeTypeFilter !== 'all' && cardType !== activeTypeFilter) {
-                        showCard = false;
+                    // Check if we should apply type filtering
+                    if (showCard && !activeFilters.type.includes('all')) {
+                        showCard = activeFilters.type.includes(cardType);
                     }
 
-                    // Check Search Term (only if other filters passed)
+                    // Check Search Term
                     if (showCard && searchTerm !== '') {
-                         // Include title, subtitle, preview text, and full description in search
-                         const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
-                         const subtitle = card.querySelector('.card-subtitle')?.textContent.toLowerCase() || '';
-                         const preview = card.querySelector('.card-text-preview')?.textContent.toLowerCase() || '';
-                         const fullDesc = card.querySelector('.session-description')?.textContent.toLowerCase() || '';
-                         const combinedText = `${title} ${subtitle} ${preview} ${fullDesc}`;
+                        // Include title, subtitle, preview text, and full description in search
+                        const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
+                        const subtitle = card.querySelector('.card-subtitle')?.textContent.toLowerCase() || '';
+                        const preview = card.querySelector('.card-text-preview')?.textContent.toLowerCase() || '';
+                        const fullDesc = card.querySelector('.session-description')?.textContent.toLowerCase() || '';
+                        const combinedText = `${title} ${subtitle} ${preview} ${fullDesc}`;
 
                         if (!combinedText.includes(searchTerm)) {
                             showCard = false;
@@ -435,11 +511,14 @@
                         visibleCount++;
                     } else {
                         card.classList.add('hidden');
-                        // Hide description if card is hidden
+                        // Collapse any expanded descriptions
                         const desc = card.querySelector('.session-description');
+                        const preview = card.querySelector('.card-text-preview');
+                        const button = card.querySelector('.toggle-description');
+                        
                         if (desc && desc.classList.contains('show')) {
                             desc.classList.remove('show');
-                            const button = card.querySelector('button[onclick^="toggleDescription"]');
+                            if (preview) preview.classList.add('collapsed');
                             if (button) button.textContent = 'Read More';
                         }
                     }
@@ -453,16 +532,24 @@
                 }
             }
 
-            // --- Function to reset all filters and search ---
+            // --- Updated function to reset all filters ---
             window.resetAllFilters = function() {
-                // Reset active buttons visually (will trigger applyFilters via setActiveFilter)
-                setActiveFilter('strand', 'all', document.querySelector('#strand-filters [data-filter="all"]'));
-                setActiveFilter('type', 'all', document.querySelector('#type-filters [data-filter="all"]'));
+                // Reset active filters state
+                activeFilters.strand = ['all'];
+                activeFilters.type = ['all'];
+                
+                // Update UI to match state
+                document.querySelectorAll('.btn-filter').forEach(button => {
+                    button.classList.remove('active');
+                });
+                
+                document.querySelector('#strand-filters [data-filter="all"]').classList.add('active');
+                document.querySelector('#type-filters [data-filter="all"]').classList.add('active');
 
                 // Clear search input
                 searchInput.value = '';
 
-                // Re-apply filters (might be redundant if setActiveFilter already did, but ensures state)
+                // Apply filters
                 applyFilters();
             }
 
