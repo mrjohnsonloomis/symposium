@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* Loomis Chaffee Brand Colors */
         :root {
@@ -37,7 +37,7 @@
 
         body {
             /* Use Inter font or specify your desired font stack */
-            font-family: 'Inter', Arial, sans-serif; 
+            font-family: 'Inter', Arial, sans-serif;
             color: var(--lc-gray);
             background-color: #f9f9f9;
         }
@@ -136,12 +136,14 @@
 
         /* Card Body and Borders (Removed type-specific borders) */
         .session-card .card-body {
-             padding: 1rem 1.25rem; /* Adjust padding */
+             /* Reduced bottom padding slightly */
+             padding: 1rem 1.25rem 0.75rem 1.25rem;
              border-left: 5px solid transparent; /* Placeholder */
         }
         /* Add border based on strand for visual grouping */
         .session-card.strand1 .card-body { border-left-color: var(--cupola); }
         .session-card.strand2 .card-body { border-left-color: var(--river); }
+        .session-card.strand3 .card-body { border-left-color: var(--lc-gray); } /* Added style for strand 3 */
 
 
         .filter-group {
@@ -204,6 +206,11 @@
         .btn-strand-2 { background-color: var(--river-light); }
         .btn-strand-2.active { background-color: var(--river); color: white; border-color: var(--river);}
 
+        /* Added Strand 3 button style */
+        .btn-strand-3 { background-color: var(--pelican-light); } /* Example: Use neutral color */
+        .btn-strand-3.active { background-color: var(--lc-gray); color: white; border-color: var(--lc-gray); }
+
+
         /* Time Block Filter Buttons */
         .btn-timeblock-1 { background-color: var(--time-block-1-light); }
         .btn-timeblock-1.active { background-color: var(--time-block-1); color: white; border-color: var(--time-block-1);}
@@ -240,7 +247,8 @@
         /* Session content expansion styles */
         .session-content-container {
             position: relative;
-            margin-bottom: 10px;
+            /* Reduced margin-bottom */
+            margin-bottom: 0.5rem; /* Was 10px (0.625rem) */
             /* Ensure text rendering respects whitespace and newlines from HTML */
              white-space: pre-wrap; /* Renders newlines and spaces */
         }
@@ -296,8 +304,9 @@
 
         /* Session details badges (Time, Location) */
         .session-details {
-            margin-top: 10px; /* Increased space */
-            margin-bottom: 15px; /* Increased space */
+            margin-top: 0.75rem; /* Reduced space above */
+            /* Reduced space below */
+            margin-bottom: 0.75rem; /* Was 15px (0.9375rem) */
             display: flex; /* Align badges horizontally */
             flex-wrap: wrap; /* Allow wrapping on small screens */
             gap: 0.5rem; /* Space between badges */
@@ -322,8 +331,8 @@
 
         /* Tags section within the card body */
         .session-tags {
-            margin-top: 15px;
-            padding-top: 10px;
+            margin-top: 1rem; /* Adjusted space */
+            padding-top: 0.75rem; /* Adjusted space */
             border-top: 1px solid #eee;
         }
         .session-tags .tag { /* Use the general tag style */
@@ -367,6 +376,8 @@
              font-size: 0.85rem;
              cursor: pointer;
              transition: background-color 0.2s, color 0.2s;
+             /* Reduced top margin */
+             margin-top: 0.5rem; /* Was 1rem (mt-2) */
          }
          .toggle-description:hover {
              background-color: var(--lc-gray);
@@ -378,7 +389,7 @@
 <body>
     <header class="lc-header">
         <div class="container">
-            <img src="logo.png" alt="Loomis Chaffee Logo" class="lc-logo" onerror="this.style.display='none'; this.onerror=null;">
+            <img src="logo.png" alt="Loomis Chaffee Logo" class="lc-logo" onerror="this.style.display='none'; console.error('Logo image not found.');">
             </div>
     </header>
 
@@ -392,6 +403,7 @@
                             <button class="btn btn-filter btn-strand-all active" data-filter="all" onclick="toggleFilter('strand', 'all', this)">All Strands</button>
                             <button class="btn btn-filter btn-strand-1" data-filter="strand1" onclick="toggleFilter('strand', 'strand1', this)">1: AI in the Classroom</button>
                             <button class="btn btn-filter btn-strand-2" data-filter="strand2" onclick="toggleFilter('strand', 'strand2', this)">2: Human-Centered Innovation</button>
+                            <button class="btn btn-filter btn-strand-3" data-filter="strand3" onclick="toggleFilter('strand', 'strand3', this)">3: Leadership in AI</button>
                         </div>
                     </div>
 
@@ -463,11 +475,14 @@
             const noResultsDiv = document.getElementById('no-results');
             const searchInput = document.getElementById('search-input');
             const tagFiltersContainer = document.getElementById('tag-filters'); // Container for tag buttons
+            const strandFiltersContainer = document.getElementById('strand-filters'); // Container for strand buttons
 
             // Store all session data globally after fetch
             let allSessionData = [];
             // Store all unique tags globally
             let allTags = new Set();
+            // Store all unique strands globally
+            let allStrands = new Set(); // To dynamically add strand buttons if needed
 
             // Track active filters
             const activeFilters = {
@@ -490,7 +505,10 @@
             // Function to create a session card from session data
             function createSessionCard(session, index) {
                 // Determine strand class
-                const strandClass = session.strand === "strand1" ? "strand-ai-classroom" : "strand-human-centered";
+                let strandClass = 'strand-unknown'; // Default
+                if (session.strand === "strand1") strandClass = "strand-ai-classroom";
+                else if (session.strand === "strand2") strandClass = "strand-human-centered";
+                else if (session.strand === "strand3") strandClass = "strand-leadership"; // Assuming a style for strand3
 
                 // Determine session type class for the badge
                 let typeBadgeClass = 'type-workshop'; // Default
@@ -504,12 +522,12 @@
                 // Added data attributes for filtering: data-strand, data-timeblock, data-tags
                 const cardHtml = `
                     <div class="card session-card mb-4 ${session.strand} ${session.type}"
-                         data-strand="${session.strand}"
+                         data-strand="${session.strand || 'all'}"
                          data-timeblock="${session.timeBlock || 'all'}"
                          data-tags="${(session.tags || []).join(',')}"
                          data-index="${index}">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span class="tag ${strandClass}">${session.strandName}</span>
+                            <span class="tag ${strandClass}">${session.strandName || 'Unknown Strand'}</span>
                              <div class="session-badge-container">
                                 <span class="badge session-type ${typeBadgeClass}">${session.typeName}</span>
                              </div>
@@ -517,8 +535,7 @@
                         <div class="card-body">
                             <h5 class="card-title">${session.title}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">${session.presenter}</h6>
-                            <div class="session-details mb-3">
-                                <span class="badge"><i class="bi bi-clock"></i> Block: ${session.timeBlock || 'TBD'}</span>
+                            <div class="session-details"> <span class="badge"><i class="bi bi-clock"></i> Block: ${session.timeBlock || 'TBD'}</span>
                                 <span class="badge"><i class="bi bi-geo-alt"></i> Location: ${session.location || 'TBD'}</span>
                             </div>
 
@@ -527,7 +544,7 @@
                                 <div id="desc${index}" class="session-full-content">${session.description || ''}</div>
                             </div>
 
-                            <button class="btn btn-sm toggle-description mt-2"
+                            <button class="btn btn-sm toggle-description"
                                      onclick="toggleDescription(event, 'desc${index}')">Read More</button>
 
                             ${tagsHtml}
@@ -549,10 +566,35 @@
                 sortedTags.forEach(tag => {
                     const button = document.createElement('button');
                     button.className = 'btn btn-filter btn-tag-filter'; // Use specific class for styling
-                    button.dataset.filter = tag.toLowerCase().replace(/\s+/g, '-'); // Create a filter value
+                    // Create a filter value (lowercase, hyphenated)
+                    const filterValue = tag.toLowerCase().replace(/\s+/g, '-');
+                    button.dataset.filter = filterValue;
                     button.textContent = tag;
-                    button.onclick = () => toggleFilter('tag', button.dataset.filter, button);
+                    button.onclick = () => toggleFilter('tag', filterValue, button);
                     tagFiltersContainer.appendChild(button);
+                });
+            }
+
+            // Function to dynamically add strand buttons if new ones are found
+            function updateStrandFilters() {
+                const existingStrandFilters = new Set();
+                strandFiltersContainer.querySelectorAll('button[data-filter]').forEach(btn => {
+                    if (btn.dataset.filter !== 'all') {
+                        existingStrandFilters.add(btn.dataset.filter);
+                    }
+                });
+
+                allStrands.forEach(strandData => {
+                    if (!existingStrandFilters.has(strandData.id)) {
+                        console.log(`Adding button for new strand: ${strandData.name}`);
+                        const button = document.createElement('button');
+                        // Add appropriate classes based on strand ID (e.g., btn-strand-3)
+                        button.className = `btn btn-filter btn-strand-${strandData.id.replace('strand', '')}`;
+                        button.dataset.filter = strandData.id;
+                        button.textContent = strandData.name;
+                        button.onclick = () => toggleFilter('strand', strandData.id, button);
+                        strandFiltersContainer.appendChild(button);
+                    }
                 });
             }
 
@@ -576,17 +618,24 @@
                     sessionsContainer.querySelectorAll('.session-card').forEach(card => card.remove());
 
 
-                    // Collect all unique tags and create session cards
+                    // Collect all unique tags and strands, create session cards
                     allSessionData.forEach((session, index) => {
                         // Add session tags to the global set
                         if (session.tags && Array.isArray(session.tags)) {
                             session.tags.forEach(tag => allTags.add(tag));
                         }
+                        // Add strand info to global set
+                        if (session.strand && session.strandName) {
+                             allStrands.add({ id: session.strand, name: session.strandName });
+                        }
+
                         const sessionCardHtml = createSessionCard(session, index);
                         // Insert the HTML before the no-results div
                         noResultsDiv.insertAdjacentHTML('beforebegin', sessionCardHtml);
                     });
 
+                    // Update strand filters if new strands were found
+                    updateStrandFilters();
                     // Populate tag filter buttons now that we have all tags
                     populateTagFilters();
 
@@ -620,7 +669,7 @@
                 if (!cardBody) return; // Exit if card body not found
 
                 const preview = cardBody.querySelector('.session-preview');
-                const fullContent = cardBody.querySelector('.session-full-content'); // Use the ID passed to the function
+                const fullContent = cardBody.querySelector(`#${descId}`); // Use the ID passed
 
                 if (preview && fullContent) {
                     if (fullContent.classList.contains('show')) {
@@ -712,9 +761,9 @@
                     // 3. Check Tag Filter (Only if still visible)
                     if (showCard && !activeFilters.tag.includes('all')) {
                          // Card must have at least one of the active tags
-                         const hasActiveTag = activeFilters.tag.some(activeTag =>
-                              cardTags.some(cardTag => cardTag.toLowerCase().replace(/\s+/g, '-') === activeTag)
-                         );
+                         // Convert card tags to lowercase, hyphenated format for comparison
+                         const cardTagFilters = cardTags.map(tag => tag.toLowerCase().replace(/\s+/g, '-'));
+                         const hasActiveTag = activeFilters.tag.some(activeTag => cardTagFilters.includes(activeTag));
                          if (!hasActiveTag) {
                               showCard = false;
                          }
