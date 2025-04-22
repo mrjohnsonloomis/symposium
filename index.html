@@ -6,6 +6,9 @@
     <title>New Paths Forward: AI, Humanity, and the Next Era of Education</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet"> 
     <style>
         /* Loomis Chaffee Brand Colors */
         :root {
@@ -21,22 +24,54 @@
             --brick-light: #E1947D; /* 60% version */
             --accent-red: #FC5A5C;
             --pelican: #d1d5d8; /* 90% pelican color for badges */
+            --pelican-light: #e5e7eb; /* Lighter pelican for non-active tags */
+
+            /* Colors for Time Blocks (Using existing palette) */
+            --time-block-1: var(--lc-red);
+            --time-block-1-light: #C77C77; /* LC Red 60% */
+            --time-block-2: var(--meadow);
+            --time-block-2-light: var(--meadow-light);
+            --time-block-3: var(--brick);
+            --time-block-3-light: var(--brick-light);
         }
 
         body {
-            font-family: 'Proxima Nova', Arial, sans-serif;
+            /* Use Inter font or specify your desired font stack */
+            font-family: 'Inter', Arial, sans-serif; 
             color: var(--lc-gray);
             background-color: #f9f9f9;
         }
 
+        /* Use Inter for headings as well, or specify Financier if it's a web font */
         h1, h2, h3, h4, h5 {
-            font-family: 'Financier Display', serif;
+             font-family: 'Inter', serif; /* Or 'Financier Display', serif; if available */
+             font-weight: 700; /* Example weight */
         }
+         h1 { font-size: 2.5rem; }
+         h2 { font-size: 2rem; }
+         h3 { font-size: 1.75rem; }
+         h4 { font-size: 1.5rem; }
+         h5 { font-size: 1.25rem; font-weight: 500;}
+
 
         .lc-header {
             background-color: var(--lc-red);
             color: white;
-            padding: 2rem 0;
+            padding: 1rem 0; /* Adjusted padding */
+            display: flex; /* Use flexbox for alignment */
+            align-items: center; /* Center items vertically */
+        }
+
+        .lc-header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Space between logo and potential right-aligned content */
+            width: 100%;
+        }
+
+        .lc-logo {
+            height: 60px; /* Adjust height as needed */
+            width: auto; /* Maintain aspect ratio */
         }
 
         .header-red {
@@ -45,261 +80,361 @@
 
         .session-card {
             margin-bottom: 1.5rem;
-            border-radius: 4px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: opacity 0.3s ease-in-out; /* Add transition for smooth hide/show */
-            background-color: white; /* Ensure card background is white */
+            border-radius: 8px; /* Slightly more rounded */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Softer shadow */
+            transition: opacity 0.3s ease-in-out, transform 0.2s ease-out;
+            background-color: white;
+            overflow: hidden; /* Ensure border radius applies correctly */
+        }
+        .session-card:hover {
+             transform: translateY(-3px); /* Subtle lift on hover */
+             box-shadow: 0 6px 16px rgba(0,0,0,0.1);
         }
 
-        .tag {
+
+        .session-card .card-header {
+            background-color: #f8f9fa; /* Light background for header */
+            border-bottom: 1px solid #eee;
+            padding: 0.75rem 1rem; /* Adjust padding */
+        }
+
+        .tag { /* General tag styling */
             display: inline-block;
-            padding: 0.25rem 0.5rem;
+            padding: 0.3rem 0.75rem; /* Adjusted padding */
             margin-right: 0.5rem;
             margin-bottom: 0.5rem;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 500;
+            line-height: 1; /* Ensure consistent height */
+            border: 1px solid transparent; /* Base border */
         }
 
-        .strand-ai-classroom {
+        /* Strand Tags in Header */
+        .tag.strand-ai-classroom {
             background-color: var(--cupola);
             color: white;
         }
 
-        .strand-human-centered {
+        .tag.strand-human-centered {
             background-color: var(--river);
             color: white;
         }
 
-        /* Type Indicator Badges - Match filter button colors */
-        .badge.type-workshop { 
-            background-color: var(--lc-red) !important; 
-            color: white !important;
-        }
-        .badge.type-presentation { 
-            background-color: var(--meadow) !important; 
-            color: var(--lc-gray) !important;
-        }
-        .badge.type-discussion { 
-            background-color: var(--brick) !important; 
-            color: white !important;
-        }
+        /* Session Type Badges in Header (using original type colors for visual distinction) */
+         .badge.session-type {
+             font-weight: 500;
+             font-size: 0.8rem;
+             padding: 0.3rem 0.75rem;
+             border-radius: 20px;
+             color: white; /* Default */
+         }
+        .badge.type-workshop { background-color: var(--lc-red) !important; }
+        .badge.type-presentation { background-color: var(--meadow) !important; color: var(--lc-gray) !important; }
+        .badge.type-discussion { background-color: var(--brick) !important; }
 
-        /* Type Indicator Borders */
-        .type-workshop .card-body { border-left: 5px solid var(--lc-red); padding-left: 1rem; }
-        .type-presentation .card-body { border-left: 5px solid var(--meadow); padding-left: 1rem; }
-        .type-discussion .card-body { border-left: 5px solid var(--brick); padding-left: 1rem; }
+
+        /* Card Body and Borders (Removed type-specific borders) */
+        .session-card .card-body {
+             padding: 1rem 1.25rem; /* Adjust padding */
+             border-left: 5px solid transparent; /* Placeholder */
+        }
+        /* Add border based on strand for visual grouping */
+        .session-card.strand1 .card-body { border-left-color: var(--cupola); }
+        .session-card.strand2 .card-body { border-left-color: var(--river); }
 
 
         .filter-group {
             background-color: white;
             padding: 1.5rem;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-radius: 8px; /* Match card radius */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* Match card shadow style */
             margin-bottom: 1.5rem;
-            position: sticky; /* Make filters stick */
-            top: 20px;       /* Adjust top offset as needed */
         }
+
+         .filter-group-wrapper { /* To make the sticky positioning work reliably */
+            position: sticky;
+            top: 20px;
+         }
 
         .filter-title {
             color: var(--lc-red);
             margin-bottom: 1rem;
-            font-weight: 500;
+            font-weight: 700; /* Bolder title */
+            font-size: 1.1rem;
         }
 
         /* Updated filter button styles for multi-select */
         .btn-filter {
             color: var(--lc-gray);
             border: 1px solid #ddd;
-            transition: all 0.2s;
+            transition: all 0.2s ease-in-out;
             margin-bottom: 0.5rem;
             text-align: left;
-            padding: 0.5rem 0.75rem;
-            opacity: 0.7; /* Start with slightly faded look */
+            padding: 0.6rem 0.85rem; /* Slightly larger padding */
+            opacity: 0.8; /* Start slightly less faded */
+            border-radius: 6px; /* Rounded corners */
+            font-size: 0.9rem;
+            background-color: #f8f9fa; /* Default light background */
+            width: 100%; /* Ensure buttons fill width */
+            display: block; /* Ensure they stack correctly */
         }
 
         .btn-filter:hover {
-            opacity: 0.9;
+            opacity: 1;
+            border-color: #bbb;
+            background-color: #f1f1f1;
         }
 
         .btn-filter.active {
             opacity: 1;
             font-weight: 500;
-            transform: scale(1.02);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transform: scale(1.01); /* Subtle scale */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Subtle shadow */
+            border-width: 1px; /* Ensure border remains */
         }
 
-        /* Filter button colors - lighter when not selected */
-        .btn-strand-all { background-color: #f0f0f0; }
-        .btn-strand-all.active { background-color: var(--lc-gray); color: white; }
+        /* Filter button colors - using defined variables */
+        .btn-strand-all, .btn-timeblock-all, .btn-tag-all { background-color: var(--pelican-light); }
+        .btn-strand-all.active, .btn-timeblock-all.active, .btn-tag-all.active { background-color: var(--lc-gray); color: white; border-color: var(--lc-gray);}
 
         .btn-strand-1 { background-color: var(--cupola-light); }
-        .btn-strand-1.active { background-color: var(--cupola); color: white; }
+        .btn-strand-1.active { background-color: var(--cupola); color: white; border-color: var(--cupola);}
 
         .btn-strand-2 { background-color: var(--river-light); }
-        .btn-strand-2.active { background-color: var(--river); color: white; }
+        .btn-strand-2.active { background-color: var(--river); color: white; border-color: var(--river);}
 
-        .btn-type-all { background-color: #f0f0f0; }
-        .btn-type-all.active { background-color: var(--lc-gray); color: white; }
+        /* Time Block Filter Buttons */
+        .btn-timeblock-1 { background-color: var(--time-block-1-light); }
+        .btn-timeblock-1.active { background-color: var(--time-block-1); color: white; border-color: var(--time-block-1);}
 
-        .btn-type-workshop { background-color: #C77C77; /* LC Red 60% */ }
-        .btn-type-workshop.active { background-color: var(--lc-red); color: white; }
+        .btn-timeblock-2 { background-color: var(--time-block-2-light); }
+        .btn-timeblock-2.active { background-color: var(--time-block-2); color: var(--lc-gray); border-color: var(--time-block-2);} /* Meadow needs dark text */
 
-        .btn-type-presentation { background-color: var(--meadow-light); }
-        .btn-type-presentation.active { background-color: var(--meadow); color: var(--lc-gray); }
+        .btn-timeblock-3 { background-color: var(--time-block-3-light); }
+        .btn-timeblock-3.active { background-color: var(--time-block-3); color: white; border-color: var(--time-block-3);}
 
-        .btn-type-discussion { background-color: var(--brick-light); }
-        .btn-type-discussion.active { background-color: var(--brick); color: white; }
+        /* Tag Filter Buttons - Using neutral colors */
+        .btn-tag-filter {
+            background-color: var(--pelican-light);
+            color: var(--lc-gray);
+        }
+        .btn-tag-filter.active {
+            background-color: var(--lc-gray);
+            color: white;
+            border-color: var(--lc-gray);
+        }
+
 
         footer {
             background-color: var(--lc-gray);
             color: white;
             padding: 2rem 0;
-            margin-top: 2rem;
+            margin-top: 3rem; /* Increased margin */
         }
 
         .hidden {
             display: none !important;
         }
 
-        /* Updated session content styles for expanding in place */
+        /* Session content expansion styles */
         .session-content-container {
             position: relative;
             margin-bottom: 10px;
+            /* Ensure text rendering respects whitespace and newlines from HTML */
+             white-space: pre-wrap; /* Renders newlines and spaces */
         }
-        
+
         .session-preview {
             display: block;
+            /* Limit preview height and add fade if desired */
+           /* max-height: 100px; */
+           /* overflow: hidden; */
+           /* position: relative; */
         }
-        
+        /* Optional: Fade out effect for preview text */
+        /* .session-preview::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(to bottom, transparent, white);
+        } */
+
+
         .session-full-content {
             display: none;
             margin-top: 10px;
-            padding: 10px;
+            padding: 15px; /* More padding */
             background-color: #f8f9fa;
             border-radius: 5px;
             border-left: 3px solid var(--lc-red);
+             white-space: pre-wrap; /* Ensure newlines render */
         }
-        
+
         .session-full-content.show {
             display: block;
-            animation: fadeIn 0.3s ease-in;
+            animation: fadeIn 0.4s ease-in-out; /* Smoother fade */
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .session-preview.hide {
             display: none;
         }
-        
-        .session-badge {
-            display: flex;
-            justify-content: center;
+
+        .session-badge-container { /* Container for badges in header */
+             display: flex;
+             gap: 0.5rem; /* Space between badges */
+             align-items: center;
+        }
+
+        /* Session details badges (Time, Location) */
+        .session-details {
+            margin-top: 10px; /* Increased space */
+            margin-bottom: 15px; /* Increased space */
+            display: flex; /* Align badges horizontally */
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+            gap: 0.5rem; /* Space between badges */
+        }
+
+        .session-details .badge {
+            font-weight: 400; /* Normal weight */
+            font-size: 0.85rem;
+            padding: 6px 12px; /* More padding */
+            background-color: var(--pelican) !important;
+            color: var(--lc-gray) !important;
+            border: none; /* Remove border */
+            border-radius: 6px; /* Rounded corners */
+            display: inline-flex; /* Align icon and text */
             align-items: center;
         }
-        
-        /* Session details styles - Updated for better readability */
-        .session-details {
-            margin-top: 8px;
-            margin-bottom: 12px;
-        }
-        
-        .session-details .badge {
-            font-weight: normal;
-            font-size: 0.85rem;
-            padding: 6px 10px;
-            background-color: var(--pelican) !important; /* Using pelican color */
-            color: var(--lc-gray) !important;
-            border: 1px solid #ddd;
-        }
-        
+
         .session-details .badge i {
-            margin-right: 4px;
+            margin-right: 5px; /* Space after icon */
+            font-size: 1em; /* Match text size */
         }
-        
-        /* Additional info styling */
-        .additional-info {
+
+        /* Tags section within the card body */
+        .session-tags {
             margin-top: 15px;
-            border-top: 1px solid #eee;
             padding-top: 10px;
+            border-top: 1px solid #eee;
         }
-        
+        .session-tags .tag { /* Use the general tag style */
+             background-color: var(--pelican-light); /* Neutral background */
+             color: var(--lc-gray);
+             border: 1px solid var(--pelican);
+             font-size: 0.75rem; /* Slightly smaller */
+             padding: 0.25rem 0.6rem;
+        }
+
+
         /* Loading indicator styles */
         #loading {
             text-align: center;
-            padding: 20px;
+            padding: 40px 20px; /* More padding */
             font-size: 1.2rem;
             color: var(--lc-red);
         }
-        
+
         .spinner-border {
             width: 3rem;
             height: 3rem;
             margin-bottom: 1rem;
+            color: var(--lc-red); /* Use brand color */
         }
+
+        /* No results message */
+        #no-results {
+             margin-top: 2rem;
+             padding: 1.5rem;
+             font-size: 1.1rem;
+        }
+
+         /* Style for the toggle button */
+         .toggle-description {
+             background-color: transparent;
+             border: 1px solid var(--lc-gray);
+             color: var(--lc-gray);
+             padding: 0.25rem 0.75rem;
+             border-radius: 4px;
+             font-size: 0.85rem;
+             cursor: pointer;
+             transition: background-color 0.2s, color 0.2s;
+         }
+         .toggle-description:hover {
+             background-color: var(--lc-gray);
+             color: white;
+         }
+
     </style>
 </head>
 <body>
     <header class="lc-header">
         <div class="container">
-            <div class="col-12 text-left">
-                <h1>New Paths Forward</h1>
-                <h2>AI, Humanity, and the Next Era of Education</h2>
+            <img src="logo.png" alt="Loomis Chaffee Logo" class="lc-logo" onerror="this.style.display='none'; this.onerror=null;">
             </div>
-        </div>
     </header>
 
     <div class="container py-5">
         <div class="row">
             <div class="col-lg-3">
-                <div class="filter-group-wrapper" style="position: sticky; top: 20px;">
+                <div class="filter-group-wrapper">
                     <div class="filter-group">
                         <h4 class="filter-title">Filter by Strand</h4>
-                        <div class="d-grid gap-1" id="strand-filters"> 
+                        <div class="d-grid gap-1" id="strand-filters">
                             <button class="btn btn-filter btn-strand-all active" data-filter="all" onclick="toggleFilter('strand', 'all', this)">All Strands</button>
-                            <button class="btn btn-filter btn-strand-1" data-filter="strand1" onclick="toggleFilter('strand', 'strand1', this)">Strand 1: AI in the Classroom</button>
-                            <button class="btn btn-filter btn-strand-2" data-filter="strand2" onclick="toggleFilter('strand', 'strand2', this)">Strand 2: Human-Centered Innovation</button>
+                            <button class="btn btn-filter btn-strand-1" data-filter="strand1" onclick="toggleFilter('strand', 'strand1', this)">1: AI in the Classroom</button>
+                            <button class="btn btn-filter btn-strand-2" data-filter="strand2" onclick="toggleFilter('strand', 'strand2', this)">2: Human-Centered Innovation</button>
                         </div>
                     </div>
 
                     <div class="filter-group">
-                        <h4 class="filter-title">Filter by Type</h4>
-                        <div class="d-grid gap-1" id="type-filters"> 
-                            <button class="btn btn-filter btn-type-all active" data-filter="all" onclick="toggleFilter('type', 'all', this)">All Types</button>
-                            <button class="btn btn-filter btn-type-workshop" data-filter="type-workshop" onclick="toggleFilter('type', 'type-workshop', this)">Workshop</button>
-                            <button class="btn btn-filter btn-type-presentation" data-filter="type-presentation" onclick="toggleFilter('type', 'type-presentation', this)">Presentation and Q&A</button>
-                            <button class="btn btn-filter btn-type-discussion" data-filter="type-discussion" onclick="toggleFilter('type', 'type-discussion', this)">Facilitated Discussion</button>
-                        </div>
+                        <h4 class="filter-title">Filter by Time Block</h4>
+                        <div class="d-grid gap-1" id="timeblock-filters">
+                            <button class="btn btn-filter btn-timeblock-all active" data-filter="all" onclick="toggleFilter('timeblock', 'all', this)">All Time Blocks</button>
+                            <button class="btn btn-filter btn-timeblock-1" data-filter="1" onclick="toggleFilter('timeblock', '1', this)">Time Block 1</button>
+                            <button class="btn btn-filter btn-timeblock-2" data-filter="2" onclick="toggleFilter('timeblock', '2', this)">Time Block 2</button>
+                            <button class="btn btn-filter btn-timeblock-3" data-filter="3" onclick="toggleFilter('timeblock', '3', this)">Time Block 3</button>
+                            </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4 class="filter-title">Filter by Tag</h4>
+                        <div class="d-grid gap-1" id="tag-filters">
+                            <button class="btn btn-filter btn-tag-all active" data-filter="all" onclick="toggleFilter('tag', 'all', this)">All Tags</button>
+                            </div>
                     </div>
 
                     <div class="filter-group">
                         <h4 class="filter-title">Search</h4>
                         <div class="input-group mb-3">
                             <input type="text" id="search-input" class="form-control" placeholder="Search sessions...">
-                            <button class="btn btn-outline-secondary btn-type-all" type="button" onclick="applyFilters()">Search</button> 
+                            <button class="btn btn-outline-secondary" type="button" onclick="applyFilters()" style="border-color: var(--lc-gray); color: var(--lc-gray);">
+                                <i class="bi bi-search"></i> </button>
                         </div>
-                        <button class="btn btn-outline-secondary w-100 btn-type-all" onclick="resetAllFilters()">Clear All Filters</button>
+                        <button class="btn btn-outline-secondary w-100" onclick="resetAllFilters()" style="border-color: var(--lc-red); color: var(--lc-red);">Clear All Filters</button>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <div class="col-lg-9">
                 <h2 class="mb-4 header-red">Conference Sessions</h2>
                 <div id="sessions-container">
-                    <!-- Loading indicator -->
                     <div id="loading">
-                        <div class="spinner-border text-primary" role="status">
+                        <div class="spinner-border" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
                         <p>Loading session data...</p>
                     </div>
-                    
-                    <!-- Sessions will be dynamically inserted here -->
-                    
-                    <div id="no-results" class="alert alert-warning hidden">
+
+                    <div id="no-results" class="alert alert-warning hidden" role="alert">
                         No sessions match your criteria. Please adjust your filters or search term.
                     </div>
                 </div>
@@ -312,10 +447,8 @@
             <div class="row">
                 <div class="col-md-8">
                     <h4>Loomis Chaffee</h4>
-                    <p>4 Batchelder Road, Windsor, CT 06095</p>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <p>&copy; 2025 Loomis Chaffee School</p> 
+                    <p class="mb-0">4 Batchelder Road, Windsor, CT 06095</p> </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0"> <p class="mb-0">&copy; 2025 Loomis Chaffee School</p>
                 </div>
             </div>
         </div>
@@ -329,197 +462,277 @@
             const loadingElement = document.getElementById('loading');
             const noResultsDiv = document.getElementById('no-results');
             const searchInput = document.getElementById('search-input');
-            
+            const tagFiltersContainer = document.getElementById('tag-filters'); // Container for tag buttons
+
+            // Store all session data globally after fetch
+            let allSessionData = [];
+            // Store all unique tags globally
+            let allTags = new Set();
+
             // Track active filters
             const activeFilters = {
                 strand: ['all'],
-                type: ['all']
+                timeblock: ['all'], // Changed from 'type' to 'timeblock'
+                tag: ['all']       // Added 'tag' filter
             };
-            
+
+            // Function to create HTML for tags within a card
+            function createTagsHtml(tags) {
+                if (!tags || tags.length === 0) {
+                    return ''; // Return empty string if no tags
+                }
+                // Map each tag to a span element
+                const tagSpans = tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+                // Return the tags wrapped in a container div
+                return `<div class="session-tags"><strong>Tags:</strong><div class="mt-2">${tagSpans}</div></div>`;
+            }
+
             // Function to create a session card from session data
             function createSessionCard(session, index) {
-                // Determine strand class and tag text
+                // Determine strand class
                 const strandClass = session.strand === "strand1" ? "strand-ai-classroom" : "strand-human-centered";
-                
-                // Create the HTML for the session card with expanded text functionality
+
+                // Determine session type class for the badge
+                let typeBadgeClass = 'type-workshop'; // Default
+                if (session.type === 'type-presentation') typeBadgeClass = 'type-presentation';
+                if (session.type === 'type-discussion') typeBadgeClass = 'type-discussion';
+
+                // Generate HTML for tags section
+                const tagsHtml = createTagsHtml(session.tags);
+
+                // Create the HTML for the session card
+                // Added data attributes for filtering: data-strand, data-timeblock, data-tags
                 const cardHtml = `
-                    <div class="card session-card mb-4 ${session.type} ${session.strand}">
+                    <div class="card session-card mb-4 ${session.strand} ${session.type}"
+                         data-strand="${session.strand}"
+                         data-timeblock="${session.timeBlock || 'all'}"
+                         data-tags="${(session.tags || []).join(',')}"
+                         data-index="${index}">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <span class="tag ${strandClass}">${session.strandName}</span>
-                            <div class="session-badge">
-                                <span class="badge ${session.type}">${session.typeName}</span>
-                            </div>
+                             <div class="session-badge-container">
+                                <span class="badge session-type ${typeBadgeClass}">${session.typeName}</span>
+                             </div>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">${session.title}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">${session.presenter}</h6>
-                            <div class="session-details mb-2">
-                                <span class="badge bg-secondary me-2"><i class="bi bi-clock"></i> Time: ${session.time || 'TBD'}</span>
-                                <span class="badge bg-secondary"><i class="bi bi-geo-alt"></i> Location: ${session.location || 'TBD'}</span>
+                            <div class="session-details mb-3">
+                                <span class="badge"><i class="bi bi-clock"></i> Block: ${session.timeBlock || 'TBD'}</span>
+                                <span class="badge"><i class="bi bi-geo-alt"></i> Location: ${session.location || 'TBD'}</span>
                             </div>
-                            
-                            <!-- For expanding text, we use a single container with both preview and full content -->
+
                             <div class="session-content-container">
-                                <!-- Initially visible preview text -->
                                 <div class="session-preview">${session.preview}</div>
-                                
-                                <!-- Full description (initially hidden) -->
-                                <div id="desc${index}" class="session-full-content">
-                                    <!-- Complete text that includes the preview content plus additional info -->
-                                    ${session.description || ''}
-                                    
-                                    <!-- Additional details - no email, no duplicate presenter/time/location -->
-                                    <div class="additional-info mt-3">
-                                        <strong>Additional Information:</strong>
-                                    </div>
-                                </div>
+                                <div id="desc${index}" class="session-full-content">${session.description || ''}</div>
                             </div>
-                            
-                            <button class="btn btn-sm btn-outline-secondary toggle-description mt-2" 
-                                   onclick="toggleDescription(event, 'desc${index}')">Read More</button>
+
+                            <button class="btn btn-sm toggle-description mt-2"
+                                     onclick="toggleDescription(event, 'desc${index}')">Read More</button>
+
+                            ${tagsHtml}
                         </div>
                     </div>
                 `;
-                
                 return cardHtml;
             }
-            
+
+            // Function to populate tag filter buttons
+            function populateTagFilters() {
+                // Clear existing buttons except 'All Tags'
+                tagFiltersContainer.innerHTML = `
+                    <button class="btn btn-filter btn-tag-all active" data-filter="all" onclick="toggleFilter('tag', 'all', this)">All Tags</button>
+                `;
+                // Sort tags alphabetically
+                const sortedTags = Array.from(allTags).sort();
+                // Create button for each unique tag
+                sortedTags.forEach(tag => {
+                    const button = document.createElement('button');
+                    button.className = 'btn btn-filter btn-tag-filter'; // Use specific class for styling
+                    button.dataset.filter = tag.toLowerCase().replace(/\s+/g, '-'); // Create a filter value
+                    button.textContent = tag;
+                    button.onclick = () => toggleFilter('tag', button.dataset.filter, button);
+                    tagFiltersContainer.appendChild(button);
+                });
+            }
+
+
             // Function to load session data from JSON file
             async function loadSessionData() {
                 try {
-                    const response = await fetch('sessions.json');
+                    const response = await fetch('sessions.json'); // Assuming sessions.json is in the same directory
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    
-                    const sessionData = await response.json();
-                    
+
+                    allSessionData = await response.json(); // Store data globally
+
                     // Remove loading indicator
                     if (loadingElement) {
                         loadingElement.remove();
                     }
-                    
-                    // Create and append session cards
-                    sessionData.forEach((session, index) => {
-                        const sessionCard = createSessionCard(session, index);
+
+                    // Clear previous sessions if any (important for re-filtering)
+                    sessionsContainer.querySelectorAll('.session-card').forEach(card => card.remove());
+
+
+                    // Collect all unique tags and create session cards
+                    allSessionData.forEach((session, index) => {
+                        // Add session tags to the global set
+                        if (session.tags && Array.isArray(session.tags)) {
+                            session.tags.forEach(tag => allTags.add(tag));
+                        }
+                        const sessionCardHtml = createSessionCard(session, index);
                         // Insert the HTML before the no-results div
-                        noResultsDiv.insertAdjacentHTML('beforebegin', sessionCard);
+                        noResultsDiv.insertAdjacentHTML('beforebegin', sessionCardHtml);
                     });
-                    
-                    // After loading data, apply initial filters if needed
+
+                    // Populate tag filter buttons now that we have all tags
+                    populateTagFilters();
+
+                    // Apply initial filters (which should show all cards)
                     applyFilters();
-                    
+
                 } catch (error) {
                     console.error('Error loading session data:', error);
-                    loadingElement.innerHTML = `
-                        <div class="alert alert-danger">
-                            Error loading session data. Please try refreshing the page.
-                        </div>
-                    `;
+                    if (loadingElement) {
+                         loadingElement.innerHTML = `
+                             <div class="alert alert-danger" role="alert">
+                                 Error loading session data. Please check the console and ensure 'sessions.json' is accessible.
+                             </div>`;
+                    } else {
+                         sessionsContainer.insertAdjacentHTML('afterbegin', `
+                             <div class="alert alert-danger" role="alert">
+                                 Error loading session data. Please check the console and ensure 'sessions.json' is accessible.
+                             </div>`);
+                    }
                 }
             }
-            
+
             // Call function to load session data
             loadSessionData();
-            
-            // --- Updated function to toggle session descriptions without duplication ---
+
+            // Function to toggle session descriptions
             window.toggleDescription = function(event, descId) {
-                event.preventDefault();
-                const card = event.currentTarget.closest('.card-body');
-                const preview = card.querySelector('.session-preview');
-                const fullContent = card.querySelector('.session-full-content');
+                event.preventDefault(); // Prevent default button behavior
                 const button = event.currentTarget;
+                const cardBody = button.closest('.card-body'); // Find the parent card body
+                if (!cardBody) return; // Exit if card body not found
+
+                const preview = cardBody.querySelector('.session-preview');
+                const fullContent = cardBody.querySelector('.session-full-content'); // Use the ID passed to the function
 
                 if (preview && fullContent) {
                     if (fullContent.classList.contains('show')) {
                         // Collapse
-                        preview.classList.remove('hide');
                         fullContent.classList.remove('show');
+                        preview.classList.remove('hide'); // Show preview again
                         button.textContent = 'Read More';
                     } else {
                         // Expand
-                        preview.classList.add('hide');
+                         preview.classList.add('hide'); // Hide preview
                         fullContent.classList.add('show');
                         button.textContent = 'Show Less';
                     }
+                } else {
+                     console.warn("Could not find preview or full content element for ID:", descId);
                 }
             }
 
-            // --- Updated function for multi-select filtering ---
+
+            // Function to handle filter button clicks (multi-select logic)
             window.toggleFilter = function(group, value, element) {
-                // Special handling for 'all' filter
+                const filterGroup = activeFilters[group];
+                const allButton = document.querySelector(`#${group}-filters [data-filter="all"]`);
+
                 if (value === 'all') {
-                    // If 'all' is clicked and not already active, make it the only active filter
+                    // If 'all' is clicked and not active, activate it and deactivate others
                     if (!element.classList.contains('active')) {
-                        document.querySelectorAll(`#${group}-filters .btn-filter`).forEach(button => {
-                            button.classList.remove('active');
-                        });
+                        document.querySelectorAll(`#${group}-filters .btn-filter`).forEach(btn => btn.classList.remove('active'));
                         element.classList.add('active');
                         activeFilters[group] = ['all'];
                     }
+                    // If 'all' is already active, do nothing (keep it active)
                 } else {
                     // If a specific filter is clicked
-                    const allButton = document.querySelector(`#${group}-filters [data-filter="all"]`);
-                    
-                    // Remove 'all' from active filters
-                    if (allButton.classList.contains('active')) {
+                    // 1. Deactivate 'all' button if it's active
+                    if (allButton && allButton.classList.contains('active')) {
                         allButton.classList.remove('active');
-                        activeFilters[group] = [];
+                        activeFilters[group] = []; // Clear 'all' from the active list
                     }
-                    
-                    // Toggle this specific filter
+
+                    // 2. Toggle the clicked button's state
                     if (element.classList.contains('active')) {
-                        // Remove this filter
+                        // Deactivate the button
                         element.classList.remove('active');
-                        activeFilters[group] = activeFilters[group].filter(f => f !== value);
-                        
-                        // If no filters are active, activate 'all'
-                        if (activeFilters[group].length === 0) {
-                            allButton.classList.add('active');
-                            activeFilters[group] = ['all'];
-                        }
+                        activeFilters[group] = filterGroup.filter(f => f !== value); // Remove from active list
                     } else {
-                        // Add this filter
+                        // Activate the button
                         element.classList.add('active');
-                        activeFilters[group].push(value);
+                        activeFilters[group].push(value); // Add to active list
+                    }
+
+                    // 3. If no specific filters are active anymore, reactivate 'all'
+                    if (activeFilters[group].length === 0 && allButton) {
+                        allButton.classList.add('active');
+                        activeFilters[group] = ['all'];
                     }
                 }
-                
+
                 // Apply all filters after changing state
                 applyFilters();
             }
 
-            // --- Updated function to apply multi-select filters ---
+            // Function to apply all active filters and search term
             window.applyFilters = function() {
                 const searchTerm = searchInput.value.toLowerCase().trim();
                 let visibleCount = 0;
 
-                // Get all session cards
+                // Get all session cards present in the DOM
                 const allSessionCards = sessionsContainer.querySelectorAll('.session-card');
 
                 allSessionCards.forEach(card => {
-                    const cardStrand = Array.from(card.classList).find(cls => cls.startsWith('strand'));
-                    const cardType = Array.from(card.classList).find(cls => cls.startsWith('type-'));
+                    // Get data attributes from the card
+                    const cardStrand = card.dataset.strand || 'all';
+                    const cardTimeBlock = card.dataset.timeblock || 'all';
+                    const cardTags = (card.dataset.tags || '').split(',').filter(t => t); // Get tags as an array
+
                     let showCard = true;
 
-                    // Check if we should apply strand filtering
-                    if (!activeFilters.strand.includes('all')) {
-                        showCard = activeFilters.strand.includes(cardStrand);
+                    // 1. Check Strand Filter
+                    if (!activeFilters.strand.includes('all') && !activeFilters.strand.includes(cardStrand)) {
+                        showCard = false;
                     }
 
-                    // Check if we should apply type filtering
-                    if (showCard && !activeFilters.type.includes('all')) {
-                        showCard = activeFilters.type.includes(cardType);
+                    // 2. Check Time Block Filter (Only if still visible)
+                    if (showCard && !activeFilters.timeblock.includes('all') && !activeFilters.timeblock.includes(cardTimeBlock)) {
+                        showCard = false;
                     }
 
-                    // Check Search Term
+                    // 3. Check Tag Filter (Only if still visible)
+                    if (showCard && !activeFilters.tag.includes('all')) {
+                         // Card must have at least one of the active tags
+                         const hasActiveTag = activeFilters.tag.some(activeTag =>
+                              cardTags.some(cardTag => cardTag.toLowerCase().replace(/\s+/g, '-') === activeTag)
+                         );
+                         if (!hasActiveTag) {
+                              showCard = false;
+                         }
+                    }
+
+
+                    // 4. Check Search Term (Only if still visible)
                     if (showCard && searchTerm !== '') {
-                        // Include title, subtitle, preview text, and full description in search
+                        // Search in title, presenter, preview, full description, and tags
                         const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
-                        const subtitle = card.querySelector('.card-subtitle')?.textContent.toLowerCase() || '';
-                        const preview = card.querySelector('.card-text-preview')?.textContent.toLowerCase() || '';
-                        const fullDesc = card.querySelector('.session-description')?.textContent.toLowerCase() || '';
-                        const combinedText = `${title} ${subtitle} ${preview} ${fullDesc}`;
+                        const presenter = card.querySelector('.card-subtitle')?.textContent.toLowerCase() || '';
+                        const preview = card.querySelector('.session-preview')?.textContent.toLowerCase() || '';
+                        // Get description text from the hidden div
+                        const fullDescElement = card.querySelector('.session-full-content');
+                        const fullDesc = fullDescElement ? fullDescElement.textContent.toLowerCase() : ''; // Use textContent
+                         const tagsText = cardTags.join(' ').toLowerCase(); // Join tags into a searchable string
+
+                        const combinedText = `${title} ${presenter} ${preview} ${fullDesc} ${tagsText}`;
 
                         if (!combinedText.includes(searchTerm)) {
                             showCard = false;
@@ -532,15 +745,14 @@
                         visibleCount++;
                     } else {
                         card.classList.add('hidden');
-                        // Collapse any expanded descriptions
-                        const desc = card.querySelector('.session-description');
-                        const preview = card.querySelector('.card-text-preview');
+                        // Optional: Collapse description if card is hidden
+                        const desc = card.querySelector('.session-full-content');
+                        const preview = card.querySelector('.session-preview');
                         const button = card.querySelector('.toggle-description');
-                        
                         if (desc && desc.classList.contains('show')) {
-                            desc.classList.remove('show');
-                            if (preview) preview.classList.add('collapsed');
-                            if (button) button.textContent = 'Read More';
+                             desc.classList.remove('show');
+                             if (preview) preview.classList.remove('hide');
+                             if (button) button.textContent = 'Read More';
                         }
                     }
                 });
@@ -553,24 +765,39 @@
                 }
             }
 
-            // --- Updated function to reset all filters ---
+            // Function to reset all filters
             window.resetAllFilters = function() {
                 // Reset active filters state
                 activeFilters.strand = ['all'];
-                activeFilters.type = ['all'];
-                
-                // Update UI to match state
+                activeFilters.timeblock = ['all'];
+                activeFilters.tag = ['all'];
+
+                // Update UI buttons to match state
                 document.querySelectorAll('.btn-filter').forEach(button => {
-                    button.classList.remove('active');
+                    const isAllButton = button.dataset.filter === 'all';
+                    if (isAllButton) {
+                         button.classList.add('active');
+                    } else {
+                         button.classList.remove('active');
+                    }
                 });
-                
-                document.querySelector('#strand-filters [data-filter="all"]').classList.add('active');
-                document.querySelector('#type-filters [data-filter="all"]').classList.add('active');
+
+                 // Ensure only the 'all' buttons are active within each group
+                 ['strand', 'timeblock', 'tag'].forEach(group => {
+                     document.querySelectorAll(`#${group}-filters .btn-filter`).forEach(button => {
+                         if (button.dataset.filter === 'all') {
+                             button.classList.add('active');
+                         } else {
+                             button.classList.remove('active');
+                         }
+                     });
+                 });
+
 
                 // Clear search input
                 searchInput.value = '';
 
-                // Apply filters
+                // Apply filters to show all sessions
                 applyFilters();
             }
 
@@ -585,6 +812,7 @@
                     applyFilters();
                 }
             });
+
         }); // End DOMContentLoaded
     </script>
 </body>
