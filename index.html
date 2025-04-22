@@ -57,36 +57,35 @@
         }
 
         body {
-            /* Updated body font per style guide */
-            font-family: 'Proxima Nova', Arial, sans-serif; /* Assuming Proxima Nova is loaded */
+            /* Updated default font to Serif per request */
+            font-family: 'Financier Display', Georgia, serif; /* Assuming Financier Display is loaded */
             color: var(--lc-gray);
             background-color: #f9f9f9;
-            /* Base font size for responsiveness */
-            font-size: 16px; /* Adjust as needed */
+            font-size: 16px;
+            font-weight: 400; /* Default to regular weight */
         }
 
+        /* Let headings inherit body font, adjust weights as needed */
         h1, h2, h3, h4, h5 {
-             /* Updated heading font per style guide */
-             font-family: 'Financier Display', Georgia, serif; /* Assuming Financier Display is loaded */
-             font-weight: 400; /* Start with regular weight, adjust specific headings if needed */
+             font-weight: 400; /* Reset to default, specific weights below */
         }
-         /* Adjust heading weights and sizes if needed, e.g., */
-         h1 { font-size: 2.5rem; font-weight: 600; } /* Example: Semi-Bold */
-         h2 { font-size: 2rem; font-weight: 500; } /* Example: Medium */
+         h1 { font-size: 2.5rem; font-weight: 600; } /* Semi-Bold */
+         h2 { font-size: 2rem; font-weight: 500; } /* Medium */
          h3 { font-size: 1.75rem; font-weight: 500; }
-         h4.filter-title { /* Target filter titles specifically */
-             font-family: 'Proxima Nova', Arial, sans-serif; /* Use body font for filter titles per style guide */
-             font-size: 1.1rem; /* Adjust size */
-             font-weight: 700; /* Bold weight per style guide */
+         /* Filter titles use the default serif font now */
+         h4.filter-title {
+             font-size: 1.1rem;
+             font-weight: 600; /* Semi-Bold for filter titles */
              color: var(--lc-red);
              margin-bottom: 0.75rem;
          }
-         h5 { font-size: 1.15rem; font-weight: 500; margin-bottom: 0.25rem;}
+         h5 { font-size: 1.15rem; font-weight: 500; margin-bottom: 0.25rem;} /* Session titles */
          h6.card-subtitle {
-             font-family: 'Proxima Nova', Arial, sans-serif; /* Ensure subtitle uses body font */
+             /* Inherits Financier Display */
              font-size: 0.9rem;
              margin-bottom: 0.5rem !important;
              font-weight: 400; /* Regular weight */
+             color: #555; /* Slightly lighter subtitle */
          }
 
 
@@ -141,9 +140,10 @@
             margin-bottom: 0.4rem;
             border-radius: 15px;
             font-size: 0.75rem;
-            font-weight: 500; /* Use slightly bolder for tags? Or 400 for regular */
+            font-weight: 500;
             line-height: 1.2;
             border: 1px solid transparent;
+            /* Inherits body font */
         }
 
         /* Strand Tags in Header */
@@ -158,6 +158,7 @@
              padding: 0.25rem 0.6rem;
              border-radius: 15px;
              color: white;
+             /* Inherits body font */
          }
         .badge.type-workshop { background-color: var(--lc-red) !important; }
         .badge.type-presentation { background-color: var(--meadow) !important; color: var(--lc-gray) !important; }
@@ -186,9 +187,6 @@
             top: 20px;
          }
 
-        /* Filter title style moved to h4.filter-title above */
-
-
         /* --- Filter Button Styles --- */
         .filter-buttons-container {
              display: flex;
@@ -200,7 +198,7 @@
             appearance: none;
             background: none;
             border: none;
-            font: inherit; /* Inherit Proxima Nova from body */
+            font: inherit; /* Inherit Financier Display from body */
             cursor: pointer;
             outline: inherit;
             display: inline-block;
@@ -226,7 +224,7 @@
 
         .btn-filter.active {
             opacity: 1;
-            font-weight: 700; /* Bold weight when active per style guide */
+            font-weight: 600; /* Semi-Bold weight when active */
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
             border-width: 1px;
             transform: scale(1.02);
@@ -236,7 +234,7 @@
         .btn-filter-all {
             background-color: var(--pelican);
             color: var(--lc-gray);
-            font-weight: 700; /* Bold 'All' button per style guide */
+            font-weight: 600; /* Semi-Bold 'All' button */
             border-color: #bbb;
         }
         .btn-filter-all.active {
@@ -245,7 +243,7 @@
             border-color: var(--lc-gray);
         }
 
-        /* Specific Filter Button Colors (Cycling through palette) */
+        /* Specific Filter Button Colors */
         .btn-filter.color-1 { background-color: var(--filter-color-1); color: var(--filter-text-color-1); border-color: var(--filter-color-1); }
         .btn-filter.color-2 { background-color: var(--filter-color-2); color: var(--filter-text-color-2); border-color: var(--filter-color-2); }
         .btn-filter.color-3 { background-color: var(--filter-color-3); color: var(--filter-text-color-3); border-color: var(--filter-color-3); }
@@ -271,45 +269,62 @@
             display: none !important;
         }
 
-        /* Session content expansion styles */
-        .session-content-container {
+        /* --- NEW Description Expansion Styles --- */
+        .session-description-wrapper {
             position: relative;
-            margin-bottom: 0.25rem;
-            white-space: pre-wrap;
+            overflow: hidden; /* Important for max-height */
+            /* Set max-height for collapsed state (e.g., approx 3 lines) */
+            max-height: 4.5em; /* Adjust this value (line-height * lines) */
+            transition: max-height 0.4s ease-in-out; /* Smooth transition */
+            cursor: pointer; /* Indicate it's clickable (optional) */
+            margin-bottom: 0.5rem; /* Space before button */
+            /* Add a fade-out effect when collapsed */
+            -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
         }
 
-        .session-preview {
-            display: block;
+        .session-description-wrapper.expanded {
+            max-height: 1000px; /* Large enough value for any content */
+            cursor: default;
+            /* Remove fade-out when expanded */
+            -webkit-mask-image: none;
+            mask-image: none;
+        }
+
+        .session-description-content {
+            /* Styles for the actual text content */
             font-size: 0.9rem;
-            line-height: 1.4;
-            color: #555;
+            line-height: 1.5; /* Use this to calculate max-height */
+            color: var(--lc-gray);
+             white-space: pre-wrap; /* Respect newlines from HTML */
+        }
+        /* Remove <p> margins if description_html uses them */
+        .session-description-content p {
+            margin-bottom: 0.5em; /* Space between paragraphs */
+        }
+        .session-description-content p:last-child {
+             margin-bottom: 0; /* No extra space after last paragraph */
         }
 
-        .session-full-content {
-            display: none;
-            margin-top: 0.75rem;
-            padding: 1rem;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            border-left: 3px solid var(--lc-red);
-            white-space: pre-wrap;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
+        /* Toggle button style */
+         .toggle-description {
+             background-color: transparent;
+             border: 1px solid var(--lc-gray);
+             color: var(--lc-gray);
+             padding: 0.2rem 0.6rem;
+             border-radius: 4px;
+             font-size: 0.75rem;
+             cursor: pointer;
+             transition: background-color 0.2s, color 0.2s;
+             /* margin-top: 0; /* Removed top margin, handled by wrapper */
+             font-weight: 400; /* Regular weight */
+         }
+         .toggle-description:hover {
+             background-color: var(--lc-gray);
+             color: white;
+         }
+        /* --- END Description Expansion Styles --- */
 
-        .session-full-content.show {
-            display: block;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .session-preview.hide {
-            display: none;
-        }
 
         .session-badge-container {
              display: flex;
@@ -327,7 +342,7 @@
         }
 
         .session-details .badge {
-            font-weight: 400; /* Regular weight */
+            font-weight: 400;
             font-size: 0.8rem;
             padding: 0.3rem 0.7rem;
             background-color: var(--pelican) !important;
@@ -336,6 +351,7 @@
             border-radius: 6px;
             display: inline-flex;
             align-items: center;
+            /* Inherits body font */
         }
 
         .session-details .badge i {
@@ -349,7 +365,7 @@
             padding-top: 0.5rem;
             border-top: 1px solid #eee;
         }
-        .session-tags .tag { /* Use the general tag style */
+        .session-tags .tag {
              background-color: var(--pelican-light);
              color: var(--lc-gray);
              border: 1px solid var(--pelican);
@@ -360,7 +376,7 @@
         }
         .session-tags strong {
             font-size: 0.8rem;
-            font-weight: 700; /* Bold label per style guide */
+            font-weight: 600; /* Semi-Bold label */
             color: var(--lc-gray);
             display: block;
             margin-bottom: 0.25rem;
@@ -389,24 +405,6 @@
              font-size: 1.1rem;
         }
 
-         /* Style for the toggle button */
-         .toggle-description {
-             background-color: transparent;
-             border: 1px solid var(--lc-gray);
-             color: var(--lc-gray);
-             padding: 0.2rem 0.6rem;
-             border-radius: 4px;
-             font-size: 0.75rem;
-             cursor: pointer;
-             transition: background-color 0.2s, color 0.2s;
-             margin-top: 0.5rem;
-             font-weight: 400; /* Regular weight */
-         }
-         .toggle-description:hover {
-             background-color: var(--lc-gray);
-             color: white;
-         }
-
          /* Search button style */
          #search-button {
              border-color: var(--lc-gray);
@@ -420,7 +418,7 @@
          #clear-filters-button {
              border-color: var(--lc-red);
              color: var(--lc-red);
-             font-weight: 700; /* Bold clear button */
+             font-weight: 600; /* Semi-Bold clear button */
          }
          #clear-filters-button:hover {
              background-color: var(--lc-red);
@@ -536,6 +534,7 @@
                 const limitedTags = tags.slice(0, 5);
                 const tagSpans = limitedTags.map(tag => `<span class="tag">${tag}</span>`).join('');
                 const ellipsis = tags.length > 5 ? '<span class="tag" title="More tags exist...">...</span>' : '';
+                // Added "Tags:" label directly here
                 return `<div class="session-tags"><strong>Tags:</strong><div class="mt-1">${tagSpans}${ellipsis}</div></div>`;
             }
 
@@ -552,6 +551,9 @@
 
                 const tagsHtml = createTagsHtml(session.tags);
 
+                // ** NEW HTML Structure for Description **
+                // Removed session-content-container and session-preview divs
+                // Added session-description-wrapper and session-description-content
                 const cardHtml = `
                     <div class="card session-card mb-3 ${session.strand} ${session.type}"
                          data-strand="${session.strand || 'all'}"
@@ -571,12 +573,16 @@
                                 <span class="badge"><i class="bi bi-clock"></i> Block: ${session.timeBlock || 'TBD'}</span>
                                 <span class="badge"><i class="bi bi-geo-alt"></i> Location: ${session.location || 'TBD'}</span>
                             </div>
-                            <div class="session-content-container">
-                                <div class="session-preview">${session.preview}</div>
-                                <div id="desc${index}" class="session-full-content">${session.description || ''}</div>
+
+                            <div class="session-description-wrapper" id="desc-wrapper-${index}">
+                                <div class="session-description-content">
+                                    ${session.description || ''}
+                                </div>
                             </div>
+
                             <button class="btn btn-sm toggle-description"
-                                     onclick="toggleDescription(event, 'desc${index}')">Read More</button>
+                                     onclick="toggleDescription(event, 'desc-wrapper-${index}')">Read More</button>
+
                             ${tagsHtml}
                         </div>
                     </div>`;
@@ -658,20 +664,18 @@
 
             loadSessionData();
 
-            // --- Function to toggle description visibility ---
-            window.toggleDescription = function(event, descId) {
+            // --- Function to toggle description visibility (NEW - uses CSS class) ---
+            window.toggleDescription = function(event, wrapperId) {
                 event.preventDefault();
                 const button = event.currentTarget;
-                const cardBody = button.closest('.card-body');
-                if (!cardBody) return;
-                const preview = cardBody.querySelector('.session-preview');
-                const fullContent = cardBody.querySelector(`#${descId}`);
+                const wrapper = document.getElementById(wrapperId); // Get the wrapper div
 
-                if (preview && fullContent) {
-                    const isShown = fullContent.classList.contains('show');
-                    fullContent.classList.toggle('show');
-                    preview.classList.toggle('hide', !isShown);
-                    button.textContent = isShown ? 'Read More' : 'Show Less';
+                if (wrapper) {
+                    const isExpanded = wrapper.classList.contains('expanded');
+                    wrapper.classList.toggle('expanded'); // Toggle the class
+                    button.textContent = isExpanded ? 'Read More' : 'Show Less'; // Update button text
+                } else {
+                    console.warn("Could not find description wrapper for ID:", wrapperId);
                 }
             }
 
@@ -732,20 +736,19 @@
                     if (showCard && searchTerm !== '') {
                         const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
                         const presenter = card.querySelector('.card-subtitle')?.textContent.toLowerCase() || '';
-                        const preview = card.querySelector('.session-preview')?.textContent.toLowerCase() || '';
-                        const fullDesc = card.querySelector('.session-full-content')?.textContent.toLowerCase() || '';
+                        // Search the actual description content now
+                        const description = card.querySelector('.session-description-content')?.textContent.toLowerCase() || '';
                         const tagsText = cardTags.join(' ').toLowerCase();
-                        const combinedText = `${title} ${presenter} ${preview} ${fullDesc} ${tagsText}`;
+                        const combinedText = `${title} ${presenter} ${description} ${tagsText}`; // Use full description for search
                         if (!combinedText.includes(searchTerm)) showCard = false;
                     }
 
-                    // Show/Hide Card & Collapse Description
+                    // Show/Hide Card & Collapse Description if hiding
                     card.classList.toggle('hidden', !showCard);
                     if (!showCard) {
-                        const desc = card.querySelector('.session-full-content');
-                        if (desc && desc.classList.contains('show')) {
-                             desc.classList.remove('show');
-                             card.querySelector('.session-preview')?.classList.remove('hide');
+                        const wrapper = card.querySelector('.session-description-wrapper');
+                        if (wrapper && wrapper.classList.contains('expanded')) {
+                             wrapper.classList.remove('expanded');
                              card.querySelector('.toggle-description').textContent = 'Read More';
                         }
                     } else {
