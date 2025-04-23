@@ -334,11 +334,11 @@
 
         /* Session details badges (Time, Location) */
         .session-details {
-            margin-top: 0.5rem;
-            margin-bottom: 0.25rem; /* Reduced margin */
+            margin-top: 0.1rem;
+            margin-bottom: 0.1rem; /* Reduced margin */
             display: flex;
             flex-wrap: wrap;
-            gap: 0.4rem;
+            gap: 0.1rem;
         }
 
         .session-details .badge {
@@ -560,22 +560,17 @@
                 if (session.type === 'type-discussion') typeBadgeClass = 'type-discussion';
 
                 const tagsHtml = createTagsHtml(session.tags);
-
                 const formattedDescription = (session.description || '').replace(
                     /(https?:\/\/[^\s]+)/g,
                     '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
                 );
-
-                // ** NEW HTML Structure for Description **
-                // Removed session-content-container and session-preview divs
-                // Added session-description-wrapper and session-description-content
                 const cardHtml = `
                     <div class="card session-card mb-3 ${session.strand} ${session.type}"
                          data-strand="${session.strand || 'all'}"
                          data-timeblock="${session.timeBlock || 'all'}"
                          data-tags="${(session.tags || []).join(',')}"
                          data-index="${index}">
-                        <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="card-header d-flex justify-content-between align-items-center" onclick="toggleDescription(event, 'desc-wrapper-${index}')" style="cursor: pointer;">
                             <span class="tag ${strandClass}">${session.strandName || 'Unknown Strand'}</span>
                              <div class="session-badge-container">
                                 <span class="badge session-type ${typeBadgeClass}">${session.typeName}</span>
