@@ -560,7 +560,7 @@
                 if (session.type === 'type-discussion') typeBadgeClass = 'type-discussion';
 
                 const tagsHtml = createTagsHtml(session.tags);
-                const formattedDescription = (session.description || '').replace(
+                const formattedDescription = (session.description || '').trim().replace(
                     /(https?:\/\/[^\s]+)/g,
                     '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
                 );
@@ -683,13 +683,16 @@
             // --- Function to toggle description visibility (NEW - uses CSS class) ---
             window.toggleDescription = function(event, wrapperId) {
                 event.preventDefault();
-                const button = event.currentTarget;
+                const element = event.currentTarget;
                 const wrapper = document.getElementById(wrapperId); // Get the wrapper div
 
                 if (wrapper) {
-                    const isExpanded = wrapper.classList.contains('expanded');
                     wrapper.classList.toggle('expanded'); // Toggle the class
-                    button.textContent = isExpanded ? 'Read More' : 'Show Less'; // Update button text
+                    // Only update text if the clicked element is the toggle button
+                    if (element.classList.contains('toggle-description')) {
+                        const isExpanded = wrapper.classList.contains('expanded');
+                        element.textContent = isExpanded ? 'Show Less' : 'Read More';
+                    }
                 } else {
                     console.warn("Could not find description wrapper for ID:", wrapperId);
                 }
