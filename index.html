@@ -551,6 +551,11 @@
 
                 const tagsHtml = createTagsHtml(session.tags);
 
+                const formattedDescription = (session.description || '').replace(
+                    /(https?:\/\/[^\s]+)/g,
+                    '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+                );
+
                 // ** NEW HTML Structure for Description **
                 // Removed session-content-container and session-preview divs
                 // Added session-description-wrapper and session-description-content
@@ -576,7 +581,7 @@
 
                             <div class="session-description-wrapper" id="desc-wrapper-${index}">
                                 <div class="session-description-content">
-                                    ${session.description || ''}
+                                    ${formattedDescription}
                                 </div>
                             </div>
 
