@@ -244,21 +244,15 @@ def csv_to_json(csv_file, output_file='sessions.json'):
                 print(f"  Processed Presenter: {presenter}")
 
                 # Process Description for HTML and Preview
-                # 1. Normalize line endings
-                description_cleaned = re.sub(r'\r\n', '\n', description)
-                # 2. Replace single newlines (not preceded or followed by another newline) with a space
-                # This helps join sentences that were broken across lines in the CSV
-                description_cleaned = re.sub(r'(?<!\n)\n(?!\n)', ' ', description_cleaned)
-                # 3. Split into paragraphs based on double newlines
-                paragraphs = [p.strip() for p in description_cleaned.split('\n\n') if p.strip()]
-                # 4. Escape HTML special characters in each paragraph and wrap in <p> tags
-                description_html = "".join(f"<p>{html.escape(p)}</p>" for p in paragraphs)
-                # 5. Add default if description was empty or only whitespace
+                # Modified to use <br> tags instead of <p> tags for line breaks
+                description_cleaned = re.sub(r'\r\n', '\n', description).strip()
+                description_escaped = html.escape(description_cleaned)
+                description_html = description_escaped.replace('\n', '<br>')
                 if not description_html:
-                     description_html = "<p>Description forthcoming.</p>"
-
+                     description_html = "Description forthcoming."
+                
                 # Create preview from the original description text (first 150 chars)
-                preview_text = ' '.join(description.split()) # Collapse all whitespace for cleaner preview
+                preview_text = ' '.join(description.split())  # Collapse all whitespace for cleaner preview
                 preview = preview_text[:150].strip() + ("..." if len(preview_text) > 150 else "")
                 print(f"  Processed Preview: {preview[:50]}...")
 
