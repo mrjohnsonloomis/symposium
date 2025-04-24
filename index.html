@@ -426,10 +426,10 @@
          }
 
         .card-title {
-            margin-bottom: 0.5rem; /* Reduced margin */
+            margin-bottom: 0.1rem; /* Reduced margin */
         }
         .card-subtitle {
-            margin-bottom: 0.25rem; /* Reduced margin */
+            margin-bottom: 0.1rem; /* Reduced margin */
         }
         .session-description-wrapper {
             margin-top: 0.1rem;  /* Reduced top margin */
@@ -441,7 +441,9 @@
 <body>
     <header class="lc-header">
         <div class="container">
-            <img src="logo.png" alt="Loomis Chaffee Logo" class="lc-logo" onerror="this.style.display='none'; console.error('Logo image not found.');">
+            <a href="#" onclick="location.reload(); return false;">
+                <img src="logo.png" alt="Loomis Chaffee Logo" class="lc-logo" onerror="this.style.display='none'; console.error('Logo image not found.');">
+            </a>
         </div>
     </header>
 
@@ -685,13 +687,15 @@
                 event.preventDefault();
                 const element = event.currentTarget;
                 const wrapper = document.getElementById(wrapperId); // Get the wrapper div
-
                 if (wrapper) {
                     wrapper.classList.toggle('expanded'); // Toggle the class
-                    // Only update text if the clicked element is the toggle button
-                    if (element.classList.contains('toggle-description')) {
+                    // Always update the toggle button text:
+                    const toggleButton = element.classList.contains('toggle-description')
+                        ? element
+                        : element.closest('.session-card').querySelector('.toggle-description');
+                    if (toggleButton) {
                         const isExpanded = wrapper.classList.contains('expanded');
-                        element.textContent = isExpanded ? 'Show Less' : 'Read More';
+                        toggleButton.textContent = isExpanded ? 'Show Less' : 'Read More';
                     }
                 } else {
                     console.warn("Could not find description wrapper for ID:", wrapperId);
