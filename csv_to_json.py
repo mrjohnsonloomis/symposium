@@ -244,8 +244,7 @@ def csv_to_json(csv_file, output_file='sessions.json'):
                 print(f"  Processed Presenter: {presenter}")
 
                 # Process Description for HTML and Preview
-                # Modified to use <br> tags instead of <p> tags for line breaks
-                description_cleaned = re.sub(r'\r\n', '\n', description).strip()
+                description_cleaned = re.sub(r'\s+', ' ', description).strip()  # Collapse all whitespace
                 description_escaped = html.escape(description_cleaned)
                 description_html = description_escaped.replace('\n', '<br>')
                 if not description_html:
