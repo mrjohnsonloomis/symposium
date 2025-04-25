@@ -426,14 +426,14 @@
          }
 
         .card-title {
-            margin-bottom: 0.1rem; /* Reduced margin */
+            margin-bottom: 0.25rem; /* Reduced margin */
         }
         .card-subtitle {
-            margin-bottom: 0.1rem; /* Reduced margin */
+            margin-bottom: 0.25rem; /* Reduced margin */
         }
         .session-description-wrapper {
-            margin-top: 0.1rem;  /* Reduced top margin */
-            margin-bottom: 0.1rem;  /* Reduced bottom margin */
+            margin-top: 0.25rem;  /* Reduced top margin */
+            margin-bottom: 0.25rem;  /* Reduced bottom margin */
         }
 
     </style>
@@ -580,7 +580,9 @@
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">${session.title}</h5>
-                            <h6 class="card-subtitle text-muted">${session.presenter}</h6>
+                            <h6 class="card-subtitle text-muted">
+                                ${session.presenter.replace(/, /g, '<br>')} <!-- Replace commas with line breaks for multiple presenters -->
+                            </h6>
                             <div class="session-details">
                                 <span class="badge"><i class="bi bi-clock"></i> Block: ${session.timeBlock || 'TBD'}</span>
                                 <span class="badge"><i class="bi bi-geo-alt"></i> Location: ${session.location || 'TBD'}</span>

@@ -237,7 +237,18 @@ def csv_to_json(csv_file, output_file='sessions.json'):
 
                 # Process Presenter String
                 if presenter_name and presenter_school:
-                    presenter = f"{presenter_name} - {presenter_school}"
+                    # Check if there are multiple presenters separated by commas
+                    presenter_names = [name.strip() for name in presenter_name.split(',')]
+                    presenter_schools = [school.strip() for school in presenter_school.split(',')]
+
+                    # If there are multiple names but only one school, assign the same school to all names
+                    if len(presenter_names) > 1 and len(presenter_schools) == 1:
+                        presenter_schools *= len(presenter_names)
+
+                    # Combine names and schools in order
+                    presenter = ', '.join(
+                        f"{name} - {school}" for name, school in zip(presenter_names, presenter_schools)
+                    )
                 else:
                     # Use whichever value is available, or default to TBD
                     presenter = presenter_name or presenter_school or "TBD"
