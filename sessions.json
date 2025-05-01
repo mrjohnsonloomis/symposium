@@ -490,5 +490,23 @@
     "tags": [
       "Pedagogy"
     ]
+  },
+  {
+    "strand": "strand2",
+    "strandName": "2: Human-Centered Innovation",
+    "type": "type-workshop",
+    "typeName": "Workshop",
+    "title": "Untethered Thinking: Design Thinking Frameworks for Tech-Free Student Brainstorms",
+    "presenter": "Jen Solomon - Loomis Chaffee School",
+    "email": "4/25/2025 13:32",
+    "preview": "In a world where AI can generate ideas at the click of a button, it&#x27;s more important than ever to empower students to think creatively and independent...",
+    "description": "In a world where AI can generate ideas at the click of a button, it&#x27;s more important than ever to empower students to think creatively and independently. Untethered Thinking will introduce frameworks that encourage students to generate their own ideas through both independent and collaborative processes. This workshop will guide you through practical frameworks that could be used in the early stages of project or paper design, helping students unleash their full creative potential and increase their agency in the process itself. Walk away with tools to facilitate brainstorming sessions that inspire original, human-driven ideas and innovation.",
+    "timeBlock": "TBD",
+    "location": "anonymous",
+    "tags": [
+      "AI",
+      "Collaboration",
+      "Innovation"
+    ]
   }
 ]
