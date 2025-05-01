@@ -546,6 +546,38 @@
                 return `<div class="session-tags"><strong>Tags:</strong><div class="mt-1">${tagSpans}${ellipsis}</div></div>`;
             }
 
+            // --- Function to refine and consolidate session tags ---
+            function refineTags(tags) {
+                const tagMapping = {
+                    // Removed 'AI' as a tag since it is too broad
+                    'Pedagogy': 'Teaching Strategies',
+                    'Humanities': 'Arts & Humanities',
+                    'Technology': 'EdTech',
+                    'STEM': 'Science & Math',
+                    'Ethics': 'Ethical Considerations',
+                    'Innovation': 'Innovative Practices',
+                    'Research': 'Academic Research',
+                    'Student Engagement': 'Engagement Strategies',
+                    'Writing': 'Writing Skills',
+                    'Collaboration': 'Teamwork & Collaboration',
+                    'Assessment': 'Evaluation Methods',
+                    'Curriculum': 'Curriculum Design',
+                    'Metacognition': 'Reflective Thinking',
+                    'Simulations': 'Interactive Simulations',
+                    'History': 'Historical Context',
+                    'Professional Development': 'Teacher Training',
+                    'Wellbeing': 'Student Wellbeing'
+                };
+
+                const refinedTags = new Set();
+                tags.forEach(tag => {
+                    if (tagMapping[tag]) {
+                        refinedTags.add(tagMapping[tag]);
+                    }
+                });
+                return Array.from(refinedTags);
+            }
+
             // --- Function to create a session card ---
             function createSessionCard(session, index) {
                 let strandClass = 'strand-unknown';
@@ -557,7 +589,8 @@
                 if (session.type === 'type-presentation') typeBadgeClass = 'type-presentation';
                 if (session.type === 'type-discussion') typeBadgeClass = 'type-discussion';
 
-                const tagsHtml = createTagsHtml(session.tags);
+                const refinedTags = refineTags(session.tags);
+                const tagsHtml = createTagsHtml(refinedTags);
                 const formattedDescription = (session.description || '').trim().replace(
                     /(https?:\/\/[^\s]+)/g,
                     '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
@@ -566,7 +599,7 @@
                     <div class="card session-card mb-3 ${session.strand} ${session.type}"
                          data-strand="${session.strand || 'all'}"
                          data-timeblock="${session.timeBlock || 'all'}"
-                         data-tags="${(session.tags || []).join(',')}"
+                         data-tags="${refinedTags.join(',')}"
                          data-index="${index}">
                         <div class="card-header d-flex justify-content-between align-items-center" onclick="toggleDescription(event, 'desc-wrapper-${index}')" style="cursor: pointer;">
                             <span class="tag ${strandClass}">${session.strandName || 'Unknown Strand'}</span>
