@@ -603,14 +603,14 @@
                          data-index="${index}">
                         <div class="card-header d-flex justify-content-between align-items-center" onclick="toggleDescription(event, 'desc-wrapper-${index}')" style="cursor: pointer;">
                             <span class="tag ${strandClass}">${session.strandName || 'Unknown Strand'}</span>
-                             <div class="session-badge-container">
+                            <div class="session-badge-container">
                                 <span class="badge session-type ${typeBadgeClass}">${session.typeName}</span>
-                             </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">${session.title}</h5>
                             <h6 class="card-subtitle text-muted">
-                                ${session.presenter.replace(/, /g, '<br>')} <!-- Replace commas with line breaks for multiple presenters -->
+                                ${session.presenter.replace(/, /g, '<br>')}
                             </h6>
                             <div class="session-details">
                                 <span class="badge"><i class="bi bi-clock"></i> Block: ${session.timeBlock || 'TBD'}</span>
