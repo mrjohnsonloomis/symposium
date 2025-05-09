@@ -548,6 +548,8 @@
 
             // --- Function to refine and consolidate session tags ---
             function refineTags(tags) {
+                if (!tags || !Array.isArray(tags)) return [];
+                
                 const tagMapping = {
                     // Removed 'AI' as a tag since it is too broad
                     'Pedagogy': 'Teaching Strategies',
@@ -571,8 +573,11 @@
 
                 const refinedTags = new Set();
                 tags.forEach(tag => {
+                    // Add the mapped tag if it exists, otherwise add the original tag
                     if (tagMapping[tag]) {
                         refinedTags.add(tagMapping[tag]);
+                    } else {
+                        refinedTags.add(tag); // Keep original tag if no mapping exists
                     }
                 });
                 return Array.from(refinedTags);
@@ -640,6 +645,8 @@
                     const button = document.createElement('button');
                     const colorClass = `color-${(index % 5) + 1}`;
                     button.className = `btn btn-filter ${colorClass}`;
+                    // Store original tag as a data attribute
+                    button.dataset.originalTag = tag;
                     const filterValue = tag.toLowerCase().replace(/\s+/g, '-');
                     button.dataset.filter = filterValue;
                     button.textContent = tag;
