@@ -125,7 +125,7 @@
             flex-wrap: nowrap;
             overflow-x: auto;
             padding: 0.75rem 0.5rem;
-            min-height: 160px;
+            min-height: 180px;
             scroll-behavior: smooth;
             scrollbar-width: thin;
             scrollbar-color: var(--lc-red) var(--pelican-light);
@@ -147,7 +147,7 @@
         }
         
         .session-block {
-            flex: 0 0 280px;
+            flex: 0 0 300px;
             background-color: white;
             margin: 0.5rem;
             border-radius: 8px;
@@ -576,12 +576,9 @@
 <body>
     <header class="lc-header">
         <div class="container">
-            <div>
-                <img src="logo.png" alt="Loomis Chaffee Logo" class="lc-logo" onerror="this.style.display='none'">
-            </div>
-            <div class="d-none d-md-block text-end">
-                <h2 class="m-0">New Paths Forward: AI, Humanity, and the Next Era of Education</h2>
-            </div>
+            <a href="#" onclick="location.reload(); return false;">
+                <img src="logo.png" alt="Loomis Chaffee Logo" class="lc-logo" onerror="this.style.display='none'; console.error('Logo image not found.');">
+            </a>
         </div>
     </header>
 

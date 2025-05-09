@@ -109,12 +109,12 @@
         }
 
         .session-cell {
-            height: 100px;
+            height: 120px;
             cursor: pointer;
             transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
             position: relative;
             overflow: hidden;
-            padding: 8px;
+            padding: 10px;
         }
 
         .session-cell:hover {
@@ -125,8 +125,8 @@
 
         .session-title {
             font-weight: 500;
-            font-size: 0.9rem;
-            margin-bottom: 4px;
+            font-size: 1rem;
+            margin-bottom: 6px;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
@@ -134,10 +134,10 @@
         }
 
         .session-presenter {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #666;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -321,12 +321,9 @@
 <body>
     <header class="lc-header">
         <div class="container">
-            <div>
-                <img src="logo.png" alt="Loomis Chaffee Logo" class="lc-logo" onerror="this.style.display='none'">
-            </div>
-            <div class="d-none d-md-block text-end">
-                <h2 class="m-0">New Paths Forward: AI, Humanity, and the Next Era of Education</h2>
-            </div>
+            <a href="#" onclick="location.reload(); return false;">
+                <img src="logo.png" alt="Loomis Chaffee Logo" class="lc-logo" onerror="this.style.display='none'; console.error('Logo image not found.');">
+            </a>
         </div>
     </header>
 
@@ -453,7 +450,6 @@
                                     <div class="strand-indicator"></div>
                                     <div class="session-title">${session.title}</div>
                                     <div class="session-presenter">${session.presenter}</div>
-                                    <div class="session-type ${session.type}">${session.typeName}</div>
                                 </td>
                             `;
                         } else {
