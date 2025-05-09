@@ -596,39 +596,36 @@
                     '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
                 );
                 const cardHtml = `
-                    <div class="card session-card mb-3 ${session.strand} ${session.type}"
-                         data-strand="${session.strand || 'all'}"
-                         data-timeblock="${session.timeBlock || 'all'}"
-                         data-tags="${refinedTags.join(',')}"
-                         data-index="${index}">
-                        <div class="card-header d-flex justify-content-between align-items-center" onclick="toggleDescription(event, 'desc-wrapper-${index}')" style="cursor: pointer;">
-                            <span class="tag ${strandClass}">${session.strandName || 'Unknown Strand'}</span>
-                            <div class="session-badge-container">
-                                <span class="badge session-type ${typeBadgeClass}">${session.typeName}</span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${session.title}</h5>
-                            <h6 class="card-subtitle text-muted">
-                                ${session.presenter.replace(/, /g, '<br>')}
-                            </h6>
-                            <div class="session-details">
-                                <span class="badge"><i class="bi bi-clock"></i> Block: ${session.timeBlock || 'TBD'}</span>
-                                <span class="badge"><i class="bi bi-geo-alt"></i> Location: ${session.location || 'TBD'}</span>
-                            </div>
-
-                            <div class="session-description-wrapper" id="desc-wrapper-${index}">
-                                <div class="session-description-content">
-                                    ${formattedDescription}
-                                </div>
-                            </div>
-
-                            <button class="btn btn-sm toggle-description"
-                                     onclick="toggleDescription(event, 'desc-wrapper-${index}')">Read More</button>
-
-                            ${tagsHtml}
-                        </div>
-                    </div>`;
+    <div class="card session-card mb-3 ${session.strand} ${session.type}"
+         data-strand="${session.strand || 'all'}"
+         data-timeblock="${session.timeBlock || 'all'}"
+         data-tags="${refinedTags.join(',')}"
+         data-index="${index}">
+        <div class="card-header d-flex justify-content-between align-items-center" 
+             onclick="toggleDescription(event, 'desc-wrapper-${index}')" 
+             style="cursor: pointer;">
+            <span class="tag ${strandClass}">${session.strandName || 'Unknown Strand'}</span>
+            <div class="session-badge-container">
+                <span class="badge session-type ${typeBadgeClass}">${session.typeName}</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">${session.title}</h5>
+            <h6 class="card-subtitle text-muted">
+                ${session.presenter.replace(/, /g, '<br>')}
+            </h6>
+            <div class="session-details">
+                <span class="badge"><i class="bi bi-clock"></i> Block: ${session.timeBlock || 'TBD'}</span>
+                <span class="badge"><i class="bi bi-geo-alt"></i> Location: ${session.location || 'TBD'}</span>
+            </div>
+            <div class="session-description-wrapper" id="desc-wrapper-${index}">
+                <div class="session-description-content">${formattedDescription}</div>
+            </div>
+            <button class="btn btn-sm toggle-description" 
+                    onclick="toggleDescription(event, 'desc-wrapper-${index}')">Read More</button>
+            ${tagsHtml}
+        </div>
+    </div>`;
                 return cardHtml;
             }
 
