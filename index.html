@@ -166,7 +166,7 @@
 
         /* Card Body and Borders */
         .session-card .card-body {
-            padding: 0.5rem 1rem; /* Reduced padding */
+            padding: 0.75rem 1rem; /* Increased from 0.5rem 1rem */
             border-left: 5px solid transparent;
         }
         .session-card.strand1 .card-body { border-left-color: var(--cupola); }
@@ -334,11 +334,11 @@
 
         /* Session details badges (Time, Location) */
         .session-details {
-            margin-top: 0.1rem;
-            margin-bottom: 0.1rem; /* Reduced margin */
+            margin-top: 0.5rem !important;    /* Increased from 0.1rem */
+            margin-bottom: 0.75rem !important; /* Increased from 0.1rem */
             display: flex;
             flex-wrap: wrap;
-            gap: 0.1rem;
+            gap: 0.3rem;  /* Increased from 0.1rem */
         }
 
         .session-details .badge {
@@ -425,15 +425,23 @@
              color: white;
          }
 
+        /* Increase spacing between card elements */
         .card-title {
-            margin-bottom: 0.25rem; /* Reduced margin */
+            margin-bottom: 0.5rem !important; /* Increased from 0.25rem */
         }
         .card-subtitle {
-            margin-bottom: 0.25rem; /* Reduced margin */
+            margin-bottom: 0.5rem !important; /* Increased from 0.25rem */
+        }
+        .session-details {
+            margin-top: 0.5rem !important;    /* Increased from 0.1rem */
+            margin-bottom: 0.75rem !important; /* Increased from 0.1rem */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;  /* Increased from 0.1rem */
         }
         .session-description-wrapper {
-            margin-top: 0.25rem;  /* Reduced top margin */
-            margin-bottom: 0.25rem;  /* Reduced bottom margin */
+            margin-top: 0.5rem;  /* Increased from 0.25rem */
+            margin-bottom: 0.5rem;  /* Increased from 0.25rem */
         }
 
     </style>
@@ -594,43 +602,48 @@
                 if (session.type === 'type-presentation') typeBadgeClass = 'type-presentation';
                 if (session.type === 'type-discussion') typeBadgeClass = 'type-discussion';
 
-                const refinedTags = refineTags(session.tags);
+                // Use the pre-processed refined tags
+                const refinedTags = session.refinedTags || [];
                 const tagsHtml = createTagsHtml(refinedTags);
                 const formattedDescription = (session.description || '').trim().replace(
                     /(https?:\/\/[^\s]+)/g,
                     '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
                 );
+                
+                // Create data-tags with properly formatted values for filtering
+                const tagDataValue = refinedTags.map(tag => tag.toLowerCase().replace(/\s+/g, '-')).join(',');
+                
                 const cardHtml = `
-    <div class="card session-card mb-3 ${session.strand} ${session.type}"
-         data-strand="${session.strand || 'all'}"
-         data-timeblock="${session.timeBlock || 'all'}"
-         data-tags="${refinedTags.join(',')}"
-         data-index="${index}">
-        <div class="card-header d-flex justify-content-between align-items-center" 
-             onclick="toggleDescription(event, 'desc-wrapper-${index}')" 
-             style="cursor: pointer;">
-            <span class="tag ${strandClass}">${session.strandName || 'Unknown Strand'}</span>
-            <div class="session-badge-container">
-                <span class="badge session-type ${typeBadgeClass}">${session.typeName}</span>
-            </div>
+<div class="card session-card mb-3 ${session.strand} ${session.type}"
+     data-strand="${session.strand || 'all'}"
+     data-timeblock="${session.timeBlock || 'all'}"
+     data-tags="${tagDataValue}"
+     data-index="${index}">
+    <div class="card-header d-flex justify-content-between align-items-center" 
+         onclick="toggleDescription(event, 'desc-wrapper-${index}')" 
+         style="cursor: pointer;">
+        <span class="tag ${strandClass}">${session.strandName || 'Unknown Strand'}</span>
+        <div class="session-badge-container">
+            <span class="badge session-type ${typeBadgeClass}">${session.typeName}</span>
         </div>
-        <div class="card-body">
-            <h5 class="card-title">${session.title}</h5>
-            <h6 class="card-subtitle text-muted">
-                ${session.presenter.replace(/, /g, '<br>')}
-            </h6>
-            <div class="session-details">
-                <span class="badge"><i class="bi bi-clock"></i> Block: ${session.timeBlock || 'TBD'}</span>
-                <span class="badge"><i class="bi bi-geo-alt"></i> Location: ${session.location || 'TBD'}</span>
-            </div>
-            <div class="session-description-wrapper" id="desc-wrapper-${index}">
-                <div class="session-description-content">${formattedDescription}</div>
-            </div>
-            <button class="btn btn-sm toggle-description" 
-                    onclick="toggleDescription(event, 'desc-wrapper-${index}')">Read More</button>
-            ${tagsHtml}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">${session.title}</h5>
+        <h6 class="card-subtitle text-muted">
+            ${session.presenter.replace(/, /g, '<br>')}
+        </h6>
+        <div class="session-details">
+            <span class="badge"><i class="bi bi-clock"></i> Block: ${session.timeBlock || 'TBD'}</span>
+            <span class="badge"><i class="bi bi-geo-alt"></i> Location: ${session.location || 'TBD'}</span>
         </div>
-    </div>`;
+        <div class="session-description-wrapper" id="desc-wrapper-${index}">
+            <div class="session-description-content">${formattedDescription}</div>
+        </div>
+        <button class="btn btn-sm toggle-description" 
+                onclick="toggleDescription(event, 'desc-wrapper-${index}')">Read More</button>
+        ${tagsHtml}
+    </div>
+</div>`;
                 return cardHtml;
             }
 
@@ -692,13 +705,24 @@
                     shuffle(allSessionData);
                     if (loadingElement) loadingElement.remove();
                     sessionsContainer.querySelectorAll('.session-card').forEach(card => card.remove());
-                    allSessionData.forEach((session, index) => {
+                    
+                    // Process all sessions first to collect and refine all tags
+                    allSessionData.forEach((session) => {
                         if (session.tags && Array.isArray(session.tags)) {
-                            session.tags.forEach(tag => allTags.add(tag));
+                            // Process the tags through refineTags to get consistency
+                            const refinedSessionTags = refineTags(session.tags);
+                            // Store the refined tags back to the session for later use
+                            session.refinedTags = refinedSessionTags;
+                            // Add refined tags to the global tags set
+                            refinedSessionTags.forEach(tag => allTags.add(tag));
                         }
                         if (session.strand && session.strandName) {
                              allStrands.add({ id: session.strand, name: session.strandName });
                         }
+                    });
+                    
+                    // Now create all session cards using the processed tags
+                    allSessionData.forEach((session, index) => {
                         const sessionCardHtml = createSessionCard(session, index);
                         noResultsDiv.insertAdjacentHTML('beforebegin', sessionCardHtml);
                     });
