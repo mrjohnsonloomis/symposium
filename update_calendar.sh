@@ -6,5 +6,9 @@
 echo "Updating schedule data from Excel file..."
 python3 excel_to_schedule.py
 
+# Update session locations with room assignments
+echo "Updating room assignments..."
+python3 update_rooms.py
+
 echo "Process complete!"
 echo "You can now view the updated calendar at calendar.html"

@@ -11,5 +11,10 @@ python3 update_schedule.py
 # Also update the schedule.json for the calendar view
 python3 excel_to_schedule.py
 
+# Update session locations with room assignments
+echo ""
+echo "Updating room assignments..."
+python3 update_rooms.py
+
 echo ""
 echo "All data has been updated!"

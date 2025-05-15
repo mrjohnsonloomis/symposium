@@ -12,15 +12,24 @@ def find_session_by_title(sessions, title):
     # Remove any presenter or custom notation from the title
     clean_title = re.sub(r'(.+?):\s*', '', title).strip()
     
-    # First try exact match
+    # Normalize quotes - replace different types of quotes with simple double quotes
+    clean_title = clean_title.replace('"', '"').replace('"', '"')
+    
+    # First try exact match with normalized quotes
     for session in sessions:
-        if session.get('title') == clean_title:
+        session_title = session.get('title', '')
+        # Normalize HTML entities like &quot; to actual quotes
+        normalized_title = session_title.replace('&quot;', '"').replace('&#x27;', "'")
+        
+        if normalized_title == clean_title:
             return session
     
     # Then try partial match (title might be truncated in Excel)
     for session in sessions:
         session_title = session.get('title', '')
-        if clean_title and session_title and (clean_title in session_title or session_title in clean_title):
+        normalized_title = session_title.replace('&quot;', '"').replace('&#x27;', "'")
+        
+        if clean_title and normalized_title and (clean_title in normalized_title or normalized_title in clean_title):
             return session
     
     # If no match, return a placeholder
