@@ -157,6 +157,7 @@ def csv_to_json(csv_file, output_file='sessions.json'):
             type_header = find_header(['session type', 'type', 'format', 'what is the format of your session?']) # Added specific question
             time_block_header = find_header(['time block', 'timeblock', 'block', 'session block', 'time'])
             location_header = find_header(['location', 'room', 'venue'])
+            tags_header = find_header(['tags', 'tag', 'keywords', 'keyword']) # Added tags header
             print("--- Finished Identifying Headers ---\n")
             # --- End Identifying Headers ---
 
@@ -179,6 +180,7 @@ def csv_to_json(csv_file, output_file='sessions.json'):
                 session_type_value = row.get(type_header, '').strip() if type_header else ''
                 time_block_value = row.get(time_block_header, '').strip() if time_block_header else ''
                 location = row.get(location_header, 'TBD').strip() if location_header else 'TBD'
+                tags_value = row.get(tags_header, '').strip() if tags_header else ''
                 # --- End Data Extraction ---
 
                 # Print raw extracted values for debugging
@@ -277,10 +279,24 @@ def csv_to_json(csv_file, output_file='sessions.json'):
                           print(f"  Warning: Could not extract block number (1, 2, or 3) from '{time_block_value}', setting to TBD.")
                 print(f"  Processed Time Block: {time_block_processed}")
 
-                # Generate Tags using the function defined above
-                # Pass the original (unprocessed) description for better keyword context
-                tags = generate_tags(title, description)
-                print(f"  Generated Tags: {tags}")
+                # Process tags from CSV or generate them
+                if tags_value:
+                    # Split by commas and cleanup
+                    tags = [tag.strip() for tag in tags_value.split(',')]
+                    # Remove any empty tags
+                    tags = [tag for tag in tags if tag]
+                    print(f"  Using tags from CSV: {tags}")
+                else:
+                    # Generate tags if none provided
+                    tags = generate_tags(title, description)
+                    print(f"  Generated Tags: {tags}")
+
+                # Add special event tag for keynotes, etc.
+                if "keynote" in title.lower() or "arrival" in title.lower() or "closing" in title.lower():
+                    if "Required" not in tags:
+                        tags.append("Required")
+                    if "Main Event" not in tags:
+                        tags.append("Main Event")
 
                 # --- Create final session dictionary ---
                 session = {

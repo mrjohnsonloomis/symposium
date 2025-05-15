@@ -12,6 +12,20 @@ import re
 
 def find_session_by_title(sessions, title):
     """Find a session in the sessions list by title (or partial title match)"""
+    # For special events like arrival, keynote, closing
+    if "arrival" in title.lower() or "keynote" in title.lower() or "closing" in title.lower():
+        # Create a special session object for these events
+        return {
+            "title": title,
+            "presenter": "",
+            "description": "All participants should attend this session.",
+            "strand": "",
+            "strandName": "",
+            "type": "type-keynote",
+            "typeName": "Keynote/Event",
+            "tags": ["Required"]
+        }
+        
     # Remove any presenter or custom notation from the title
     clean_title = re.sub(r'(.+?):\s*', '', title).strip()
     
@@ -65,9 +79,14 @@ def excel_to_schedule_json(excel_file, sessions_json_file, output_file='schedule
         for _, row in df.iterrows():
             time_slot = row['Time Slot']
             
-            # Extract time range from slot name, e.g., "Slot 1 (10:15-11:15)" -> "10:15-11:15"
-            time_range = re.search(r'\((.*?)\)', time_slot)
-            time_range = time_range.group(1) if time_range else time_slot
+            # Extract time range from slot name
+            # Check if it already is in a time format like "8:00-9:00"
+            if re.match(r'\d+:\d+-\d+:\d+', time_slot):
+                time_range = time_slot  # Already in the right format
+            else:
+                # For traditional format like "Slot 1 (10:15-11:15)" -> "10:15-11:15"
+                time_range = re.search(r'\((.*?)\)', time_slot)
+                time_range = time_range.group(1) if time_range else time_slot
             
             # Add time slot to list
             schedule["timeSlots"].append({

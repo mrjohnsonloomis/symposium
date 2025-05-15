@@ -18,8 +18,15 @@ def find_session_by_title(sessions, schedule_title):
     """
     Find a session by title, accounting for variations in formatting
     """
+    # Handle special events
+    if isinstance(schedule_title, str) and ("arrival" in schedule_title.lower() or 
+                                            "keynote" in schedule_title.lower() or 
+                                            "closing" in schedule_title.lower()):
+        # These don't need to be matched against regular sessions
+        return None
+        
     # Remove any presenter prefix (e.g., "Cotton: ")
-    clean_title = re.sub(r'(.+?):\s*', '', schedule_title).strip()
+    clean_title = re.sub(r'(.+?):\s*', '', schedule_title).strip() if isinstance(schedule_title, str) else ""
     normalized_schedule_title = normalize_title(clean_title)
     
     # First try exact match with normalized titles
@@ -104,6 +111,12 @@ def update_calendar_with_rooms():
             
             # Skip sessions that already have locations and aren't special cases
             if session.get('location') and not special_case:
+                continue
+                
+            # Check for special venues for keynote, arrival, etc.
+            if "keynote" in session_title.lower() or "arrival" in session_title.lower() or "closing" in session_title.lower():
+                session['location'] = "Hubbard Auditorium"
+                updated_count += 1
                 continue
                 
             # Direct lookup by title

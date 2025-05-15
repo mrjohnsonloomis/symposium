@@ -9,6 +9,21 @@ import re
 
 def find_session_by_title(sessions, title):
     """Find a session in the sessions list by title (or partial title match)"""
+    # For special events like arrival, keynote, closing
+    if "arrival" in title.lower() or "keynote" in title.lower() or "closing" in title.lower():
+        # Create a special session object for these events
+        return {
+            "title": title,
+            "presenter": "",
+            "description": "All participants should attend this session.",
+            "strand": "",
+            "strandName": "",
+            "type": "type-keynote",
+            "typeName": "Keynote/Event",
+            "tags": ["Required"]
+        }
+        
+    # Normal session matching logic
     # Remove any presenter or custom notation from the title
     clean_title = re.sub(r'(.+?):\s*', '', title).strip()
     
