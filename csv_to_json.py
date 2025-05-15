@@ -5,7 +5,7 @@ import sys
 import os
 import re # Import regular expressions for tag finding
 
-def generate_tags(title, description_text):
+def generate_tags(title, description_text): 
     """
     Analyzes title and description to generate relevant tags based on keywords.
 
