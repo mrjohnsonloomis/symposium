@@ -75,14 +75,16 @@
       "timeSlot": "Slot 1 (10:15-11:15)",
       "room": "Hubbard Auditorium",
       "sessionId": "",
-      "title": "Deeper Dive into \"Thinking with our Surroundings\" from The Extended Mind",
-      "presenter": "",
-      "description": "Session details not available.",
-      "strand": "",
-      "strandName": "",
-      "type": "",
-      "typeName": "",
-      "tags": []
+      "title": "Annie Murphy Paul Breakout Session: Deeper Dive into \"Thinking with our Surroundings\" from The Extended Mind",
+      "presenter": "Annie Murphy Paul - Hidden Brain Media",
+      "description": "Keynote speaker Annie Murphy Paul will dive deeper into her work The Extended Mind, offering more thoughts about the middle section of the book: Thinking with our Surroundings. Topics will include how the natural world and built environments influence our thinking, and how we can alter our spaces to think more effectively.",
+      "strand": "strand2",
+      "strandName": "2: Human-Centered Innovation",
+      "type": "type-presentation",
+      "typeName": "Presentation and Q&A",
+      "tags": [
+        "Place-Based Education"
+      ]
     },
     {
       "timeSlot": "Slot 1 (10:15-11:15)",
@@ -168,13 +170,16 @@
       "room": "Brush 203",
       "sessionId": "",
       "title": "Student Buy-In and \"Ungrading\" in the Humanities Classroom",
-      "presenter": "",
-      "description": "Session details not available.",
-      "strand": "",
-      "strandName": "",
-      "type": "",
-      "typeName": "",
-      "tags": []
+      "presenter": "Caitie Cotton - Loomis Chaffee",
+      "description": "A challenge posed by AI is how to grade given the concern that students are not submitting their own work. One way to combat this is by deemphasizing student grades and focusing students on their genuine learning. In this presentation, we will look at ways to first create student buy-in to class activities and assessments. Then, we will talk about how systems of \"ungrading\" can further emphasize student learning and decrease student interest in AI tools. Specific approaches to ungrading will be discussed.",
+      "strand": "strand2",
+      "strandName": "2: Human-Centered Innovation",
+      "type": "type-presentation",
+      "typeName": "Presentation and Q&A",
+      "tags": [
+        "Provocative Ideas",
+        "Humanities"
+      ]
     },
     {
       "timeSlot": "Slot 1 (10:15-11:15)",
@@ -182,7 +187,7 @@
       "sessionId": "",
       "title": "The Value of Struggle: Preserving Meaningful Learning in an AI Age",
       "presenter": "Marta Napiorkowska - St. Luke&#x27;s School",
-      "description": "I present my recent article, &quot;The Value of Struggle&quot; (https://edu-ai.org/the-value-of-struggle-preserving-meaningful-learning-in-an-ai-age/), which includes a case study based on a small experiment that I ran in my class, &quot;Science in Literature&quot;, and the student-reported experiences of completing a difficult prompt on their own versus using ChatGPT to do so. Student testimonies align with recent research in the neuroscience of happiness, meaning and purpose. Since my article, I have also been writing a new related piece on the role that the philosophy of &quot;human dignity&quot; and Aristotelian ethics can play in articulating how best to acquire AI fluency. Sophisticated and well-articulated framing around AI-use can both earn greater buy-in from both teachers and students but also foster new answers to questions about the value of being human.",
+      "description": "I present my recent article, \"The Value of Struggle\" (https://edu-ai.org/the-value-of-struggle-preserving-meaningful-learning-in-an-ai-age/), which includes a case study based on a small experiment that I ran in my class, \"Science in Literature\", and the student-reported experiences of completing a difficult prompt on their own versus using ChatGPT to do so. Student testimonies align with recent research in the neuroscience of happiness, meaning and purpose. Since my article, I have also been writing a new related piece on the role that the philosophy of \"human dignity\" and Aristotelian ethics can play in articulating how best to acquire AI fluency. Sophisticated and well-articulated framing around AI-use can both earn greater buy-in from both teachers and students but also foster new answers to questions about the value of being human.",
       "strand": "strand1",
       "strandName": "1: AI in the Classroom",
       "type": "type-presentation",
@@ -324,13 +329,16 @@
       "room": "Brush 203",
       "sessionId": "",
       "title": "Student Buy-In and \"Ungrading\" in the Humanities Classroom",
-      "presenter": "",
-      "description": "Session details not available.",
-      "strand": "",
-      "strandName": "",
-      "type": "",
-      "typeName": "",
-      "tags": []
+      "presenter": "Caitie Cotton - Loomis Chaffee",
+      "description": "A challenge posed by AI is how to grade given the concern that students are not submitting their own work. One way to combat this is by deemphasizing student grades and focusing students on their genuine learning. In this presentation, we will look at ways to first create student buy-in to class activities and assessments. Then, we will talk about how systems of \"ungrading\" can further emphasize student learning and decrease student interest in AI tools. Specific approaches to ungrading will be discussed.",
+      "strand": "strand2",
+      "strandName": "2: Human-Centered Innovation",
+      "type": "type-presentation",
+      "typeName": "Presentation and Q&A",
+      "tags": [
+        "Provocative Ideas",
+        "Humanities"
+      ]
     },
     {
       "timeSlot": "Slot 2 (11:30-12:30)",
@@ -338,7 +346,7 @@
       "sessionId": "",
       "title": "The Value of Struggle: Preserving Meaningful Learning in an AI Age",
       "presenter": "Marta Napiorkowska - St. Luke&#x27;s School",
-      "description": "I present my recent article, &quot;The Value of Struggle&quot; (https://edu-ai.org/the-value-of-struggle-preserving-meaningful-learning-in-an-ai-age/), which includes a case study based on a small experiment that I ran in my class, &quot;Science in Literature&quot;, and the student-reported experiences of completing a difficult prompt on their own versus using ChatGPT to do so. Student testimonies align with recent research in the neuroscience of happiness, meaning and purpose. Since my article, I have also been writing a new related piece on the role that the philosophy of &quot;human dignity&quot; and Aristotelian ethics can play in articulating how best to acquire AI fluency. Sophisticated and well-articulated framing around AI-use can both earn greater buy-in from both teachers and students but also foster new answers to questions about the value of being human.",
+      "description": "I present my recent article, \"The Value of Struggle\" (https://edu-ai.org/the-value-of-struggle-preserving-meaningful-learning-in-an-ai-age/), which includes a case study based on a small experiment that I ran in my class, \"Science in Literature\", and the student-reported experiences of completing a difficult prompt on their own versus using ChatGPT to do so. Student testimonies align with recent research in the neuroscience of happiness, meaning and purpose. Since my article, I have also been writing a new related piece on the role that the philosophy of \"human dignity\" and Aristotelian ethics can play in articulating how best to acquire AI fluency. Sophisticated and well-articulated framing around AI-use can both earn greater buy-in from both teachers and students but also foster new answers to questions about the value of being human.",
       "strand": "strand1",
       "strandName": "1: AI in the Classroom",
       "type": "type-presentation",

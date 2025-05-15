@@ -7,7 +7,8 @@ with open('sessions.json', 'r') as f:
 # Update session information
 for session in sessions:
     title = session.get('title', '')
-    if '&quot;Ungrading&quot;' in title:
+    # Support both quoted and HTML-entity versions for backward compatibility
+    if '"Ungrading"' in title or '&quot;Ungrading&quot;' in title:
         session['timeBlock'] = 'Slot 1 (10:15-11:15) and Slot 2 (11:30-12:30)'
         session['location'] = 'Room G'
         print(f"Updated session: {title}")

@@ -5,17 +5,18 @@ import sys
 import os
 import re # Import regular expressions for tag finding
 
-def generate_tags(title, description_text): 
+def html_encode_but_preserve_quotes(text):
     """
-    Analyzes title and description to generate relevant tags based on keywords.
-
-    Parameters:
-    - title: Session title string
-    - description_text: Plain text session description string
-
-    Returns:
-    - A list of identified tags (strings), sorted alphabetically.
+    HTML escapes text but converts quote HTML entities back to actual quotes
+    for better display on the website.
     """
+    if not text:
+        return ""
+    escaped = html.escape(str(text))
+    # Convert HTML entities for quotes back to actual quote characters
+    return escaped.replace("&quot;", "\"").replace("&#x27;", "'")
+
+# Later in the file, use this function for all fields that need HTML escaping:
     tags = set()
     # Combine title and description, convert to lowercase for case-insensitive matching
     full_text = (title + " " + description_text).lower()
@@ -299,16 +300,33 @@ def csv_to_json(csv_file, output_file='sessions.json'):
                         tags.append("Main Event")
 
                 # --- Create final session dictionary ---
+                # Process Title - Escape HTML but preserve quotes
+                title_escaped = html.escape(title)
+                # Convert &quot; back to " for display purposes
+                title_escaped = title_escaped.replace("&quot;", "\"")
+                
+                # Process presenter - Escape HTML but preserve quotes
+                presenter_escaped = html.escape(presenter)
+                presenter_escaped = presenter_escaped.replace("&quot;", "\"")
+                
+                # Process description - Escape HTML but preserve quotes
+                description_escaped = description_html
+                description_escaped = description_escaped.replace("&quot;", "\"")
+                
+                # Process preview - Escape HTML but preserve quotes
+                preview_escaped = html.escape(preview)
+                preview_escaped = preview_escaped.replace("&quot;", "\"")
+                
                 session = {
                     "strand": strand,
                     "strandName": strand_name,
                     "type": type_class,
                     "typeName": type_name,
-                    "title": html.escape(title), # Escape title just in case of stray HTML chars
-                    "presenter": html.escape(presenter),
+                    "title": title_escaped, # Escaped but with quotes preserved
+                    "presenter": presenter_escaped,
                     "email": html.escape(email), # Should be safe, but escape anyway
-                    "preview": html.escape(preview), # Escape preview text
-                    "description": description_html, # Already HTML formatted and escaped
+                    "preview": preview_escaped, # Escaped but with quotes preserved
+                    "description": description_escaped, # Escaped but with quotes preserved
                     "timeBlock": time_block_processed, # Use processed time block number
                     "location": html.escape(location),
                     "tags": tags # Add the generated tags list
