@@ -229,6 +229,22 @@
       ]
     },
     {
+      "timeSlot": "Slot 1 (10:15-11:15)",
+      "room": "Writing Center",
+      "sessionId": "",
+      "title": "Overcoming students\u2019 initial reactions to AI through text-based experiments",
+      "presenter": "Kyle Conrau-Lewis - Taft School",
+      "description": "AI inspires awe in students\u2014and this first reaction presents one of the greatest challenges for writing instructors of all disciplines. Students are often mesmerized by the instantaneous display of sophisticated vocabulary, rhetorical fluency and encyclopedic knowledge (notwithstanding hallucinations). Programs like ChatGPT can distill complex ideas in syntactically smooth prose while students at all levels, still honing their compositional skills and grappling with new texts and concepts, naturally produce rough ideas with cumbersome phrasing. Comparing AI output with their own drafts, many students express humility and even despondence, with variations of \u201cI could never write anything like that.\u201d Our current educational crisis, therefore, is not simply a matter of combating academic plagiarism but, more fundamentally, of uplifting students\u2019 self-perceptions. In my own classes (Grade 12 English Literature), I have used AI writing to help my students become more critical readers of AI, to see through its well-constructed prose and to question the core argument and its use of evidence. Text-based exercises (for example, role-playing, script-doctoring, flipped storytelling) can reveal unpredictable gaps in an LLM\u2019s proficiency at textual reasoning. Students quickly learn to detect uses of textual evidence that are vague,Ned Heckman, Maureen Russo-Rodriguez, Maureen Russo-Rodriguez, Maureen Russo-Rodriguez, Maureen Russo-Rodriguez, Maureen Russo-Rodriguez, or rote. By positioning students as reviewers and arbiters of AI-generated language, we can help students to recover confidence in their own competencies and analytical thinking. To reframe things more optimistically, the uneven abilities of AI present new opportunities for students to practice the art of close reading and reassert their own expertise.",
+      "strand": "strand2",
+      "strandName": "2: Human-Centered Innovation",
+      "type": "type-presentation",
+      "typeName": "Presentation and Q&A",
+      "tags": [
+        "Humanities",
+        "Curriculum Design"
+      ]
+    },
+    {
       "timeSlot": "Slot 2 (11:30-12:30)",
       "room": "Brush 201",
       "sessionId": "",
@@ -328,16 +344,16 @@
       "timeSlot": "Slot 2 (11:30-12:30)",
       "room": "Brush 203",
       "sessionId": "",
-      "title": "Student Buy-In and \"Ungrading\" in the Humanities Classroom",
-      "presenter": "Richard Scullin - Loomis Chaffee",
-      "description": "A challenge posed by AI is how to grade given the concern that students are not submitting their own work. One way to combat this is by deemphasizing student grades and focusing students on their genuine learning. In this presentation, we will look at ways to first create student buy-in to class activities and assessments. Then, we will talk about how systems of \"ungrading\" can further emphasize student learning and decrease student interest in AI tools. Specific approaches to ungrading will be discussed.",
+      "title": "Place-Based Education in the Era of AI",
+      "presenter": "Marley Matlack - Loomis Chaffee, Sarah Griggs - Loomis Chaffee",
+      "description": "Place-based education invites students to engage deeply with the cultural, ecological, and historical dimensions of their local surroundings. At Loomis Chaffee, this approach has become a powerful framework across classroom learning, extracurricular programs, and faculty professional development. In an era when education is increasingly shaped by digital tools, our work explores the seemingly unexpected synergy between the natural and artificial worlds. In this session, we\ufffdll share how Loomis is using place-based education to ground student learning in real-world contexts, while also demonstrating how AI tools can support educators in designing lessons and making this pedagogical approach more accessible and manageable. Participants will explore examples from across disciplines and begin adapting their own lessons through a place-based lens. As part of this process, attendees will learn about and have the opportunity to use Alvord\ufffd our place-based GPT developed collaboratively by Loomis Chaffee students and faculty.",
       "strand": "strand2",
       "strandName": "2: Human-Centered Innovation",
       "type": "type-presentation",
       "typeName": "Presentation and Q&A",
       "tags": [
-        "Provocative Ideas",
-        "Humanities"
+        "Place-Based Education",
+        "AI Skills"
       ]
     },
     {
@@ -531,16 +547,16 @@
       "timeSlot": "Slot 3 (1:30-2:30)",
       "room": "Kravis Center",
       "sessionId": "",
-      "title": "Place-Based Education in the Era of AI",
-      "presenter": "Marley Matlack - Loomis Chaffee, Sarah Griggs - Loomis Chaffee",
-      "description": "Place-based education invites students to engage deeply with the cultural, ecological, and historical dimensions of their local surroundings. At Loomis Chaffee, this approach has become a powerful framework across classroom learning, extracurricular programs, and faculty professional development. In an era when education is increasingly shaped by digital tools, our work explores the seemingly unexpected synergy between the natural and artificial worlds. In this session, we\ufffdll share how Loomis is using place-based education to ground student learning in real-world contexts, while also demonstrating how AI tools can support educators in designing lessons and making this pedagogical approach more accessible and manageable. Participants will explore examples from across disciplines and begin adapting their own lessons through a place-based lens. As part of this process, attendees will learn about and have the opportunity to use Alvord\ufffd our place-based GPT developed collaboratively by Loomis Chaffee students and faculty.",
+      "title": "Student Buy-In and \"Ungrading\" in the Humanities Classroom",
+      "presenter": "Richard Scullin - Loomis Chaffee",
+      "description": "A challenge posed by AI is how to grade given the concern that students are not submitting their own work. One way to combat this is by deemphasizing student grades and focusing students on their genuine learning. In this presentation, we will look at ways to first create student buy-in to class activities and assessments. Then, we will talk about how systems of \"ungrading\" can further emphasize student learning and decrease student interest in AI tools. Specific approaches to ungrading will be discussed.",
       "strand": "strand2",
       "strandName": "2: Human-Centered Innovation",
       "type": "type-presentation",
       "typeName": "Presentation and Q&A",
       "tags": [
-        "Place-Based Education",
-        "AI Skills"
+        "Provocative Ideas",
+        "Humanities"
       ]
     },
     {
