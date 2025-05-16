@@ -23,6 +23,10 @@ echo "Step 5: Updating sessions with schedule information..."
 python3 update_sessions.py
 
 echo ""
+echo "Step 6: Running comprehensive fixes for consistency..."
+python3 fix_session_info_comprehensive.py
+
+echo ""
 echo "=== Update process complete! ==="
 echo "You can now view the updated data in:"
 echo "- index.html (Session Listing)"
