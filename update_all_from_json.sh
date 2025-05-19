@@ -20,4 +20,8 @@ echo "Step 4: Updating calendar.html..."
 python3 update_calendar_from_json.py
 
 echo ""
+echo "Step 5: Creating schedule.json for backward compatibility..."
+python3 create_schedule_json.py
+
+echo ""
 echo "=== All updates complete! ==="
