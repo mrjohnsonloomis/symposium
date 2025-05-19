@@ -277,6 +277,36 @@
             color: white;
         }
 
+        /* Styles for the session cards in Time View and Compact View */
+        .session-card {
+            background-color: white;
+            border: 1px solid #eee; /* Consistent with other borders */
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 1rem; /* Space between cards */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: relative; /* For absolutely positioned child elements like strand-indicator and session-type */
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        }
+
+        .session-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 2; /* Ensure hovered card is on top of others */
+        }
+
+        /* Ensure session-room, session-title, session-presenter, session-type have some base styling if not already fully covered */
+        .session-card .session-room {
+            font-size: 0.8rem;
+            color: var(--lc-gray);
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+        /* .session-title, .session-presenter, .session-type styles are already defined and should work within .session-card */
+        
+
         /* View toggle */
         .view-toggle {
             margin-bottom: 1rem;
@@ -312,6 +342,7 @@
 
         .compact-view .session-title {
             -webkit-line-clamp: 1;
+            line-clamp: 1; /* Standard property */
         }
 
         .compact-view .session-presenter {
@@ -382,206 +413,364 @@
 <script>
         document.addEventListener('DOMContentLoaded', function() {
             // DOM elements
-            const scheduleTable = document.getElementById('scheduleTable');
+            // const scheduleTable = document.getElementById('scheduleTable'); // REMOVE THIS LINE
             const loading = document.getElementById('loading');
             const sessionModal = document.getElementById('sessionModal');
             const modalContent = document.getElementById('modalContent');
             const viewToggleButtons = document.querySelectorAll('.btn-view');
             const scheduleContainer = document.querySelector('.schedule-container');
 
-            // Store schedule data
-            let scheduleData = null;
+            // Store schedule data globally for access by render functions and modal
+            window.masterScheduleData = [];
+            window.processedSessionsByTimeSlot = {};
+            window.sortedTimeSlotNames = [];
 
             // Load schedule data
             async function loadScheduleData() {
                 try {
-                    const response = await fetch('sessions.json'); // Changed to fetch sessions.json
+                    if (loading) loading.style.display = 'flex'; // Show loading indicator
+                    if (scheduleContainer) scheduleContainer.innerHTML = ''; // Clear previous content
+
+                    const response = await fetch('sessions.json'); 
                     if (!response.ok) {
-                        throw new Error('Failed to load sessions data');
+                        throw new Error(`Failed to load sessions data: ${response.statusText}`);
                     }
                     
-                    const sessionsData = await response.json(); // Data from sessions.json
-                    
-                    // Transform sessionsData into the structure expected by renderScheduleTable
-                    const timeSlots = new Set();
-                    const rooms = new Set();
-                    sessionsData.forEach(session => {
-                        if (session.time_slot) timeSlots.add(session.time_slot);
-                        if (session.room) rooms.add(session.room);
+                    const allSessions = await response.json(); 
+                    window.masterScheduleData = allSessions; // Store original data
+
+                    const sessionsByTimeSlot = {};
+
+                    allSessions.forEach(session => {
+                        if (session.isPlaceholder) return; // Skip placeholder sessions
+
+                        if (session.isSpecialEvent && session.timeBlock) {
+                            const timeSlot = session.timeBlock;
+                            if (!sessionsByTimeSlot[timeSlot]) {
+                                sessionsByTimeSlot[timeSlot] = [];
+                            }
+                            sessionsByTimeSlot[timeSlot].push({
+                                ...session,
+                                specificLocation: session.location || 'N/A',
+                                specificTimeBlock: session.timeBlock
+                            });
+                        } else if (session.occurrences && session.occurrences.length > 0) {
+                            session.occurrences.forEach(occ => {
+                                if (occ.timeBlock && occ.location) { // Ensure occurrence has time and location
+                                    const timeSlot = occ.timeBlock;
+                                    if (!sessionsByTimeSlot[timeSlot]) {
+                                        sessionsByTimeSlot[timeSlot] = [];
+                                    }
+                                    sessionsByTimeSlot[timeSlot].push({
+                                        ...session, 
+                                        specificLocation: occ.location,
+                                        specificTimeBlock: occ.timeBlock,
+                                        originalOccurrences: session.occurrences, // Keep original occurrences for modal if needed from this context
+                                        occurrences: undefined // Avoid confusion with parent's occurrences array in this flattened object
+                                    });
+                                }
+                            });
+                        }
                     });
 
-                    scheduleData = {
-                        timeSlots: Array.from(timeSlots).sort().map(ts => ({ name: ts, timeRange: ts })),
-                        rooms: Array.from(rooms).sort(),
-                        sessions: sessionsData.map(s => ({
-                            id: s.id,
-                            title: s.title,
-                            presenter: s.presenter,
-                            strand: s.strand, // e.g., "strand1"
-                            type: s.type,     // e.g., "type-workshop"
-                            timeSlot: s.time_slot, // Ensure this matches the property name in sessions.json
-                            room: s.room,         // Ensure this matches the property name in sessions.json
-                            tags: s.tags || [],
-                            description: s.description || '',
-                            strandName: s.strandName || '', // e.g., "AI in the Classroom"
-                            typeName: s.typeName || '',     // e.g., "Workshop"
-                            isSpecialEvent: s.isSpecialEvent || false
-                        }))
-                    };
+                    const sortedTimeSlots = Object.keys(sessionsByTimeSlot).sort((a, b) => {
+                        const parseTime = (timeStr) => {
+                            // timeStr is expected to be like "HH:MM - HH:MM"
+                            if (!timeStr || typeof timeStr !== 'string' || !timeStr.includes(' - ') || !timeStr.includes(':')) {
+                                console.warn(`Could not parse time string (invalid format): ${timeStr}`);
+                                return Number.MAX_SAFE_INTEGER; // Sort unparseable times last
+                            }
+                            
+                            const startTimeStr = timeStr.split(' - ')[0]; // "HH:MM"
+                            const timeComponents = startTimeStr.split(':');
+
+                            if (timeComponents.length !== 2) {
+                                console.warn(`Could not parse time string (HH:MM format error): ${startTimeStr}`);
+                                return Number.MAX_SAFE_INTEGER;
+                            }
+
+                            let hours = parseInt(timeComponents[0], 10);
+                            let minutes = parseInt(timeComponents[1], 10);
+
+                            if (isNaN(hours) || isNaN(minutes)) {
+                                console.warn(`Could not parse time string (NaN hours/minutes): ${timeStr}`);
+                                return Number.MAX_SAFE_INTEGER;
+                            }
+
+                            // Heuristic for PM conversion:
+                            // If the hour is 1-7 (inclusive), it's likely 1 PM to 7 PM. Add 12.
+                            // This assumes conference times like 8 AM - 12 PM, then 1 PM - 7 PM.
+                            // Hours 8, 9, 10, 11 are treated as AM. Hour 12 is treated as 12 PM.
+                            if (hours >= 1 && hours <= 7) {
+                                hours += 12;
+                            }
+                            // This logic correctly handles:
+                            // "8:00" (AM) -> 8
+                            // "11:00" (AM) -> 11
+                            // "12:00" (PM) -> 12
+                            // "1:30" (PM) -> 1 + 12 = 13
+                            // "5:00" (PM) -> 5 + 12 = 17
+
+                            return hours * 60 + minutes;
+                        };
+                        return parseTime(a) - parseTime(b);
+                    });
                     
-                    renderScheduleTable();
-                    loading.style.display = 'none';
-                    // Make sure the schedule container is visible if it was hidden
-                    if (scheduleContainer) scheduleContainer.style.display = ''; 
+                    window.processedSessionsByTimeSlot = sessionsByTimeSlot;
+                    window.sortedTimeSlotNames = sortedTimeSlots;
+                    
+                    renderTimeView(); // Call render for the default "Time View"
+                    if (scheduleContainer) scheduleContainer.style.display = ''; // Ensure container is visible
                 } catch (error) {
                     console.error('Error loading schedule data:', error);
-                    loading.innerHTML = '<div class="alert alert-danger">Failed to load schedule data. Please try again later.</div>';
+                    if (loading) loading.innerHTML = `<div class="alert alert-danger">Failed to load schedule data. ${error.message}. Please try again later.</div>`;
+                    if (scheduleContainer && !scheduleContainer.hasChildNodes()) { // Ensure some feedback if container is empty
+                        scheduleContainer.innerHTML = '<p class=\"text-danger text-center\">Could not load schedule. Please check the data source or try refreshing.</p>';
+                    }
+                } finally {
+                    if (loading) loading.style.display = 'none'; 
                 }
             }
 
-            // Render schedule table
-            function renderScheduleTable() {
-                if (!scheduleData || !scheduleTable) { // Added null check for scheduleTable
-                    console.error("Schedule data or table element not available for rendering.");
+            // Render schedule table (Time View) // RENAME THIS COMMENT IF NEEDED or rely on function name
+            // function renderScheduleTable() { // REMOVE THIS ENTIRE FUNCTION
+            //    ...
+            // } // END REMOVAL OF renderScheduleTable
+
+            function renderTimeView() {
+                if (!window.processedSessionsByTimeSlot || !window.sortedTimeSlotNames || !scheduleContainer) {
+                    console.error("Schedule data not available for Time View rendering.");
+                    if (scheduleContainer) scheduleContainer.innerHTML = '<p class=\"text-danger text-center\">Error: Could not render schedule (Time View).</p>';
                     return;
                 }
 
-                const { timeSlots, rooms, sessions } = scheduleData;
-                
-                // Create table header
-                let tableHTML = '<thead><tr><th class="time-column">Time</th>';
-                
-                // Add room headers
-                rooms.forEach(room => {
-                    tableHTML += `<th>${room}</th>`;
-                });
-                
-                tableHTML += '</tr></thead><tbody>';
-                
-                // Create rows for each time slot
-                timeSlots.forEach(slot => {
-                    tableHTML += `<tr><td class="time-column">${slot.timeRange}</td>`;
-                    
-                    // Add cells for each room
-                    rooms.forEach(room => {
-                        // Find session matching current time slot and room
-                        const session = sessions.find(s => s.timeSlot === slot.name && s.room === room);
-                        
-                        if (session) {
-                            // Ensure session.strand, session.title, and session.presenter are defined
-                            const strandClass = session.strand ? session.strand : 'default-strand';
-                            const title = session.title ? session.title : 'Untitled Session';
-                            const presenter = session.presenter ? session.presenter : 'N/A';
-                            // Make sure to handle special events if they have a different structure or no strand
-                            const isSpecial = session.isSpecialEvent || false;
-                            const cellClass = isSpecial ? 'special-event' : strandClass;
+                scheduleContainer.innerHTML = ''; 
+                scheduleContainer.classList.add('time-view');
+                scheduleContainer.classList.remove('compact-view');
 
-                            tableHTML += `
-                                <td class="session-cell ${cellClass}" 
-                                    onclick="openSessionModal('${encodeURIComponent(JSON.stringify(session))}')">
-                                    <div class="strand-indicator"></div>
-                                    <div class="session-title">${title}</div>
-                                    <div class="session-presenter">${presenter}</div>
-                                    ${session.type ? `<div class="session-type ${session.type.toLowerCase().replace(/\s+/g, '-')}">${session.typeName || session.type}</div>` : ''}
-                                </td>
-                            `;
-                        } else {
-                            tableHTML += '<td></td>';
-                        }
-                    });
-                    
-                    tableHTML += '</tr>';
-                });
-                
-                tableHTML += '</tbody>';
-                scheduleTable.innerHTML = tableHTML;
-            }
+                window.sortedTimeSlotNames.forEach(timeSlot => {
+                    const sessionsInTimeSlot = window.processedSessionsByTimeSlot[timeSlot];
 
-            // Toggle between different views
-            viewToggleButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Update active button
-                    viewToggleButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Update view
-                    const viewType = this.getAttribute('data-view');
-                    if (viewType === 'compact') {
-                        scheduleContainer.classList.add('compact-view');
-                    } else {
-                        scheduleContainer.classList.remove('compact-view');
-                    }
-                });
-            });
+                    const timeBlockDiv = document.createElement('div');
+                    timeBlockDiv.className = 'time-block';
 
-            // Open session modal
-            window.openSessionModal = function(sessionJson) {
-                try {
-                    const session = JSON.parse(decodeURIComponent(sessionJson));
-                    
-                    // Create tags HTML
-                    let tagsHTML = '';
-                    if (session.tags && session.tags.length > 0) {
-                        tagsHTML = '<div class="mt-3"><strong>Tags:</strong> ';
-                        session.tags.forEach(tag => {
-                            tagsHTML += `<span class="tag">${tag}</span>`;
+                    const timeHeader = document.createElement('h2');
+                    timeHeader.textContent = timeSlot;
+                    timeBlockDiv.appendChild(timeHeader);
+
+                    const sessionsContainerDiv = document.createElement('div');
+                    sessionsContainerDiv.className = 'sessions-container';
+
+                    if (sessionsInTimeSlot && sessionsInTimeSlot.length > 0) {
+                        sessionsInTimeSlot.sort((a, b) => {
+                            const locA = a.specificLocation || '';
+                            const locB = b.specificLocation || '';
+                            if (locA < locB) return -1;
+                            if (locA > locB) return 1;
+                            const titleA = a.title || '';
+                            const titleB = b.title || '';
+                            if (titleA < titleB) return -1;
+                            if (titleA > titleB) return 1;
+                            return 0;
                         });
-                        tagsHTML += '</div>';
+
+                        sessionsInTimeSlot.forEach(sessionOccurrence => {
+                            const card = document.createElement('div');
+                            const strandName = sessionOccurrence.strand || (sessionOccurrence.isSpecialEvent ? 'special' : '');
+                            const strandClass = strandName.toLowerCase().replace(/\s+/g, '');
+                            card.className = `session-card ${strandClass}`;
+                            card.dataset.strand = strandClass;
+                            card.dataset.type = (sessionOccurrence.type || 'session').toLowerCase().replace(/[^a-z0-9]/g, '-');
+                            card.dataset.sessionId = sessionOccurrence.id;
+
+                            if (!sessionOccurrence.isSpecialEvent && strandName && strandName !== 'special') {
+                                const strandIndicator = document.createElement('div');
+                                strandIndicator.className = 'strand-indicator';
+                                card.appendChild(strandIndicator);
+                            }
+
+                            const roomDiv = document.createElement('div');
+                            roomDiv.className = 'session-room';
+                            roomDiv.textContent = sessionOccurrence.specificLocation || (sessionOccurrence.isSpecialEvent ? '' : 'N/A');
+                            card.appendChild(roomDiv);
+
+                            const titleDiv = document.createElement('div');
+                            titleDiv.className = 'session-title';
+                            titleDiv.textContent = sessionOccurrence.title || 'Untitled Session';
+                            card.appendChild(titleDiv);
+
+                            if (!sessionOccurrence.isSpecialEvent) {
+                                const presenterName = sessionOccurrence.presenter || (sessionOccurrence.organization || '');
+                                if (presenterName) {
+                                    const presenterDiv = document.createElement('div');
+                                    presenterDiv.className = 'session-presenter';
+                                    presenterDiv.textContent = presenterName;
+                                    card.appendChild(presenterDiv);
+                                }
+
+                                const typeName = sessionOccurrence.typeName || sessionOccurrence.type || 'Session';
+                                const typeDiv = document.createElement('div');
+                                const typeClass = typeName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                                typeDiv.className = `session-type type-${typeClass}`;
+                                typeDiv.textContent = typeName;
+                                card.appendChild(typeDiv);
+                            }
+                            
+                            card.addEventListener('click', () => openSessionModal(sessionOccurrence.id));
+                            sessionsContainerDiv.appendChild(card);
+                        });
+                    }
+                    timeBlockDiv.appendChild(sessionsContainerDiv);
+                    scheduleContainer.appendChild(timeBlockDiv);
+                });
+            }
+
+            function renderCompactView() {
+                if (!window.masterScheduleData || !scheduleContainer) {
+                    console.error("Original session data not available for Compact View rendering.");
+                    if (scheduleContainer) scheduleContainer.innerHTML = '<p class=\"text-danger text-center\">Error: Could not render schedule (Compact View).</p>';
+                    return;
+                }
+
+                scheduleContainer.innerHTML = '';
+                scheduleContainer.classList.add('compact-view');
+                scheduleContainer.classList.remove('time-view');
+
+                const sortedSessions = [...window.masterScheduleData].filter(s => !s.isPlaceholder).sort((a, b) => {
+                    const titleA = a.title || '';
+                    const titleB = b.title || '';
+                    if (titleA < titleB) return -1;
+                    if (titleA > titleB) return 1;
+                    return 0;
+                });
+
+                sortedSessions.forEach(session => {
+                    const card = document.createElement('div');
+                    const strandName = session.strand || (session.isSpecialEvent ? 'special' : '');
+                    const strandClass = strandName.toLowerCase().replace(/\s+/g, '');
+                    card.className = `session-card ${strandClass}`; // Use session-card for styling
+                    card.dataset.strand = strandClass;
+                    card.dataset.type = (session.type || 'session').toLowerCase().replace(/[^a-z0-9]/g, '-');
+                    card.dataset.sessionId = session.id;
+
+                    if (!session.isSpecialEvent && strandName && strandName !== 'special') {
+                        const strandIndicator = document.createElement('div');
+                        strandIndicator.className = 'strand-indicator';
+                        card.appendChild(strandIndicator); 
                     }
 
-                    // Build modal content
-                    const content = `
-                        <h3 class="header-red">${session.title}</h3>
-                        <h5>${session.presenter}</h5>
-                        <div class="mt-3 mb-3">
-                            <span class="badge ${session.strand === 'strand1' ? 'bg-info' : session.strand === 'strand2' ? 'bg-danger' : 'bg-secondary'}">
-                                ${session.strandName}
-                            </span>
-                            <span class="badge ${session.type === 'type-workshop' ? 'bg-primary' : session.type === 'type-presentation' ? 'bg-warning text-dark' : 'bg-success'}">
-                                ${session.typeName}
-                            </span>
-                            <span class="badge bg-secondary">
-                                ${session.timeSlot}
-                            </span>
-                            <span class="badge bg-light text-dark">
-                                ${session.room}
-                            </span>
-                        </div>
-                        <div class="session-description">
-                            ${session.description.replace(/\n/g, '<br>')}
-                        </div>
-                        ${tagsHTML}
-                    `;
-                    
-                    modalContent.innerHTML = content;
-                    sessionModal.style.display = 'flex';
-                    
-                    // Add event listener to close when clicking outside the modal
-                    sessionModal.addEventListener('click', function(event) {
-                        if (event.target === sessionModal) {
-                            closeSessionModal();
-                        }
-                    });
-                    
-                } catch (error) {
-                    console.error('Error opening session modal:', error);
-                }
-            };
+                    const titleDiv = document.createElement('div');
+                    titleDiv.className = 'session-title';
+                    titleDiv.textContent = session.title || 'Untitled Session';
+                    card.appendChild(titleDiv);
 
-            // Close session modal
-            window.closeSessionModal = function() {
-                sessionModal.style.display = 'none';
-            };
-
-            // Initialize
-            // Check if scheduleTable exists before calling loadScheduleData
-            if (scheduleTable) {
-                loadScheduleData();
-            } else {
-                // If scheduleTable is not on this page, hide loading and do nothing further for schedule
-                if(loading) loading.style.display = 'none';
-                // console.log("Schedule table not found on this page, skipping schedule rendering.");
+                    const presenterName = session.presenter || (session.organization || '');
+                    if (presenterName) { 
+                        const presenterDiv = document.createElement('div');
+                        presenterDiv.className = 'session-presenter';
+                        presenterDiv.textContent = presenterName;
+                        card.appendChild(presenterDiv); // Will be hidden by CSS in compact view
+                    }
+                    
+                    const occurrencesContainer = document.createElement('div');
+                    let occurrencesHTML = '';
+                    if (session.isSpecialEvent && session.timeBlock && session.location) {
+                        occurrencesHTML = `<div class="session-occurrence-compact"><strong>When:</strong> ${session.timeBlock} | <strong>Where:</strong> ${session.location}</div>`;
+                    } else if (session.occurrences && session.occurrences.length > 0) {
+                        session.occurrences.forEach(occ => {
+                            occurrencesHTML += `<div class="session-occurrence-compact"><strong>When:</strong> ${occ.timeBlock} | <strong>Where:</strong> ${occ.location}</div>`;
+                        });
+                    } else if (!session.isSpecialEvent) {
+                        occurrencesHTML = `<div class="session-occurrence-compact"><em>Time and location not specified.</em></div>`;
+                    }
+                    occurrencesContainer.innerHTML = occurrencesHTML;
+                    card.appendChild(occurrencesContainer);
+                    
+                    card.addEventListener('click', () => openSessionModal(session.id));
+                    scheduleContainer.appendChild(card);
+                });
             }
+
+            function openSessionModal(sessionId) {
+                if (!window.masterScheduleData || !sessionModal || !modalContent) return;
+                
+                // Ensure sessionId is treated as a string if IDs in JSON are strings, or number if numbers.
+                // Assuming IDs in sessions.json are numbers or can be coerced. If they are strings, use String(s.id) === String(sessionId)
+                const session = window.masterScheduleData.find(s => String(s.id) === String(sessionId));
+
+                if (!session) {
+                    modalContent.innerHTML = '<p>Session details not found.</p>';
+                    if (sessionModal) sessionModal.style.display = 'flex';
+                    return;
+                }
+
+                let occurrencesHTML = '';
+                if (session.isSpecialEvent && session.timeBlock && session.location) {
+                     occurrencesHTML = `
+                        <p><strong>Time:</strong> ${session.timeBlock}</p>
+                        <p><strong>Location:</strong> ${session.location}</p>`;
+                } else if (session.occurrences && session.occurrences.length > 0) {
+                    occurrencesHTML = session.occurrences.map(occ => `
+                        <p><strong>Time:</strong> ${occ.timeBlock} | <strong>Location:</strong> ${occ.location}</p>
+                    `).join('');
+                } else {
+                    occurrencesHTML = '<p><em>Specific times and locations not available.</em></p>';
+                }
+
+                const presenterName = session.presenter || (session.organization || 'N/A');
+                const contactEmailVal = session.contactEmail; // Assuming it might be null or "NaN" as string
+                const contactEmailHTML = (contactEmailVal && contactEmailVal !== "N/A" && contactEmailVal !== "NaN") 
+                    ? `<p><strong>Contact:</strong> <a href="mailto:${contactEmailVal}">${contactEmailVal}</a></p>` 
+                    : '';
+                const description = session.description || 'No description available.';
+                const typeName = session.typeName || session.type || 'Session';
+                const strandDisplay = session.strand || (session.isSpecialEvent ? 'Special Event' : 'N/A');
+
+                modalContent.innerHTML = `
+                    <h3>${session.title || 'Untitled Session'}</h3>
+                    <p><strong>Presented by:</strong> ${presenterName}</p>
+                    ${contactEmailHTML}
+                    <p><strong>Type:</strong> ${typeName}</p>
+                    <p><strong>Strand:</strong> ${strandDisplay}</p>
+                    <div><strong>Occurrences:</strong> ${occurrencesHTML}</div>
+                    <hr>
+                    <p><strong>Description:</strong></p>
+                    <div>${description.replace(/\n/g, '<br>')}</div>
+                `;
+                if (sessionModal) sessionModal.style.display = 'flex';
+            }
+
+            function closeSessionModal() {
+                if (sessionModal) sessionModal.style.display = 'none';
+            }
+            
+            // Attach close modal to the X button if it's part of the static HTML
+            const closeModalButton = document.querySelector('.close-modal');
+            if (closeModalButton) {
+                closeModalButton.onclick = closeSessionModal; // Ensure this is connected
+            }
+
+
+            if (viewToggleButtons.length > 0 && scheduleContainer) {
+                viewToggleButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        viewToggleButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                        const view = this.dataset.view;
+                        if (view === 'time') {
+                            renderTimeView();
+                        } else if (view === 'compact') {
+                            renderCompactView();
+                        }
+                        // Add other views if necessary
+                    });
+                });
+            } else {
+                console.warn("View toggle buttons or schedule container not found. View switching may not work.");
+            }
+
+            // Initial data load
+            loadScheduleData();
         });
     </script>
 </body>

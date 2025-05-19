@@ -668,11 +668,42 @@
         </div>
     </div>
     
-    <div class="session-modal" id="sessionModal">
+    <div class="container mt-4 mb-5">
+        <h1 class="mb-4 text-center header-red">Symposium Calendar</h1>
+
+        <!-- Filter Controls Removed -->
+
+        <div id="loading" class="text-center my-5">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>Loading calendar data...</p>
+        </div>
+
+        <div class="calendar-container hidden" id="calendar-grid-container">
+            <!-- Calendar grid will be populated here -->
+        </div>
+    </div>
+
+    <!-- Session Detail Modal -->
+    <div class="session-modal" id="sessionModal-calendar">
         <div class="session-modal-content">
-            <span class="close-modal" onclick="closeSessionModal()">&times;</span>
-            <div id="modalContent">
-                <!-- Session details will be displayed here -->
+            <span class="close-modal" id="closeModal-calendar">&times;</span>
+            <h3 class="modal-header-red" id="modalTitle-calendar"></h3>
+            <p class="text-muted mb-2"><strong>Presented by:</strong> <span id="modalPresenter-calendar"></span></p>
+            <p class="text-muted mb-2"><em><span id="modalOrganization-calendar"></span></em></p>
+            
+            <div id="modalOccurrences-calendar" class="mb-3">
+                <!-- Occurrences will be listed here -->
+            </div>
+
+            <p class="modal-session-description" id="modalDescription-calendar"></p>
+            <div class="modal-session-details">
+                <span class="tag" id="modalType-calendar"></span>
+                <span class="tag" id="modalStrand-calendar"></span>
+            </div>
+            <div id="modalTags-calendar" class="mt-2">
+                <!-- Tags will be populated here -->
             </div>
         </div>
     </div>
@@ -689,423 +720,342 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // DOM elements
-            const calendarView = document.getElementById('calendar-view');
-            const loading = document.getElementById('loading');
-            const noResults = document.getElementById('no-results');
-            const sessionModal = document.getElementById('sessionModal');
-            const modalContent = document.getElementById('modalContent');
-            const searchInput = document.getElementById('search-input');
-            const searchButton = document.getElementById('search-button');
-            const viewToggleButtons = document.querySelectorAll('.btn-view');
-            const roomFiltersContainer = document.getElementById('room-filters');
-            
-            // Store schedule data
-            let scheduleData = null;
-            
-            // Active filters
-            const activeFilters = {
-                strand: ['all'],
-                type: ['all'],
-                room: ['all']
-            };
-            
-            // Load schedule data
-            async function loadScheduleData() {
-                try {
-                    const response = await fetch('sessions.json'); // Changed to fetch sessions.json
-                    if (!response.ok) {
-                        throw new Error('Failed to load sessions data');
-                    }
-                    
-                    const sessionsData = await response.json(); // Data from sessions.json
-                    
-                    scheduleData = { // Initialize scheduleData
-                        timeSlots: [],
-                        rooms: [],
-                        sessions: []
-                    };
+        let allSessionsData = [];
 
-                    const uniqueTimeSlots = new Set();
-                    const uniqueRooms = new Set();
-                    
-                    // Process each session from sessions.json
-                    sessionsData.forEach(session => {
-                        // Add session to scheduleData.sessions
-                        scheduleData.sessions.push({
-                            id: session.id,
-                            title: session.title,
-                            presenter: session.presenter,
-                            strand: session.strand, // e.g., "strand1"
-                            type: session.type,     // e.g., "type-workshop"
-                            timeSlot: session.time_slot, // Ensure this matches the property name in sessions.json
-                            room: session.room,         // Ensure this matches the property name in sessions.json
-                            tags: session.tags || [],
-                            description: session.description || '',
-                            strandName: session.strandName || '', // e.g., "AI in the Classroom"
-                            typeName: session.typeName || '',     // e.g., "Workshop"
-                            isSpecialEvent: session.isSpecialEvent || false
-                        });
-                        
-                        // Collect unique time slots and rooms
-                        if (session.time_slot) {
-                            uniqueTimeSlots.add(session.time_slot);
-                        }
-                        if (session.room) {
-                            uniqueRooms.add(session.room);
-                        }
-                    });
-                    
-                    // Populate scheduleData.timeSlots
-                    uniqueTimeSlots.forEach(ts => {
-                        scheduleData.timeSlots.push({ name: ts, timeRange: ts });
-                    });
-                    // Sort time slots (optional, but good for consistency)
-                    scheduleData.timeSlots.sort((a, b) => a.name.localeCompare(b.name));
-                    
-                    // Populate scheduleData.rooms
-                    scheduleData.rooms = Array.from(uniqueRooms).sort();
-                    
-                    populateRoomFilters();
-                    renderCalendarView(); // This function should now work with the new scheduleData structure
-                    loading.classList.add('hidden');
-                    calendarView.classList.remove('hidden');
-                } catch (error) {
-                    console.error('Error loading session data for calendar:', error);
-                    loading.innerHTML = '<div class="alert alert-danger">Failed to load session data. Please try again later.</div>';
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCalendarData();
+            const closeModalButton = document.getElementById('closeModal-calendar');
+            if(closeModalButton) {
+                closeModalButton.addEventListener('click', closeSessionModalCalendar);
             }
-            
-            // Populate room filters
-            function populateRoomFilters() {
-                if (!scheduleData || !scheduleData.rooms) return;
-                
-                const allRoomsButton = roomFiltersContainer.querySelector('.btn-filter-all');
-                roomFiltersContainer.innerHTML = '';
-                roomFiltersContainer.appendChild(allRoomsButton);
-                
-                scheduleData.rooms.forEach((room, index) => {
-                    const button = document.createElement('button');
-                    const colorIndex = (index % 5) + 1;
-                    button.className = `btn btn-filter`;
-                    button.dataset.filter = room.replace(/\s+/g, '-');
-                    button.textContent = room;
-                    button.onclick = () => toggleFilter('room', room.replace(/\s+/g, '-'), button);
-                    roomFiltersContainer.appendChild(button);
+            const modal = document.getElementById('sessionModal-calendar');
+            if(modal) {
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        closeSessionModalCalendar();
+                    }
                 });
             }
-            
-            // Render calendar view
-            function renderCalendarView() {
-                if (!scheduleData) return;
-                
-                const { timeSlots, rooms, sessions } = scheduleData;
-                let calendarHTML = '';
-                
-                // Create a section for each time slot
-                timeSlots.forEach((slot, index) => {
-                    const slotsessions = sessions.filter(s => s.timeSlot === slot.name);
-                    const timeSlotNumber = index + 1;
-                    const timeBlockClass = `time-block-${timeSlotNumber}`;
-                    
-                    calendarHTML += `
-                        <div class="calendar-timeslot mb-4 ${timeBlockClass}">
-                            <div class="timeslot-header">
-                                <i class="bi bi-clock me-2"></i>${slot.timeRange}
-                            </div>
-                            <div class="session-row">
-                    `;
-                    
-                    // If no sessions in this time slot
-                    if (slotsessions.length === 0) {
-                        calendarHTML += `
-                            <div class="empty-timeslot w-100">
-                                No sessions scheduled for this time slot
-                            </div>
-                        `;
-                    } else {
-                        // Add each session as a card in this time slot
-                        slotsessions.forEach(session => {
-                            let typeBadgeClass = 'type-workshop';
-                            if (session.type === 'type-presentation') typeBadgeClass = 'type-presentation';
-                            if (session.type === 'type-discussion') typeBadgeClass = 'type-discussion';
-                            
-                            calendarHTML += `
-                                <div class="session-block ${session.strand}" 
-                                     data-strand="${session.strand || 'unknown'}"
-                                     data-type="${session.type || 'unknown'}"
-                                     data-room="${session.room.replace(/\s+/g, '-')}"
-                                     onclick="openSessionModal('${encodeURIComponent(JSON.stringify(session))}')">
-                                    <div class="strand-indicator"></div>
-                                    <div class="session-block-header">
-                                        <span class="session-type ${typeBadgeClass}">${session.typeName}</span>
-                                        <span class="room-badge"><i class="bi bi-geo-alt"></i> ${session.room}</span>
-                                    </div>
-                                    <div class="session-block-body">
-                                        <div class="session-block-title">${session.title}</div>
-                                        <div class="session-block-presenter">${session.presenter}</div>
-                                        <div class="tags-preview">
-                                            ${session.tags && session.tags.length > 0 
-                                                ? session.tags.slice(0, 2).map(tag => `<span class="tag">${tag}</span>`).join('') 
-                                                + (session.tags.length > 2 ? '<span class="tag-more">+' + (session.tags.length - 2) + '</span>' : '')
-                                                : ''}
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        });
-                    }
-                    
-                    calendarHTML += `
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                calendarView.innerHTML = calendarHTML;
-            }
-            
-            // Toggle filter
-            window.toggleFilter = function(type, value, element) {
-                const filterGroup = activeFilters[type];
-                const allButton = document.querySelector(`#${type}-filters .btn-filter-all`);
-                
-                if (value === 'all') {
-                    if (!element.classList.contains('active')) {
-                        document.querySelectorAll(`#${type}-filters .btn-filter`).forEach(btn => btn.classList.remove('active'));
-                        element.classList.add('active');
-                        activeFilters[type] = ['all'];
-                    }
-                } else {
-                    if (allButton && allButton.classList.contains('active')) {
-                        allButton.classList.remove('active');
-                        activeFilters[type] = [];
-                    }
-                    
-                    if (element.classList.contains('active')) {
-                        element.classList.remove('active');
-                        activeFilters[type] = filterGroup.filter(f => f !== value);
-                    } else {
-                        element.classList.add('active');
-                        activeFilters[type].push(value);
-                    }
-                    
-                    if (activeFilters[type].length === 0 && allButton) {
-                        allButton.classList.add('active');
-                        activeFilters[type] = ['all'];
-                    }
-                }
-                
-                applyFilters();
-            };
-            
-            // Apply filters to calendar
-            function applyFilters() {
-                const searchTerm = searchInput.value.toLowerCase().trim();
-                let visibleCount = 0;
-                
-                // Loop through all session blocks
-                const sessionBlocks = document.querySelectorAll('.session-block');
-                sessionBlocks.forEach(block => {
-                    const blockStrand = block.dataset.strand;
-                    const blockType = block.dataset.type;
-                    const blockRoom = block.dataset.room;
-                    
-                    let showBlock = true;
-                    
-                    // Apply strand filter
-                    if (!activeFilters.strand.includes('all') && !activeFilters.strand.includes(blockStrand)) {
-                        showBlock = false;
-                    }
-                    
-                    // Apply type filter
-                    if (showBlock && !activeFilters.type.includes('all') && !activeFilters.type.includes(blockType)) {
-                        showBlock = false;
-                    }
-                    
-                    // Apply room filter
-                    if (showBlock && !activeFilters.room.includes('all') && !activeFilters.room.includes(blockRoom)) {
-                        showBlock = false;
-                    }
-                    
-                    // Apply search filter
-                    if (showBlock && searchTerm !== '') {
-                        const title = block.querySelector('.session-block-title').textContent.toLowerCase();
-                        const presenter = block.querySelector('.session-block-presenter').textContent.toLowerCase();
-                        const location = block.querySelector('.session-block-location').textContent.toLowerCase();
-                        
-                        // Get the full session object for searching description
-                        const sessionIndex = Array.from(sessionBlocks).indexOf(block);
-                        const session = scheduleData.sessions[sessionIndex];
-                        const description = session ? session.description.toLowerCase() : '';
-                        
-                        const combinedText = `${title} ${presenter} ${location} ${description}`;
-                        if (!combinedText.includes(searchTerm)) {
-                            showBlock = false;
-                        }
-                    }
-                    
-                    // Show/hide block
-                    block.style.display = showBlock ? 'flex' : 'none';
-                    
-                    if (showBlock) {
-                        visibleCount++;
-                    }
-                });
-                
-                // Check if any time slots are now empty after filtering
-                document.querySelectorAll('.session-row').forEach(row => {
-                    let visibleBlocks = 0;
-                    row.querySelectorAll('.session-block').forEach(block => {
-                        if (block.style.display !== 'none') {
-                            visibleBlocks++;
-                        }
-                    });
-                    
-                    // If this row has no visible blocks and doesn't already have an empty message
-                    if (visibleBlocks === 0 && !row.querySelector('.empty-timeslot')) {
-                        const emptyMessage = document.createElement('div');
-                        emptyMessage.className = 'empty-timeslot w-100';
-                        emptyMessage.textContent = 'No matching sessions for this time slot';
-                        row.appendChild(emptyMessage);
-                    } 
-                    // If this row has visible blocks but also has an empty message
-                    else if (visibleBlocks > 0) {
-                        const emptyMessage = row.querySelector('.empty-timeslot');
-                        if (emptyMessage) {
-                            emptyMessage.remove();
-                        }
-                    }
-                });
-                
-                // Show/hide no results message
-                noResults.classList.toggle('hidden', visibleCount > 0);
-            }
-            
-            // Reset all filters
-            window.resetAllFilters = function() {
-                activeFilters.strand = ['all'];
-                activeFilters.type = ['all'];
-                activeFilters.room = ['all'];
-                
-                // Reset filter buttons
-                ['strand', 'type', 'room'].forEach(type => {
-                    document.querySelectorAll(`#${type}-filters .btn-filter`).forEach(button => {
-                        button.classList.toggle('active', button.dataset.filter === 'all');
-                    });
-                });
-                
-                // Clear search input
-                searchInput.value = '';
-                
-                // Re-apply filters (which will now show everything)
-                applyFilters();
-            };
-            
-            // Open session modal
-            window.openSessionModal = function(sessionJson) {
-                try {
-                    const session = JSON.parse(decodeURIComponent(sessionJson));
-                    
-                    // Create tags HTML
-                    let tagsHTML = '';
-                    if (session.tags && session.tags.length > 0) {
-                        tagsHTML = '<div class="mt-3"><strong>Tags:</strong> <div class="d-flex flex-wrap gap-2 mt-2">';
-                        session.tags.forEach(tag => {
-                            tagsHTML += `<span class="tag">${tag}</span>`;
-                        });
-                        tagsHTML += '</div></div>';
-                    }
-                    
-                    // Build modal content
-                    const content = `
-                        <h3 class="modal-header-red">${session.title}</h3>
-                        <h5>${session.presenter}</h5>
-                        <div class="modal-session-details">
-                            <span class="badge ${session.strand === 'strand1' ? 'bg-info' : session.strand === 'strand2' ? 'bg-danger' : 'bg-secondary'}">
-                                ${session.strandName || 'Unknown Strand'}
-                            </span>
-                            <span class="badge ${session.type === 'type-workshop' ? 'bg-primary' : session.type === 'type-presentation' ? 'bg-warning text-dark' : 'bg-success'}">
-                                ${session.typeName || 'Unknown Type'}
-                            </span>
-                            <span class="badge bg-secondary">
-                                <i class="bi bi-clock me-1"></i>${session.timeSlot}
-                            </span>
-                            <span class="badge bg-light text-dark">
-                                <i class="bi bi-geo-alt me-1"></i>${session.room}
-                            </span>
-                        </div>
-                        <div class="modal-session-description">
-                            ${session.description.replace(/\n/g, '<br>')}
-                        </div>
-                        ${tagsHTML}
-                    `;
-                    
-                    modalContent.innerHTML = content;
-                    sessionModal.style.display = 'flex';
-                    // Apply animation after a small delay to ensure display:flex is applied
-                    setTimeout(() => {
-                        sessionModal.classList.add('show');
-                    }, 10);
-                    
-                } catch (error) {
-                    console.error('Error opening session modal:', error);
-                }
-            };
-            
-            // Close session modal
-            window.closeSessionModal = function() {
-                sessionModal.classList.remove('show');
-                // Remove display:flex after animation completes
-                setTimeout(() => {
-                    sessionModal.style.display = 'none';
-                }, 300);
-            };
-            
-            // Toggle view (standard/condensed)
-            viewToggleButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Update active button
-                    viewToggleButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Update view
-                    const viewType = this.getAttribute('data-view');
-                    if (viewType === 'condensed') {
-                        calendarView.classList.add('condensed-view');
-                    } else {
-                        calendarView.classList.remove('condensed-view');
-                    }
-                });
-            });
-            
-            // Add event listeners
-            searchInput.addEventListener('keyup', function(event) {
-                if (event.key === 'Enter') {
-                    applyFilters();
-                }
-            });
-            
-            searchButton.addEventListener('click', applyFilters);
-            
-            // Add event listener to close modal when clicking outside
-            sessionModal.addEventListener('click', function(event) {
-                if (event.target === sessionModal) {
-                    closeSessionModal();
-                }
-            });
-            
-            // Listen for escape key to close modal
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape' && sessionModal.classList.contains('show')) {
-                    closeSessionModal();
-                }
-            });
-            
-            // Initialize
-            loadScheduleData();
         });
+
+        async function loadCalendarData() {
+            const loadingIndicator = document.getElementById('loading');
+            const calendarContainer = document.getElementById('calendar-grid-container');
+            
+            // Ensure loading is visible and container is hidden at the start
+            if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+            if (calendarContainer) calendarContainer.classList.add('hidden');
+
+            try {
+                const response = await fetch('sessions.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                allSessionsData = await response.json();
+                
+                const schedulableSessions = allSessionsData.filter(session => !session.isSpecialEvent);
+
+                // populateStrandFiltersCalendar call removed
+                renderCalendarGrid(schedulableSessions);
+
+                if (loadingIndicator) loadingIndicator.classList.add('hidden');
+                if (calendarContainer) calendarContainer.classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Error loading or parsing calendar data:", error);
+                if (loadingIndicator) {
+                    loadingIndicator.innerHTML = '<p class="text-danger">Error loading calendar data. Please try refreshing the page.</p>';
+                    loadingIndicator.classList.remove('hidden'); // Ensure error message is visible
+                }
+                if (calendarContainer) calendarContainer.classList.add('hidden');
+            }
+        }
+
+        function getStrandColor(strandId, isLight = false) { // This function is still used for cards/modal
+            if (strandId === 'strand1') return isLight ? 'var(--cupola-light)' : 'var(--cupola)';
+            if (strandId === 'strand2') return isLight ? 'var(--brick-light)' : 'var(--brick)';
+            return isLight ? 'var(--pelican-light)' : 'var(--pelican)';
+        }
+
+        function renderCalendarGrid(sessions) {
+            const calendarGridContainer = document.getElementById('calendar-grid-container');
+            if (!calendarGridContainer) return;
+
+            calendarGridContainer.innerHTML = ''; 
+
+            if (sessions.length === 0 && allSessionsData.length > 0) { // Check if filtering resulted in no sessions
+                calendarGridContainer.innerHTML = '<p class="text-center text-muted mt-5">No sessions available for the current view (special events are excluded from this grid).</p>';
+                return;
+            }
+            if (allSessionsData.length === 0) { // No data loaded at all
+                 calendarGridContainer.innerHTML = '<p class="text-center text-muted mt-5">No session data loaded.</p>';
+                return;
+            }
+
+
+            const timeBlocks = {};
+            sessions.forEach(session => {
+                session.occurrences.forEach(occurrence => {
+                    if (!timeBlocks[occurrence.timeBlock]) {
+                        timeBlocks[occurrence.timeBlock] = {};
+                    }
+                    if (!timeBlocks[occurrence.timeBlock][occurrence.location]) {
+                        timeBlocks[occurrence.timeBlock][occurrence.location] = [];
+                    }
+                    timeBlocks[occurrence.timeBlock][occurrence.location].push({...session, currentOccurrence: occurrence });
+                });
+            });
+
+            const sortedTimeBlocks = Object.keys(timeBlocks).sort((a, b) => {
+                const timeA = parseTime(a.split(' - ')[0]);
+                const timeB = parseTime(b.split(' - ')[0]);
+                return timeA - timeB;
+            });
+
+            if (sortedTimeBlocks.length === 0) {
+                calendarGridContainer.innerHTML = '<p class="text-center text-muted mt-5">No sessions scheduled in the grid.</p>';
+                return;
+            }
+
+            const allRooms = new Set();
+            sessions.forEach(session => session.occurrences.forEach(occ => allRooms.add(occ.location)));
+            const sortedRooms = Array.from(allRooms).sort((a,b) => a.localeCompare(b));
+
+            const table = document.createElement('table');
+            table.classList.add('table', 'table-bordered', 'mt-3');
+            
+            const thead = table.createTHead();
+            const headerRow = thead.insertRow();
+            const thTime = document.createElement('th');
+            thTime.textContent = 'Time';
+            thTime.style.width = '120px'; 
+            thTime.style.minWidth = '120px'; // Ensure time column doesn't shrink too much
+            thTime.classList.add('position-sticky', 'start-0'); // Make time column sticky
+            thTime.style.backgroundColor = 'var(--pelican-light)'; // Match header bg
+            thTime.style.zIndex = '2';
+
+
+            headerRow.appendChild(thTime);
+            sortedRooms.forEach(room => {
+                const th = document.createElement('th');
+                th.textContent = room;
+                th.style.minWidth = '200px'; // Give rooms a minimum width
+                headerRow.appendChild(th);
+            });
+
+            const tbody = table.createTBody();
+            sortedTimeBlocks.forEach((timeBlock, index) => {
+                const row = tbody.insertRow();
+                const tdTime = row.insertCell();
+                tdTime.textContent = timeBlock;
+                tdTime.classList.add('fw-bold', 'position-sticky', 'start-0'); // Make time cell sticky
+                tdTime.style.backgroundColor = 'white'; // Or match row color if themed
+                tdTime.style.zIndex = '1';
+
+
+                const timeBlockClass = `tb-${(index % 3) + 1}`; // e.g., tb-1, tb-2, tb-3
+                row.classList.add(timeBlockClass);
+                // Apply a slightly lighter background to the sticky time cell for distinction if needed
+                // Or use the time block color directly
+                const timeBlockColorVar = getComputedStyle(document.documentElement).getPropertyValue(`--time-block-${(index % 3) + 1}-light`).trim();
+                tdTime.style.backgroundColor = timeBlockColorVar || 'white';
+                 if (timeBlockColorVar === 'var(--meadow-light)') { // if it's meadow light, text should be dark
+                    tdTime.style.color = 'var(--lc-gray)';
+                } else {
+                    tdTime.style.color = 'white'; // For red and brick light
+                }
+
+
+                sortedRooms.forEach(room => {
+                    const tdRoom = row.insertCell();
+                    tdRoom.classList.add('align-top'); 
+                    tdRoom.style.minHeight = '120px'; // Ensure cells have some min height
+                    if (timeBlocks[timeBlock][room]) {
+                        timeBlocks[timeBlock][room].forEach(sessionInRoom => {
+                            const sessionDiv = createSessionCardForCalendar(sessionInRoom);
+                            tdRoom.appendChild(sessionDiv);
+                        });
+                    }
+                });
+            });
+
+            // Wrap table in a scrollable div
+            const tableWrapper = document.createElement('div');
+            tableWrapper.style.overflowX = 'auto';
+            tableWrapper.style.maxHeight = '70vh'; // Add vertical scroll for the whole table body if it gets too long
+            tableWrapper.style.overflowY = 'auto';
+            tableWrapper.appendChild(table);
+            
+            calendarGridContainer.appendChild(tableWrapper);
+        }
+        
+        function parseTime(timeStr) {
+            const [time, modifier] = timeStr.split(' ');
+            let [hours, minutes] = time.split(':').map(Number);
+            if (modifier && modifier.toLowerCase() === 'pm' && hours !== 12) {
+                hours += 12;
+            }
+            if (modifier && modifier.toLowerCase() === 'am' && hours === 12) { // Midnight case
+                hours = 0;
+            }
+            // Handle cases like "2:35-3:00" where modifier might be missing for the start time if it's implied by end time
+            // For sorting, we assume times are within a single day and correctly formatted.
+            // If times like "8:00" (AM implied) vs "1:30" (PM implied) exist, this might need adjustment
+            // However, current data seems to use "8:00 - 9:00" and "1:30 - 2:30" explicitly.
+            // For simplicity, if no AM/PM, assume morning for early hours, afternoon for later.
+            // This is a heuristic and might need refinement if time formats are inconsistent.
+            if (!modifier && hours < 8) hours += 12; // e.g. 1:30 becomes 13:30
+
+            return hours * 60 + minutes;
+        }
+
+        function createSessionCardForCalendar(session) {
+            const card = document.createElement('div');
+            card.classList.add('session-block', 'mb-2', session.strand);
+            card.style.width = '100%'; // Take full width of the table cell
+            card.style.minHeight = '100px'; 
+            card.style.cursor = 'pointer';
+            card.style.border = '1px solid #eee'; // Add a light border to cards
+            card.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+            card.addEventListener('click', () => openSessionModalCalendar(session));
+
+            const strandIndicator = document.createElement('div');
+            strandIndicator.classList.add('strand-indicator');
+            // Ensure strand indicator color is applied based on strandId
+            strandIndicator.style.backgroundColor = getStrandColor(session.strand);
+            card.appendChild(strandIndicator);
+
+            const body = document.createElement('div');
+            body.classList.add('session-block-body', 'p-2'); // Reduced padding for calendar cells
+
+            const title = document.createElement('h5');
+            title.classList.add('session-block-title', 'mb-1');
+            title.style.webkitLineClamp = 2; // Limit title to 2 lines
+            title.style.fontSize = '0.9rem';
+            title.textContent = session.title;
+            body.appendChild(title);
+
+            if (session.presenter) {
+                const presenter = document.createElement('p');
+                presenter.classList.add('session-block-presenter', 'mb-1');
+                presenter.style.fontSize = '0.75rem';
+                presenter.style.webkitLineClamp = 1;
+                presenter.textContent = session.presenter;
+                body.appendChild(presenter);
+            }
+
+            const typeBadge = document.createElement('span');
+            typeBadge.classList.add('tag', 'tag-more', 'mt-1'); // Re-using tag-more for smaller badge
+            typeBadge.style.fontSize = '0.65rem';
+            typeBadge.textContent = session.typeName || session.type;
+            // Basic type coloring, can be expanded
+            if (session.type && session.type.toLowerCase().includes('workshop')) {
+                typeBadge.style.backgroundColor = 'var(--lc-red)'; typeBadge.style.color = 'white';
+            } else if (session.type && session.type.toLowerCase().includes('presentation')) {
+                typeBadge.style.backgroundColor = 'var(--meadow)'; typeBadge.style.color = 'var(--lc-gray)';
+            } else if (session.type && session.type.toLowerCase().includes('discussion')) {
+                typeBadge.style.backgroundColor = 'var(--brick)'; typeBadge.style.color = 'white';
+            } else { // Default styling for other types
+                typeBadge.style.backgroundColor = 'var(--pelican)'; typeBadge.style.color = 'var(--lc-gray)';
+            }
+            body.appendChild(typeBadge);
+
+            card.appendChild(body);
+            return card;
+        }
+
+        function openSessionModalCalendar(session) {
+            document.getElementById('modalTitle-calendar').textContent = session.title;
+            document.getElementById('modalPresenter-calendar').textContent = session.presenter || 'N/A';
+            document.getElementById('modalOrganization-calendar').textContent = session.organization || '';
+            // Ensure description is HTML decoded if it contains entities, or use textContent if it's plain text
+            const descriptionContent = session.description ? session.description.replace(/\\n/g, '<br>') : 'No description available.';
+            document.getElementById('modalDescription-calendar').innerHTML = descriptionContent; // Use innerHTML for <br>
+            
+            const typeElem = document.getElementById('modalType-calendar');
+            typeElem.textContent = session.typeName || session.type;
+            typeElem.className = 'tag'; 
+            if (session.type) {
+                if (session.type.toLowerCase().includes('workshop')) typeElem.classList.add('type-workshop');
+                else if (session.type.toLowerCase().includes('presentation')) typeElem.classList.add('type-presentation');
+                else if (session.type.toLowerCase().includes('discussion')) typeElem.classList.add('type-discussion');
+                else {
+                    typeElem.style.backgroundColor = getStrandColor(session.strand, true); // Use light strand color
+                    typeElem.style.color = (getStrandColor(session.strand) === 'var(--meadow)' || getStrandColor(session.strand) === 'var(--pelican)') ? 'var(--lc-gray)' : 'white';
+                }
+            }
+
+            const strandElem = document.getElementById('modalStrand-calendar');
+            strandElem.textContent = session.strandName || session.strand;
+            strandElem.className = 'tag';
+            const strandMainColor = getStrandColor(session.strand);
+            const strandLightColor = getStrandColor(session.strand, true);
+            strandElem.style.backgroundColor = strandLightColor;
+            // Determine text color for good contrast with light background
+            if (strandMainColor === 'var(--meadow)' || strandMainColor === 'var(--pelican)') { // If base color is light (meadow, pelican)
+                 strandElem.style.color = 'var(--lc-gray)';
+            } else { // For darker base colors (red, brick), light background still pairs well with dark text or white
+                 strandElem.style.color = 'var(--lc-gray)'; // Defaulting to dark gray for light backgrounds
+                 // Or, for specific light backgrounds that are still quite colorful:
+                 if (strandLightColor === 'var(--cupola-light)' || strandLightColor === 'var(--brick-light)') {
+                    // strandElem.style.color = 'white'; // if white text is preferred on these
+                 }
+            }
+
+
+            const occurrencesContainer = document.getElementById('modalOccurrences-calendar');
+            occurrencesContainer.innerHTML = '';
+            if (session.occurrences && session.occurrences.length > 0) {
+                const occurrencesTitle = document.createElement('strong');
+                occurrencesTitle.textContent = session.occurrences.length > 1 ? 'Occurrences:' : 'Time & Location:';
+                occurrencesContainer.appendChild(occurrencesTitle);
+                const ul = document.createElement('ul');
+                ul.classList.add('list-unstyled', 'ps-0', 'mt-1');
+                session.occurrences.forEach(occ => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="bi bi-clock me-2"></i>${occ.timeBlock} <br><i class="bi bi-geo-alt-fill me-2"></i>${occ.location}`;
+                    if (session.currentOccurrence && occ.timeBlock === session.currentOccurrence.timeBlock && occ.location === session.currentOccurrence.location) {
+                        // Optionally highlight the specific occurrence that was clicked in the calendar view
+                        // li.classList.add('fw-bold'); 
+                    }
+                    ul.appendChild(li);
+                });
+                occurrencesContainer.appendChild(ul);
+            } else if (session.isSpecialEvent && session.timeBlock && session.location) {
+                 // Handle special events if they were to be shown in modal via a different path
+                const occurrencesTitle = document.createElement('strong');
+                occurrencesTitle.textContent = 'Time & Location:';
+                occurrencesContainer.appendChild(occurrencesTitle);
+                const p = document.createElement('p');
+                p.innerHTML = `<i class="bi bi-clock me-2"></i>${session.timeBlock} <br><i class="bi bi-geo-alt-fill me-2"></i>${session.location}`;
+                occurrencesContainer.appendChild(p);
+            }
+
+            const tagsContainer = document.getElementById('modalTags-calendar');
+            tagsContainer.innerHTML = '';
+            if (session.tags && session.tags.length > 0) {
+                session.tags.forEach(tagText => {
+                    const tag = document.createElement('span');
+                    tag.classList.add('tag', 'tag-more');
+                    tag.textContent = tagText;
+                    tagsContainer.appendChild(tag);
+                });
+            }
+
+            document.getElementById('sessionModal-calendar').style.display = 'flex';
+            setTimeout(() => {
+                 document.getElementById('sessionModal-calendar').classList.add('show');
+            }, 10); // Small delay for transition
+        }
+
+        function closeSessionModalCalendar() {
+            const modal = document.getElementById('sessionModal-calendar');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300); // Match transition duration
+        }
+
     </script>
 </body>
 </html>
