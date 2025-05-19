@@ -51,6 +51,8 @@ The system uses the following data flow:
      - Create the master `sessions.json`
      - Update all HTML files
 
+   > **Note**: The system supports sessions that appear in multiple time slots. A session that occurs more than once will have a unique ID for each occurrence beyond the first (e.g., "1_occurrence_2").
+
 ## Data Structure
 
 ### Sessions.json Format
@@ -58,7 +60,7 @@ Each session object in the JSON file includes:
 
 ```json
 {
-  "id": 1,
+  "id": 1,                                 // Integer for single sessions, "1_occurrence_2" format for multiple occurrences
   "strand": "strand1",
   "strandName": "1: AI in the Classroom",
   "type": "workshop",

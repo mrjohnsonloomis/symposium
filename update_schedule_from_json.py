@@ -29,6 +29,12 @@ def main():
             if time_block not in schedule:
                 schedule[time_block] = {}
                 
+            # If there's already a session in this location/time slot, skip this one
+            # This shouldn't happen with our new ID system, but just in case
+            if location in schedule[time_block]:
+                print(f"Warning: Multiple sessions scheduled for {location} at {time_block}. Using the first one.")
+                continue
+                
             schedule[time_block][location] = session
             
         # Load the schedule.html file

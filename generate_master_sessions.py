@@ -122,10 +122,15 @@ def main():
                 # Try to convert to integer if it's a session ID
                 try:
                     session_id = int(cell_value)
-                    session_schedule[session_id] = {
+                    # Modified to support multiple time slots for the same session
+                    if session_id not in session_schedule:
+                        session_schedule[session_id] = []
+                    
+                    # Add this time slot and room to the session's schedule
+                    session_schedule[session_id].append({
                         'location': room,
                         'timeBlock': get_time_for_slot(time_slot)
-                    }
+                    })
                 except (ValueError, TypeError):
                     # This is a special event, not a session ID
                     special_events.append({
@@ -186,10 +191,32 @@ def main():
             
             # Add room and time information if available
             if session_id in session_schedule:
-                session['timeBlock'] = session_schedule[session_id]['timeBlock']
-                session['location'] = session_schedule[session_id]['location']
-            
-            sessions_json.append(session)
+                # Support for multiple time slots
+                session_occurrences = session_schedule[session_id]
+                
+                if len(session_occurrences) == 1:
+                    # If session occurs only once, keep the original structure
+                    session['timeBlock'] = session_occurrences[0]['timeBlock']
+                    session['location'] = session_occurrences[0]['location']
+                    sessions_json.append(session)
+                else:
+                    # If session occurs multiple times, create a separate entry for each occurrence
+                    for i, occurrence in enumerate(session_occurrences):
+                        # For the first occurrence, modify the existing session object
+                        if i == 0:
+                            session['timeBlock'] = occurrence['timeBlock']
+                            session['location'] = occurrence['location']
+                            sessions_json.append(session)
+                        else:
+                            # For additional occurrences, create a copy with a new ID
+                            new_session = session.copy()
+                            new_session['id'] = f"{session_id}_occurrence_{i+1}"
+                            new_session['timeBlock'] = occurrence['timeBlock']
+                            new_session['location'] = occurrence['location']
+                            sessions_json.append(new_session)
+            else:
+                # Session has no schedule information
+                sessions_json.append(session)
             
         # Then, add special events
         for event in special_events:

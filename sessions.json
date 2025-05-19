@@ -10,6 +10,26 @@
     "email": "mpoole@sps.edu",
     "organization": "St. Paul's School, Sidwell Friends School",
     "description": "AI-powered tools offer new possibilities for engaging students in inquiry-based learning across disciplines. This session will explore how educators can use AI to create immersive simulations and investigations that go beyond passive digital interactions. While AI can generate interactive, on-screen experiencesâ€”such as historical dialogues, scientific explorations, or real-time problem-solving scenariosâ€”it can also be used to design rich, off-screen activities, including role-playing exercises, structured debates, and hands-on investigative tasks. Drawing from classroom-tested examples of AI-driven historical simulations, this session will demonstrate how these strategies can be adapted for subjects ranging from humanities to STEM. Participants will leave with practical approaches to designing AI-enhanced simulations that foster critical thinking, deepen content understanding, and bring learning to lifeâ€”both on and off the screen.",
+    "timeBlock": "10:15 - 11:15",
+    "location": "Brush 202",
+    "tags": [
+      "Simulations",
+      "AI Skills"
+    ],
+    "isSpecialEvent": false,
+    "preview": "AI-powered tools offer new possibilities for engaging students in inquiry-based learning across disciplines."
+  },
+  {
+    "id": "1_occurrence_2",
+    "strand": "strand1",
+    "strandName": "1: AI in the Classroom",
+    "type": "workshop",
+    "typeName": "Workshop",
+    "title": "Expanding Inquiry: Using AI Tools to Create Simulations and Investigations",
+    "presenter": "Melissa Poole, Steve Armandt",
+    "email": "mpoole@sps.edu",
+    "organization": "St. Paul's School, Sidwell Friends School",
+    "description": "AI-powered tools offer new possibilities for engaging students in inquiry-based learning across disciplines. This session will explore how educators can use AI to create immersive simulations and investigations that go beyond passive digital interactions. While AI can generate interactive, on-screen experiencesâ€”such as historical dialogues, scientific explorations, or real-time problem-solving scenariosâ€”it can also be used to design rich, off-screen activities, including role-playing exercises, structured debates, and hands-on investigative tasks. Drawing from classroom-tested examples of AI-driven historical simulations, this session will demonstrate how these strategies can be adapted for subjects ranging from humanities to STEM. Participants will leave with practical approaches to designing AI-enhanced simulations that foster critical thinking, deepen content understanding, and bring learning to lifeâ€”both on and off the screen.",
     "timeBlock": "1:30 - 2:30",
     "location": "Brush 202",
     "tags": [
@@ -21,6 +41,26 @@
   },
   {
     "id": 2,
+    "strand": "strand2",
+    "strandName": "2: Human-Centered Innovation",
+    "type": "workshop",
+    "typeName": "Workshop",
+    "title": "Digital Dependency vs. Human Connection: Educational Strategies for the AI Character Era",
+    "presenter": "Suzanne Ellinwood",
+    "email": "sellinwood@sps.edu",
+    "organization": "St. Paul's School",
+    "description": "Workshop Proposal: Digital Dependency vs. Human Connection: Educational Strategies for the AI Character Era \nThe explosive growth of AI character apps presents an urgent risk to adolescents: emotionally manipulative relationships with digital â€śpalsâ€ť designed to seem perfectly understanding and always available. These AI relationships create powerful dependencies that directly compete with real human connections, particularly during vulnerable late-night hours in residential settings.\n\nThis interactive workshop presents a transferable educational model for addressing AI character risks across grades 9-12, offering practical strategies for strengthening human connection as a counterbalance to artificial relationships.\n\nThis workshop demonstrates how intentional human connection serves as the most effective response to artificial intimacy, providing a model that works across educational contexts while addressing a critical emerging challenge.",
+    "timeBlock": "11:30 - 12:30",
+    "location": "Brush 314",
+    "tags": [
+      "AI Friends",
+      "Student Life"
+    ],
+    "isSpecialEvent": false,
+    "preview": "Workshop Proposal: Digital Dependency vs. Human Connection: Educational Strategies for the AI Character Era \nThe explosive growth of AI character..."
+  },
+  {
+    "id": "2_occurrence_2",
     "strand": "strand2",
     "strandName": "2: Human-Centered Innovation",
     "type": "workshop",
@@ -50,6 +90,26 @@
     "email": "caitie_cotton@loomis.org",
     "organization": "Loomis Chaffee",
     "description": "A challenge posed by AI is how to grade given the concern that students are not submitting their own work. One way to combat this is by deemphasizing student grades and focusing students on their genuine learning. In this presentation, we will look at ways to first create student buy-in to class activities and assessments. Then, we will talk about how systems of \"ungrading\" can further emphasize student learning and decrease student interest in AI tools. Specific approaches to ungrading will be discussed. ",
+    "timeBlock": "10:15 - 11:15",
+    "location": "Brush 203",
+    "tags": [
+      "Provocative Ideas",
+      "Humanities"
+    ],
+    "isSpecialEvent": false,
+    "preview": "A challenge posed by AI is how to grade given the concern that students are not submitting their own work."
+  },
+  {
+    "id": "3_occurrence_2",
+    "strand": "strand2",
+    "strandName": "2: Human-Centered Innovation",
+    "type": "presentation and q&a",
+    "typeName": "Presentation and Q&A",
+    "title": "Student Buy-In and \"Ungrading\" in the Humanities Classroom",
+    "presenter": "Caitie Cotton",
+    "email": "caitie_cotton@loomis.org",
+    "organization": "Loomis Chaffee",
+    "description": "A challenge posed by AI is how to grade given the concern that students are not submitting their own work. One way to combat this is by deemphasizing student grades and focusing students on their genuine learning. In this presentation, we will look at ways to first create student buy-in to class activities and assessments. Then, we will talk about how systems of \"ungrading\" can further emphasize student learning and decrease student interest in AI tools. Specific approaches to ungrading will be discussed. ",
     "timeBlock": "1:30 - 2:30",
     "location": "Kravis Center",
     "tags": [
@@ -61,6 +121,26 @@
   },
   {
     "id": 4,
+    "strand": "strand1",
+    "strandName": "1: AI in the Classroom",
+    "type": "presentation and q&a",
+    "typeName": "Presentation and Q&A",
+    "title": "The Value of Struggle: Preserving Meaningful Learning in an AI Age",
+    "presenter": "Marta Napiorkowska",
+    "email": "napiorkowskam@stlukesct.org",
+    "organization": "St. Luke's School",
+    "description": "I present my recent article, \"The Value of Struggle\" (https://edu-ai.org/the-value-of-struggle-preserving-meaningful-learning-in-an-ai-age/), which includes a case study based on a small experiment that I ran in my class, \"Science in Literature\", and the student-reported experiences of completing a difficult prompt on their own versus using ChatGPT to do so. Student testimonies align with recent research in the neuroscience of happiness, meaning and purpose. Since my article, I have also been writing a new related piece on the role that the philosophy of \"human dignity\" and Aristotelian ethics can play in articulating how best to acquire AI fluency. Sophisticated and well-articulated framing around AI-use can both earn greater buy-in from both teachers and students but also foster new answers to questions about the value of being human.",
+    "timeBlock": "10:15 - 11:15",
+    "location": "Kravis Center",
+    "tags": [
+      "Provocative Ideas",
+      "Humanities"
+    ],
+    "isSpecialEvent": false,
+    "preview": "I present my recent article, \"The Value of Struggle\" (https://edu-ai.org/the-value-of-struggle-preserving-meaningful-learning-in-an-ai-age/), which..."
+  },
+  {
+    "id": "4_occurrence_2",
     "strand": "strand1",
     "strandName": "1: AI in the Classroom",
     "type": "presentation and q&a",
@@ -101,6 +181,23 @@
   },
   {
     "id": 6,
+    "strand": "strand1",
+    "strandName": "1: AI in the Classroom",
+    "type": "workshop",
+    "typeName": "Workshop",
+    "title": "AI-Powered Pedagogy: Crafting Effective Prompts for Transformative Learning",
+    "presenter": "Maureen Gassert Lamb",
+    "email": "mlamb@missporters.org",
+    "organization": "Miss Porter's School",
+    "description": "As AI tools become increasingly integrated into classrooms, educators face a challenge: how to effectively prompt AI to generate meaningful, high-quality responses that support student learning. Many teachers struggle with vague or ineffective prompts, leading to unreliable AI-generated content that lacks educational value. This session introduces the C.L.E.A.R. Prompt Creator Protocol, a framework designed to help educators craft precise and effective AI prompts. Rather than focusing on specific AI tools, this method ensures that teachers can apply the same structured approach across different platformsâ€”whether using ChatGPT, Claude, Gemini, or school-based AI systems. From STEM to humanities, teachers can design prompts that guide AI to generate content-specific outputs.\n\nParticipants will explore hands-on activities using the C.L.E.A.R. framework:\nClarity: Crafting precise prompts that yield useful AI-generated responses.\nLayout: Structuring AI interactions for different learning objectives (e.g., quizzes, dialogues, essays).\nExamples: Providing AI with models to enhance the quality of responses.\nAim: Defining educational goals to align AI-generated content with learning outcomes.\nRelevance: Ensuring prompts reflect contextual needs and student engagement strategies.\n\nAttendees will practice designing AI prompts for lesson planning, assessment creation, and student engagement, ensuring they leave with practical, classroom-ready applications.",
+    "timeBlock": "10:15 - 11:15",
+    "location": "Brush 302",
+    "tags": [],
+    "isSpecialEvent": false,
+    "preview": "As AI tools become increasingly integrated into classrooms, educators face a challenge: how to effectively prompt AI to generate meaningful,..."
+  },
+  {
+    "id": "6_occurrence_2",
     "strand": "strand1",
     "strandName": "1: AI in the Classroom",
     "type": "workshop",
@@ -176,6 +273,26 @@
   },
   {
     "id": 10,
+    "strand": "strand2",
+    "strandName": "2: Human-Centered Innovation",
+    "type": "a combination of a workshop and facilitated dicussion",
+    "typeName": "A combination of a workshop and facilitated dicussion",
+    "title": "Metacognition and AI: Empowering High School Students to Become Strategic Learners in a Technological World",
+    "presenter": "Luke Peterson",
+    "email": "lpeterson@episcopalhighschool.org",
+    "organization": "Episcopal High School ",
+    "description": "This presentation will delve into the crucial role of metacognition in preparing high school students for a future where AI is prevalent. While metacognition is already a cornerstone of the learning process, as AI becomes more prominently integrated as a tool, students should understand the role that AI plays in their academic development. \n\nThis session will explore how teachers can leverage AI tools to promote students' self-awareness of their learning processes, help them identify their strengths and weaknesses, and encourage them to monitor their progress. During the presentation, we will address specific methodologies that can teachers can integrate into their current course design that will help increase student interaction with the curriculum and their growth throughout the class. \n\nThe session will also discuss how explicit instruction in metacognitive strategies, combined with thoughtful use of AI for feedback and reflection, can empower students to become more strategic, self-directed learners who can effectively navigate and utilize AI as a tool rather than being replaced by it.",
+    "timeBlock": "11:30 - 12:30",
+    "location": "Brush 308",
+    "tags": [
+      "Metacognition",
+      "Curriculum Design"
+    ],
+    "isSpecialEvent": false,
+    "preview": "This presentation will delve into the crucial role of metacognition in preparing high school students for a future where AI is prevalent."
+  },
+  {
+    "id": "10_occurrence_2",
     "strand": "strand2",
     "strandName": "2: Human-Centered Innovation",
     "type": "a combination of a workshop and facilitated dicussion",
@@ -305,6 +422,26 @@
     "email": "lena.sadowitz@loomis.org",
     "organization": "Loomis Chaffee",
     "description": "As AI tools reshape how our students approach reading, teachers are facing a familiar yet evolving challenge: are students even reading? We will explore the changing landscape of high school literacy through the lens of environment, behavior, tools, and assessment. We'll examine how AI, multitasking, and digital habits affect reading fluency and comprehension, and offer concrete, transferable strategies to help students build stamina, reflect on their reading practices, engage meaningfully with texts, and maybe even enjoy(!) reading. ",
+    "timeBlock": "11:30 - 12:30",
+    "location": "Brush 2nd Floor",
+    "tags": [
+      "Curriculum Design",
+      "Reading"
+    ],
+    "isSpecialEvent": false,
+    "preview": "As AI tools reshape how our students approach reading, teachers are facing a familiar yet evolving challenge: are students even reading? We will..."
+  },
+  {
+    "id": "16_occurrence_2",
+    "strand": "strand2",
+    "strandName": "2: Human-Centered Innovation",
+    "type": "presentation and q&a",
+    "typeName": "Presentation and Q&A",
+    "title": "Low-Tech Reading: Strategies for Engaging High-Tech Screenagers",
+    "presenter": "Lena Sadowitz",
+    "email": "lena.sadowitz@loomis.org",
+    "organization": "Loomis Chaffee",
+    "description": "As AI tools reshape how our students approach reading, teachers are facing a familiar yet evolving challenge: are students even reading? We will explore the changing landscape of high school literacy through the lens of environment, behavior, tools, and assessment. We'll examine how AI, multitasking, and digital habits affect reading fluency and comprehension, and offer concrete, transferable strategies to help students build stamina, reflect on their reading practices, engage meaningfully with texts, and maybe even enjoy(!) reading. ",
     "timeBlock": "1:30 - 2:30",
     "location": "Brush 2nd Floor",
     "tags": [
@@ -384,6 +521,26 @@
   },
   {
     "id": 21,
+    "strand": "strand3",
+    "strandName": "3: Preparing for the Changing Workforce",
+    "type": "presentation with q&a and application activity",
+    "typeName": "Presentation with Q&A and Application Activity",
+    "title": "From Curiosity to Community: Launching a Teacher-Led Gen AI Professional Development Initiative",
+    "presenter": "Heidi Hojnicki, Dr. Rachel Heffner-Burns",
+    "email": "hojnicki.h@kingswoodoxford.org",
+    "organization": "Kingswood Oxford School",
+    "description": "The rapid evolution of Generative AI presents Kâ€“12 educators with both challenges and opportunities: to grow as professionals, to experiment with new tools, and to help students engage ethically and effectively with emerging technologies. In response to this evolution, we launched a collaborative Gen AI Working Groupâ€”an open, cross-disciplinary cohort where educators and staff could do a deep dive on the capabilities and limitations of Gen AI, explore its applications in classroom use, lesson planning, assessment, and administrative tasks, and design interactive workshops to present our findings and engage our colleagues in this learning process.\n\nIn this session, we will share how we designed and facilitated this working group, the framework we used to structure professional learning using Adult Learning Principles, and what we gleaned from our year-long experiment. We will also offer practical steps and adaptable models to help other schools build similar communities of practice around even changing technology.",
+    "timeBlock": "11:30 - 12:30",
+    "location": "Brush 201",
+    "tags": [
+      "Professional Development",
+      "AI Skills"
+    ],
+    "isSpecialEvent": false,
+    "preview": "The rapid evolution of Generative AI presents Kâ€“12 educators with both challenges and opportunities: to grow as professionals, to experiment with..."
+  },
+  {
+    "id": "21_occurrence_2",
     "strand": "strand3",
     "strandName": "3: Preparing for the Changing Workforce",
     "type": "presentation with q&a and application activity",
@@ -535,7 +692,7 @@
     "preview": "In the age of generative AI, English classrooms are key sites for developing students’ AI literacy."
   },
   {
-    "id": "special_29",
+    "id": "special_37",
     "strand": "special",
     "strandName": "Special Event",
     "type": "special",
@@ -554,7 +711,7 @@
     "isSpecialEvent": true
   },
   {
-    "id": "special_30",
+    "id": "special_38",
     "strand": "special",
     "strandName": "Special Event",
     "type": "special",
@@ -573,7 +730,7 @@
     "isSpecialEvent": true
   },
   {
-    "id": "special_31",
+    "id": "special_39",
     "strand": "special",
     "strandName": "Special Event",
     "type": "special",

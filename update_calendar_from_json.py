@@ -82,7 +82,8 @@ def main():
                         "presenter": session.get("presenter", ""),
                         "strand": session.get("strand", ""),
                         "type": session.get("type", ""),
-                        "isSpecialEvent": session.get("isSpecialEvent", False)
+                        "isSpecialEvent": session.get("isSpecialEvent", False),
+                        "tags": session.get("tags", [])
                     }
             
             calendar_json.append(row)

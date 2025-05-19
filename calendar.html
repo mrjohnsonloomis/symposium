@@ -714,19 +714,63 @@
             // Load schedule data
             async function loadScheduleData() {
                 try {
-                    const response = await fetch('schedule.json');
+                    const response = await fetch('calendar_data.json');
                     if (!response.ok) {
-                        throw new Error('Failed to load schedule data');
+                        throw new Error('Failed to load calendar data');
                     }
                     
-                    scheduleData = await response.json();
+                    scheduleData = {
+                        timeSlots: [],
+                        rooms: [],
+                        sessions: []
+                    };
+                    
+                    // Convert calendar_data.json format to schedule.json format
+                    const calendarData = fetch("calendar_data.json").then(response => response.json());
+                    
+                    // Extract rooms and time slots
+                    let allRooms = new Set();
+                    
+                    // Process each time slot
+                    calendarData.forEach(timeSlotData => {
+                        // Add time slot
+                        scheduleData.timeSlots.push({
+                            name: timeSlotData.timeSlot,
+                            timeRange: timeSlotData.timeSlot
+                        });
+                        
+                        // Process sessions in this time slot
+                        if (timeSlotData.sessions) {
+                            for (const room in timeSlotData.sessions) {
+                                allRooms.add(room);
+                                const session = timeSlotData.sessions[room];
+                                
+                                // Add this session to the sessions array
+                                scheduleData.sessions.push({
+                                    id: session.id,
+                                    title: session.title,
+                                    presenter: session.presenter,
+                                    strand: session.strand,
+                                    type: session.type,
+                                    timeSlot: timeSlotData.timeSlot,
+                                    room: room,
+                                    tags: session.tags || [],
+                                    isSpecialEvent: session.isSpecialEvent
+                                });
+                            }
+                        }
+                    });
+                    
+                    // Set rooms
+                    scheduleData.rooms = Array.from(allRooms);
+                    
                     populateRoomFilters();
                     renderCalendarView();
                     loading.classList.add('hidden');
                     calendarView.classList.remove('hidden');
                 } catch (error) {
-                    console.error('Error loading schedule data:', error);
-                    loading.innerHTML = '<div class="alert alert-danger">Failed to load schedule data. Please try again later.</div>';
+                    console.error('Error loading calendar data:', error);
+                    loading.innerHTML = '<div class="alert alert-danger">Failed to load calendar data. Please try again later.</div>';
                 }
             }
             
