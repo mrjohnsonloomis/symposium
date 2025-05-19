@@ -733,9 +733,10 @@ Teachers work tirelessly to help students use AI productively, ethically, and re
             // --- Function to load session data ---
             async function loadSessionData() {
                 try {
-                    const response = await fetch('sessions.json');
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const response = await fetch('/workspaces/symposium/sessions.json'); // Ensure correct path
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status} - Failed to fetch sessions.json`);
                     allSessionData = await response.json();
+                    
                     // Added: Function to shuffle the sessions pseudo-randomly
                     function shuffle(array) {
                         for (let i = array.length - 1; i > 0; i--) {
@@ -749,6 +750,10 @@ Teachers work tirelessly to help students use AI productively, ethically, and re
                     
                     // Process all sessions first to collect and refine all tags
                     allSessionData.forEach((session) => {
+                        // Ensure session.time_slot is used for timeBlock attribute if that's the source
+                        session.timeBlock = session.time_slot || session.timeBlock || 'TBD'; 
+                        session.location = session.room || session.location || 'TBD';
+
                         if (session.tags && Array.isArray(session.tags)) {
                             // Process the tags through refineTags to get consistency
                             const refinedSessionTags = refineTags(session.tags);
@@ -839,9 +844,21 @@ Teachers work tirelessly to help students use AI productively, ethically, and re
                 let visibleCount = 0;
                 const allSessionCards = sessionsContainer.querySelectorAll('.session-card');
 
+                if (!allSessionData || allSessionData.length === 0) {
+                    if(loadingElement && loadingElement.style.display !== 'none') {
+                        // Data is still loading or failed to load, do nothing yet or show message
+                        return; 
+                    }
+                    // If data loading is complete but allSessionData is empty, show no results.
+                    noResultsDiv.classList.remove('hidden');
+                    if (sessionsContainer) sessionsContainer.innerHTML = ''; // Clear any existing cards
+                    return;
+                }
+
                 allSessionCards.forEach(card => {
                     const cardStrand = card.dataset.strand || 'all';
-                    const cardTimeBlock = card.dataset.timeblock || 'all';
+                    // Ensure cardTimeBlock uses the correct data attribute, which should be populated from session.time_slot
+                    const cardTimeBlock = card.dataset.timeblock || 'all'; 
                     const cardTags = (card.dataset.tags || '').split(',').filter(t => t);
                     let showCard = true;
 

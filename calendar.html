@@ -714,63 +714,66 @@
             // Load schedule data
             async function loadScheduleData() {
                 try {
-                    const response = await fetch('calendar_data.json');
+                    const response = await fetch('sessions.json'); // Changed to fetch sessions.json
                     if (!response.ok) {
-                        throw new Error('Failed to load calendar data');
+                        throw new Error('Failed to load sessions data');
                     }
                     
-                    scheduleData = {
+                    const sessionsData = await response.json(); // Data from sessions.json
+                    
+                    scheduleData = { // Initialize scheduleData
                         timeSlots: [],
                         rooms: [],
                         sessions: []
                     };
+
+                    const uniqueTimeSlots = new Set();
+                    const uniqueRooms = new Set();
                     
-                    // Convert calendar_data.json format to schedule.json format
-                    const calendarData = fetch("calendar_data.json").then(response => response.json());
-                    
-                    // Extract rooms and time slots
-                    let allRooms = new Set();
-                    
-                    // Process each time slot
-                    calendarData.forEach(timeSlotData => {
-                        // Add time slot
-                        scheduleData.timeSlots.push({
-                            name: timeSlotData.timeSlot,
-                            timeRange: timeSlotData.timeSlot
+                    // Process each session from sessions.json
+                    sessionsData.forEach(session => {
+                        // Add session to scheduleData.sessions
+                        scheduleData.sessions.push({
+                            id: session.id,
+                            title: session.title,
+                            presenter: session.presenter,
+                            strand: session.strand, // e.g., "strand1"
+                            type: session.type,     // e.g., "type-workshop"
+                            timeSlot: session.time_slot, // Ensure this matches the property name in sessions.json
+                            room: session.room,         // Ensure this matches the property name in sessions.json
+                            tags: session.tags || [],
+                            description: session.description || '',
+                            strandName: session.strandName || '', // e.g., "AI in the Classroom"
+                            typeName: session.typeName || '',     // e.g., "Workshop"
+                            isSpecialEvent: session.isSpecialEvent || false
                         });
                         
-                        // Process sessions in this time slot
-                        if (timeSlotData.sessions) {
-                            for (const room in timeSlotData.sessions) {
-                                allRooms.add(room);
-                                const session = timeSlotData.sessions[room];
-                                
-                                // Add this session to the sessions array
-                                scheduleData.sessions.push({
-                                    id: session.id,
-                                    title: session.title,
-                                    presenter: session.presenter,
-                                    strand: session.strand,
-                                    type: session.type,
-                                    timeSlot: timeSlotData.timeSlot,
-                                    room: room,
-                                    tags: session.tags || [],
-                                    isSpecialEvent: session.isSpecialEvent
-                                });
-                            }
+                        // Collect unique time slots and rooms
+                        if (session.time_slot) {
+                            uniqueTimeSlots.add(session.time_slot);
+                        }
+                        if (session.room) {
+                            uniqueRooms.add(session.room);
                         }
                     });
                     
-                    // Set rooms
-                    scheduleData.rooms = Array.from(allRooms);
+                    // Populate scheduleData.timeSlots
+                    uniqueTimeSlots.forEach(ts => {
+                        scheduleData.timeSlots.push({ name: ts, timeRange: ts });
+                    });
+                    // Sort time slots (optional, but good for consistency)
+                    scheduleData.timeSlots.sort((a, b) => a.name.localeCompare(b.name));
+                    
+                    // Populate scheduleData.rooms
+                    scheduleData.rooms = Array.from(uniqueRooms).sort();
                     
                     populateRoomFilters();
-                    renderCalendarView();
+                    renderCalendarView(); // This function should now work with the new scheduleData structure
                     loading.classList.add('hidden');
                     calendarView.classList.remove('hidden');
                 } catch (error) {
-                    console.error('Error loading calendar data:', error);
-                    loading.innerHTML = '<div class="alert alert-danger">Failed to load calendar data. Please try again later.</div>';
+                    console.error('Error loading session data for calendar:', error);
+                    loading.innerHTML = '<div class="alert alert-danger">Failed to load session data. Please try again later.</div>';
                 }
             }
             

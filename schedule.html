@@ -395,14 +395,44 @@
             // Load schedule data
             async function loadScheduleData() {
                 try {
-                    const response = await fetch('schedule.json');
+                    const response = await fetch('sessions.json'); // Changed to fetch sessions.json
                     if (!response.ok) {
-                        throw new Error('Failed to load schedule data');
+                        throw new Error('Failed to load sessions data');
                     }
                     
-                    scheduleData = await response.json();
+                    const sessionsData = await response.json(); // Data from sessions.json
+                    
+                    // Transform sessionsData into the structure expected by renderScheduleTable
+                    const timeSlots = new Set();
+                    const rooms = new Set();
+                    sessionsData.forEach(session => {
+                        if (session.time_slot) timeSlots.add(session.time_slot);
+                        if (session.room) rooms.add(session.room);
+                    });
+
+                    scheduleData = {
+                        timeSlots: Array.from(timeSlots).sort().map(ts => ({ name: ts, timeRange: ts })),
+                        rooms: Array.from(rooms).sort(),
+                        sessions: sessionsData.map(s => ({
+                            id: s.id,
+                            title: s.title,
+                            presenter: s.presenter,
+                            strand: s.strand, // e.g., "strand1"
+                            type: s.type,     // e.g., "type-workshop"
+                            timeSlot: s.time_slot, // Ensure this matches the property name in sessions.json
+                            room: s.room,         // Ensure this matches the property name in sessions.json
+                            tags: s.tags || [],
+                            description: s.description || '',
+                            strandName: s.strandName || '', // e.g., "AI in the Classroom"
+                            typeName: s.typeName || '',     // e.g., "Workshop"
+                            isSpecialEvent: s.isSpecialEvent || false
+                        }))
+                    };
+                    
                     renderScheduleTable();
                     loading.style.display = 'none';
+                    // Make sure the schedule container is visible if it was hidden
+                    if (scheduleContainer) scheduleContainer.style.display = ''; 
                 } catch (error) {
                     console.error('Error loading schedule data:', error);
                     loading.innerHTML = '<div class="alert alert-danger">Failed to load schedule data. Please try again later.</div>';
@@ -411,7 +441,10 @@
 
             // Render schedule table
             function renderScheduleTable() {
-                if (!scheduleData) return;
+                if (!scheduleData || !scheduleTable) { // Added null check for scheduleTable
+                    console.error("Schedule data or table element not available for rendering.");
+                    return;
+                }
 
                 const { timeSlots, rooms, sessions } = scheduleData;
                 
@@ -431,15 +464,25 @@
                     
                     // Add cells for each room
                     rooms.forEach(room => {
+                        // Find session matching current time slot and room
                         const session = sessions.find(s => s.timeSlot === slot.name && s.room === room);
                         
                         if (session) {
+                            // Ensure session.strand, session.title, and session.presenter are defined
+                            const strandClass = session.strand ? session.strand : 'default-strand';
+                            const title = session.title ? session.title : 'Untitled Session';
+                            const presenter = session.presenter ? session.presenter : 'N/A';
+                            // Make sure to handle special events if they have a different structure or no strand
+                            const isSpecial = session.isSpecialEvent || false;
+                            const cellClass = isSpecial ? 'special-event' : strandClass;
+
                             tableHTML += `
-                                <td class="session-cell ${session.strand}" 
+                                <td class="session-cell ${cellClass}" 
                                     onclick="openSessionModal('${encodeURIComponent(JSON.stringify(session))}')">
                                     <div class="strand-indicator"></div>
-                                    <div class="session-title">${session.title}</div>
-                                    <div class="session-presenter">${session.presenter}</div>
+                                    <div class="session-title">${title}</div>
+                                    <div class="session-presenter">${presenter}</div>
+                                    ${session.type ? `<div class="session-type ${session.type.toLowerCase().replace(/\s+/g, '-')}">${session.typeName || session.type}</div>` : ''}
                                 </td>
                             `;
                         } else {
@@ -531,7 +574,14 @@
             };
 
             // Initialize
-            loadScheduleData();
+            // Check if scheduleTable exists before calling loadScheduleData
+            if (scheduleTable) {
+                loadScheduleData();
+            } else {
+                // If scheduleTable is not on this page, hide loading and do nothing further for schedule
+                if(loading) loading.style.display = 'none';
+                // console.log("Schedule table not found on this page, skipping schedule rendering.");
+            }
         });
     </script>
 </body>
