@@ -1,16 +1,17 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Paths Forward: AI, Humanity, and the Next Era of Education</title>
-    <!-- Add favicon -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <!-- Fallback text-based favicon if favicon.ico doesn't exist -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' font-family='serif' font-weight='bold' fill='%2398252b'>LC</text></svg>">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>New Paths Forward: AI, Humanity, and the Next Era of Education</title>
+<!-- Add favicon -->
+<link href="favicon.ico" rel="icon" type="image/x-icon"/>
+<!-- Fallback text-based favicon if favicon.ico doesn't exist -->
+<link href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90' font-family='serif' font-weight='bold' fill='%2398252b'&gt;LC&lt;/text&gt;&lt;/svg&gt;" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet"/>
+<style>
         /* Loomis Chaffee Brand Colors */
         :root {
             --lc-red: #98252b;
@@ -462,32 +463,30 @@
     </style>
 </head>
 <body>
-    <header class="lc-header">
-        <div class="container">
-            <a href="#" onclick="location.reload(); return false;">
-                <img src="logo.png" alt="Loomis Chaffee Logo" class="lc-logo" onerror="this.style.display='none'; console.error('Logo image not found.');">
-            </a>
-        </div>
-    </header>
-
-    <div class="container py-4">
-        <div class="row mb-4">
-            <div class="col-12">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Session Listing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="schedule.html">Schedule</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="calendar.html">Calendar View</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <style>
+<header class="lc-header">
+<div class="container">
+<a href="#" onclick="location.reload(); return false;">
+<img alt="Loomis Chaffee Logo" class="lc-logo" onerror="this.style.display='none'; console.error('Logo image not found.');" src="logo.png"/>
+</a>
+</div>
+</header>
+<div class="container py-4">
+<div class="row mb-4">
+<div class="col-12">
+<ul class="nav nav-tabs">
+<li class="nav-item">
+<a class="nav-link active" href="index.html">Session Listing</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="schedule.html">Schedule</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="calendar.html">Calendar View</a>
+</li>
+</ul>
+</div>
+</div>
+<style>
         /* Navigation tab styling */
         .nav-tabs {
             margin-bottom: 1.5rem;
@@ -506,77 +505,65 @@
             background-color: var(--lc-red);
         }
         </style>
+<div class="row">
+<div class="col-lg-3">
+<div class="filter-group-wrapper">
+<div class="filter-group">
+<h4 class="filter-title">Filter by Strand</h4>
+<div class="filter-buttons-container" id="strand-filters">
+<button class="btn btn-filter btn-filter-all active" data-filter="all" onclick="toggleFilter('strand', 'all', this)">All Strands</button>
+<button class="btn btn-filter color-1" data-filter="strand1" onclick="toggleFilter('strand', 'strand1', this)">1: AI in the Classroom</button>
+<button class="btn btn-filter color-2" data-filter="strand2" onclick="toggleFilter('strand', 'strand2', this)">2: Human-Centered Innovation</button>
+</div>
+</div>
+<div class="filter-group">
+<h4 class="filter-title">Filter by Time Block</h4>
+<div class="filter-buttons-container" id="timeblock-filters">
+<button class="btn btn-filter btn-filter-all active" data-filter="all" onclick="toggleFilter('timeblock', 'all', this)">All Time Blocks</button>
+<button class="btn btn-filter color-1" data-filter="1" onclick="toggleFilter('timeblock', '1', this)">Block 1</button>
+<button class="btn btn-filter color-3" data-filter="2" onclick="toggleFilter('timeblock', '2', this)">Block 2</button>
+<button class="btn btn-filter color-4" data-filter="3" onclick="toggleFilter('timeblock', '3', this)">Block 3</button>
+</div>
+</div>
+<div class="filter-group">
+<h4 class="filter-title">Filter by Tag</h4>
+<div class="filter-buttons-container" id="tag-filters">
+<button class="btn btn-filter btn-filter-all active" data-filter="all" onclick="toggleFilter('tag', 'all', this)">All Tags</button>
+</div>
+</div>
+<div class="filter-group">
+<h4 class="filter-title">Search &amp; Clear</h4>
+<div class="input-group mb-2"> <input class="form-control form-control-sm" id="search-input" placeholder="Search sessions..." type="text"/> <button class="btn btn-outline-secondary btn-sm" id="search-button" onclick="applyFilters()" type="button">
+<i class="bi bi-search"></i>
+</button>
+</div>
+<button class="btn btn-outline-secondary btn-sm w-100" id="clear-filters-button" onclick="resetAllFilters()">Clear All Filters</button> </div>
+</div>
+</div>
+<div class="col-lg-9">
+<h2 class="mb-3 header-red">Conference Sessions</h2> <div id="sessions-container"><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">Expanding Inquiry: Using AI Tools to Create Simulations and Investigations</div><div class="session-presenter">Melissa Poole, Steve Armandt</div><div class="session-preview">AI-powered tools offer new possibilities for engaging students in inquiry-based learning across disciplines.</div><div class="session-time-room">1:30 - 2:30 | Brush 202</div><div class="session-tags"><span class="tag">Simulations</span><span class="tag">AI Skills</span></div></div><div class="session-card strand2" data-strand="strand2" data-type="workshop"><div class="session-title">Digital Dependency vs. Human Connection: Educational Strategies for the AI Character Era</div><div class="session-presenter">Suzanne Ellinwood</div><div class="session-preview">Workshop Proposal: Digital Dependency vs. Human Connection: Educational Strategies for the AI Character Era 
+The explosive growth of AI character...</div><div class="session-time-room">1:30 - 2:30 | Brush 314</div><div class="session-tags"><span class="tag">AI Friends</span><span class="tag">Student Life</span></div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">Student Buy-In and "Ungrading" in the Humanities Classroom</div><div class="session-presenter">Caitie Cotton</div><div class="session-preview">A challenge posed by AI is how to grade given the concern that students are not submitting their own work.</div><div class="session-time-room">1:30 - 2:30 | Kravis Center</div><div class="session-tags"><span class="tag">Provocative Ideas</span><span class="tag">Humanities</span></div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation and q&amp;a"><div class="session-title">The Value of Struggle: Preserving Meaningful Learning in an AI Age</div><div class="session-presenter">Marta Napiorkowska</div><div class="session-preview">I present my recent article, "The Value of Struggle" (https://edu-ai.org/the-value-of-struggle-preserving-meaningful-learning-in-an-ai-age/), which...</div><div class="session-time-room">11:30 - 12:30 | Kravis Center</div><div class="session-tags"><span class="tag">Provocative Ideas</span><span class="tag">Humanities</span></div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">Overcoming studentsâ€™ initial reactions to AI through text-based experiments</div><div class="session-presenter">Kyle Conrau-Lewis</div><div class="session-preview">AI inspires awe in studentsâ€”and this first reaction presents one of the greatest challenges for writing instructors of all disciplines.</div><div class="session-time-room">10:15 - 11:15 | Writing Center</div><div class="session-tags"><span class="tag">Humanities</span><span class="tag">Curriculum Design</span></div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">AI-Powered Pedagogy: Crafting Effective Prompts for Transformative Learning</div><div class="session-presenter">Maureen Gassert Lamb</div><div class="session-preview">As AI tools become increasingly integrated into classrooms, educators face a challenge: how to effectively prompt AI to generate meaningful,...</div><div class="session-time-room">11:30 - 12:30 | Brush 302</div></div><div class="session-card strand2" data-strand="strand2" data-type="facilitated discussion"><div class="session-title">Slavery and Loomis Chaffee: An Ethical History Project: Collaborating with Students to Make Meaning in and out of the Classroom</div><div class="session-presenter">Eric LaForest, Elliot Dial, Karen Parsons</div><div class="session-preview">After a brief presentation on Slavery and Loomis Chaffee: An Ethical History Project (linked below), this session will invite participants to begin...</div><div class="session-time-room">11:30 - 12:30 | Brush 202</div><div class="session-tags"><span class="tag">Provocative Ideas</span><span class="tag">Humanities</span><span class="tag">Curriculum Design</span></div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">Place-Based Education in the Era of AI</div><div class="session-presenter">Marley Matlack, Sarah Griggs</div><div class="session-preview">Place-based education invites students to engage deeply with the cultural, ecological, and historical dimensions of their local surroundings.</div><div class="session-time-room">11:30 - 12:30 | Brush 203</div><div class="session-tags"><span class="tag">Place-Based Education</span><span class="tag">AI Skills</span></div></div><div class="session-card strand2" data-strand="strand2" data-type="workshop"><div class="session-title">Creating a Student Learning Praxis in the Age of AI</div><div class="session-presenter">Richard Scullin</div><div class="session-preview">This session provides teachers with a scalable unit plan that helps students develop their own philosophyâ€“and praxisâ€“of learning with generative...</div><div class="session-time-room">11:30 - 12:30 | Brush 306</div></div><div class="session-card strand2" data-strand="strand2" data-type="a combination of a workshop and facilitated dicussion"><div class="session-title">Metacognition and AI: Empowering High School Students to Become Strategic Learners in a Technological World</div><div class="session-presenter">Luke Peterson</div><div class="session-preview">This presentation will delve into the crucial role of metacognition in preparing high school students for a future where AI is prevalent.</div><div class="session-time-room">1:30 - 2:30 | Brush 308</div><div class="session-tags"><span class="tag">Metacognition</span><span class="tag">Curriculum Design</span></div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation / facilitated discussion"><div class="session-title">What's in a Name: Metaphors We Write By</div><div class="session-presenter">John Morrell</div><div class="session-preview">This session will interrogate the metaphors that shape our thinking about writing on the one hand, and those metaphors that frame our discussions...</div><div class="session-time-room">11:30 - 12:30 | Writing Center</div><div class="session-tags"><span class="tag">Provocative Ideas</span><span class="tag">Humanities</span></div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation and q&amp;a"><div class="session-title">AI-Adapted Writing Assignments for Skill Development and AI Literacy </div><div class="session-presenter">Ron Spalletta</div><div class="session-preview">Two classes of high school seniors completed baseline and benchmark timed, in-class essays to determine skill development in response to a series of...</div><div class="session-time-room">1:30 - 2:30 | Brush 302</div><div class="session-tags"><span class="tag">Curriculum Design</span><span class="tag">Humanities</span></div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">Lessons Learned from (Co-Lab)orating Across Schools</div><div class="session-presenter">Ned Heckman, Maureen Russo-Rodriguez</div><div class="session-preview">What happens when teachers from different schools come together to explore how AI can enhance their craft? In this interactive session, weâ€™ll share...</div><div class="session-time-room">10:15 - 11:15 | Brush 314</div><div class="session-tags"><span class="tag">Professional Development</span><span class="tag">AI Skills</span></div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">Ctrl+Alt+Engage: Rebooting Classrooms with AI Simulations</div><div class="session-presenter">Steph Sperber</div><div class="session-preview">Educators across disciplines are grappling with how to maintain deep student engagement, foster critical thinking, and teach collaborative...</div><div class="session-time-room">11:30 - 12:30 | Brush 310</div><div class="session-tags"><span class="tag">Simulations</span><span class="tag">AI Skills</span></div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">Better Together: How Human Connection Transforms AI into an Effective Educational Partner</div><div class="session-presenter">Kate Seyboth</div><div class="session-preview">AI tools have enormous potential in education, but many educators hesitate to fully embrace them due to concerns that they may hinder rather than...</div><div class="session-time-room">10:15 - 11:15 | Brush 310</div><div class="session-tags"><span class="tag">Collaboration</span><span class="tag">AI Skills</span></div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">Low-Tech Reading: Strategies for Engaging High-Tech Screenagers</div><div class="session-presenter">Lena Sadowitz</div><div class="session-preview">As AI tools reshape how our students approach reading, teachers are facing a familiar yet evolving challenge: are students even reading? We will...</div><div class="session-time-room">1:30 - 2:30 | Brush 2nd Floor</div><div class="session-tags"><span class="tag">Curriculum Design</span><span class="tag">Reading</span></div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">What Learning Science Tells Us about Teaching with AI</div><div class="session-presenter">Peter Nilsson, Maya Bialik</div><div class="session-preview">When should students use AI in learning, and when should they not? How should we calibrate the right balance of tech-free and tech-enabled learning?...</div><div class="session-time-room">10:15 - 11:15 | Pearse Hub for Innovation</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">Leverage AI to Support Teaching Your Passions</div><div class="session-presenter">Peter Nilsson, Maya Bialik</div><div class="session-preview">How can AI deepen our passion for our work and not distract us from our passions as educators?
 
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="filter-group-wrapper">
-                    <div class="filter-group">
-                        <h4 class="filter-title">Filter by Strand</h4>
-                        <div class="filter-buttons-container" id="strand-filters">
-                            <button class="btn btn-filter btn-filter-all active" data-filter="all" onclick="toggleFilter('strand', 'all', this)">All Strands</button>
-                            <button class="btn btn-filter color-1" data-filter="strand1" onclick="toggleFilter('strand', 'strand1', this)">1: AI in the Classroom</button>
-                            <button class="btn btn-filter color-2" data-filter="strand2" onclick="toggleFilter('strand', 'strand2', this)">2: Human-Centered Innovation</button>
-                        </div>
-                    </div>
+In this session, we look at generative AI as a...</div><div class="session-time-room">11:30 - 12:30 | Pearse Hub for Innovation</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">How To Define and Draw Clear Lines for Appropriate AI Use </div><div class="session-presenter">Peter Nilsson, Maya Bialik</div><div class="session-preview">How can we help students most clearly determine when they should and should not use AI for learning?
 
-                    <div class="filter-group">
-                        <h4 class="filter-title">Filter by Time Block</h4>
-                        <div class="filter-buttons-container" id="timeblock-filters">
-                            <button class="btn btn-filter btn-filter-all active" data-filter="all" onclick="toggleFilter('timeblock', 'all', this)">All Time Blocks</button>
-                            <button class="btn btn-filter color-1" data-filter="1" onclick="toggleFilter('timeblock', '1', this)">Block 1</button>
-                            <button class="btn btn-filter color-3" data-filter="2" onclick="toggleFilter('timeblock', '2', this)">Block 2</button>
-                            <button class="btn btn-filter color-4" data-filter="3" onclick="toggleFilter('timeblock', '3', this)">Block 3</button>
-                        </div>
-                    </div>
-
-                    <div class="filter-group">
-                        <h4 class="filter-title">Filter by Tag</h4>
-                        <div class="filter-buttons-container" id="tag-filters">
-                            <button class="btn btn-filter btn-filter-all active" data-filter="all" onclick="toggleFilter('tag', 'all', this)">All Tags</button>
-                            </div>
-                    </div>
-
-                    <div class="filter-group">
-                        <h4 class="filter-title">Search & Clear</h4>
-                        <div class="input-group mb-2"> <input type="text" id="search-input" class="form-control form-control-sm" placeholder="Search sessions..."> <button id="search-button" class="btn btn-outline-secondary btn-sm" type="button" onclick="applyFilters()">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                        <button id="clear-filters-button" class="btn btn-outline-secondary btn-sm w-100" onclick="resetAllFilters()">Clear All Filters</button> </div>
-                </div>
-            </div>
-
-            <div class="col-lg-9">
-                <h2 class="mb-3 header-red">Conference Sessions</h2> <div id="sessions-container">
-                    <div id="loading">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p>Loading session data...</p>
-                    </div>
-                    <div id="no-results" class="alert alert-warning hidden" role="alert">
-                        No sessions match your criteria. Please adjust your filters or search term.
-                    </div>
-                    </div>
-            </div>
-        </div>
-    </div>
-
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <h4>Loomis Chaffee</h4>
-                    <p class="mb-0">4 Batchelder Road, Windsor, CT 06095</p>
-                    <!-- Copyright removed -->
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
+Most AI use policies today are built around...</div><div class="session-time-room">1:30 - 2:30 | Pearse Hub for Innovation</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">Build-a-Bot Workshop: Make Your Own AI to Make Sense of AI</div><div class="session-presenter">Lista Lincoln</div><div class="session-preview">Introduction: 
+Teachers work tirelessly to help students use AI productively, ethically, and responsibly.</div><div class="session-time-room">1:30 - 2:30 | Brush 310</div></div><div class="session-card strand3" data-strand="strand3" data-type="presentation with q&amp;a and application activity"><div class="session-title">From Curiosity to Community: Launching a Teacher-Led Gen AI Professional Development Initiative</div><div class="session-presenter">Heidi Hojnicki, Dr. Rachel Heffner-Burns</div><div class="session-preview">The rapid evolution of Generative AI presents Kâ€“12 educators with both challenges and opportunities: to grow as professionals, to experiment with...</div><div class="session-time-room">1:30 - 2:30 | Brush 201</div><div class="session-tags"><span class="tag">Professional Development</span><span class="tag">AI Skills</span></div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">Annie Murphy Paul Breakout Session: Deeper Dive into "Thinking with our Surroundings" from The Extended Mind</div><div class="session-presenter">Annie Murphy Paul</div><div class="session-preview">Keynote speaker Annie Murphy Paul will dive deeper into her work The Extended Mind, offering more thoughts about the middle section of the book:...</div><div class="session-time-room">10:15 - 11:15 | Hubbard Auditorium</div></div><div class="session-card strand2" data-strand="strand2" data-type="facilitated discussion"><div class="session-title">Teaching Student Presentation Skills</div><div class="session-presenter">Scott MacClintic</div><div class="session-preview">As teachers, we frequently ask students to give presentations to their peers or outside audiences.</div><div class="session-time-room">1:30 - 2:30 | Brush 306</div></div><div class="session-card strand2" data-strand="strand2" data-type="workshop"><div class="session-title">Untethered Thinking: Design Thinking Frameworks for Tech-Free Student Brainstorms</div><div class="session-presenter">Jen Solomon</div><div class="session-preview">In a world where AI can generate ideas at the click of a button, it's more important than ever to empower students to think creatively and...</div><div class="session-time-room">10:15 - 11:15 | Brush 308</div><div class="session-tags"><span class="tag">Design Thinking</span><span class="tag">Curriculum Design</span></div></div><div class="session-card strand1" data-strand="strand1" data-type="a combination - some presentation, and some chances for participants to engage in the assignments/tools themselves to experience how they operate"><div class="session-title">Dangerous (Artificial) Minds: Engaging student critical thinking and analysis in their interactions with AI</div><div class="session-presenter">David Nurenberg</div><div class="session-preview">The problem: AI has rendered the traditional English essay, if not obsolete, at least highly problematic from an assessment perspective.</div><div class="session-time-room">10:15 - 11:15 | Brush 201</div><div class="session-tags"><span class="tag">Humanities</span><span class="tag">Curriculum Design</span></div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation but then participate in our learning lab protocol."><div class="session-title">Pre-Skilling for the Unknown: Building a Human-Centered AI Culture in Schools</div><div class="session-presenter">Meghan Chew, Sue Teyan, Erin O’Grady, Marc Maier, Nina Yuen</div><div class="session-preview">As generative AI rapidly transforms the educational landscape, many schools are racing to adopt tools without first establishing the culture,...</div><div class="session-time-room">1:30 - 2:30 | Brush 203</div></div><div class="session-card strand1" data-strand="strand1" data-type="facilitated discussion"><div class="session-title">Rethinking Creative and Critical Thinking in the Age of AI</div><div class="session-presenter">Adam Alsamadisi</div><div class="session-preview">As generative AI reshapes what students can produce in seconds, educators are being forced to reconsider the academic and intellectual values weâ€™ve...</div><div class="session-time-room">10:15 - 11:15 | Brush 2nd Floor</div><div class="session-tags"><span class="tag">Curriculum Design</span><span class="tag">AI Skills</span></div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation and q&amp;a"><div class="session-title">Do Androids Dream: Teaching AI Literacy Through Literature</div><div class="session-presenter">Jennifer Blue, Anne Peterson</div><div class="session-preview">In the age of generative AI, English classrooms are key sites for developing students’ AI literacy.</div><div class="session-time-room">1:30 - 2:30 | Writing Center</div><div class="session-tags"><span class="tag">I would be presenting with the help of a colleague</span><span class="tag">Anne Peterson</span><span class="tag">who is also registered for the conference.</span></div></div></div>
+</div>
+</div>
+</div>
+<footer>
+<div class="container">
+<div class="row">
+<div class="col-md-8">
+<h4>Loomis Chaffee</h4>
+<p class="mb-0">4 Batchelder Road, Windsor, CT 06095</p>
+<!-- Copyright removed -->
+</div>
+</div>
+</div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
         // NOTE: This script assumes the fonts 'Proxima Nova' and 'Financier Display'
         // are loaded globally via the website's main CSS or a font service.
         document.addEventListener('DOMContentLoaded', function() {
