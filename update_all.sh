@@ -27,6 +27,18 @@ echo "Step 6: Running comprehensive fixes for consistency..."
 python3 fix_session_info_comprehensive.py
 
 echo ""
+echo "Step 7: Synchronizing data between sessions.json and schedule.json..."
+python3 sync_session_data.py
+
+echo ""
+echo "Step 8: Applying specific fixes for David Nurenberg's session..."
+python3 fix_nurenberg_session.py
+
+echo ""
+echo "Step 9: Running verification checks..."
+python3 verify_data_consistency.py
+
+echo ""
 echo "=== Update process complete! ==="
 echo "You can now view the updated data in:"
 echo "- index.html (Session Listing)"

@@ -233,7 +233,7 @@
       "room": "Writing Center",
       "sessionId": "",
       "title": "Overcoming students’ initial reactions to AI through text-based experiments",
-      "presenter": "",
+      "presenter": "Kyle Conrau-Lewis - Taft School",
       "description": "Session details not available.",
       "strand": "",
       "strandName": "",
@@ -285,6 +285,22 @@
       "typeName": "Facilitated Discussion",
       "tags": [
         "Provocative Ideas",
+        "Humanities",
+        "Curriculum Design"
+      ]
+    },
+    {
+      "timeSlot": "Slot 2 (11:30-12:30)",
+      "room": "Brush 203",
+      "sessionId": "",
+      "title": "Dangerous (Artificial) Minds: Engaging student critical thinking and analysis in their interactions with AI",
+      "presenter": "David Nurenberg - Milton Academy",
+      "description": "The problem: AI has rendered the traditional English essay, if not obsolete, at least highly problematic from an assessment perspective. How can we be sure we are accurately assessing student knowledge and skills ifÂ Â they are outsourcing their thinking to LLMs? How can we convince students that there is value in learning the knowledge and skills if LLMs can instantly create the same products we are asking them to struggle to develop? Adaptable Solutions: The purpose of writing essays is not to produce essays - it is to have students develop critical/analytical thinking, and also to share their conclusions in accessible and engaging ways that reflect a unique voice. To this end, I have been exploring ways for students to turn their critical lens upon the products of LLMs and AI-based search engines themselves, examining issues of construction, authorship, bias, etc, as well as to detect the formulaic nature of LLM products so as to better distinguish their own writing and expression. In a word where everyone has access to AI, how can they make THEIR creative works stand out? Transferability: These lessons could (and do) operate across the humanities and could also have application in any STEM assignment that called for students to assemble and share their ideas and conclusions with others. Theory and Practice: At core these lessons and practices boil down to the principles of Constructivist learning; just telling students \"AI is limited and often dangerous\" and listing all the reasons accomplishes little, especially when the apparent rewards of using it seem so enticing. Instead, students need to experience AI&#x27;s limitations and dangers for themselves, in a guided series of explorations that engage their critical faculties and culminate in the creation of their own unique products.",
+      "strand": "strand1",
+      "strandName": "1: AI in the Classroom",
+      "type": "type-presentation",
+      "typeName": "Presentation and Q&A",
+      "tags": [
         "Humanities",
         "Curriculum Design"
       ]
@@ -593,7 +609,7 @@
       "room": "Writing Center",
       "sessionId": "",
       "title": "Do Androids Dream? Teaching AI Literacy Through Literature",
-      "presenter": "",
+      "presenter": "Jennifer Blue - Kimball Union Academy, Anne Peterson - Kimball Union Academy",
       "description": "Session details not available.",
       "strand": "",
       "strandName": "",

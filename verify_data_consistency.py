@@ -52,8 +52,24 @@ def check_sessions_json(sessions_data):
         print("ISSUE: Could not find Ungrading session in sessions.json")
         issues_found += 1
     
+    # Check for Writing Center sessions
+    writing_center_sessions = []
+    for session in sessions_data:
+        location = session.get("location", "")
+        if location and "Writing Center" in location:
+            writing_center_sessions.append(session)
+    
+    if writing_center_sessions:
+        print(f"OK: Found {len(writing_center_sessions)} sessions in the Writing Center:")
+        for session in writing_center_sessions:
+            print(f"  - {session.get('title', '')[:50]}... ({session.get('timeBlock', 'No time block')})")
+    else:
+        print("ISSUE: No sessions found in Writing Center location")
+        issues_found += 1
+    
     # Check for TBD values
     tbd_count = 0
+    anonymous_count = 0
     sessions_with_tbd = []
     for session in sessions_data:
         title = session.get("title", "")
@@ -63,6 +79,9 @@ def check_sessions_json(sessions_data):
         if session.get("location", "") == "TBD" or not session.get("location"):
             tbd_count += 1
             sessions_with_tbd.append(f"Location TBD: {title[:50]}...")
+        if session.get("location", "") == "anonymous":
+            anonymous_count += 1
+            sessions_with_tbd.append(f"Location is 'anonymous': {title[:50]}...")
     
     if tbd_count > 0:
         print(f"ISSUE: Found {tbd_count} TBD values in sessions.json")
@@ -71,6 +90,12 @@ def check_sessions_json(sessions_data):
         issues_found += tbd_count
     else:
         print("OK: No TBD values found in sessions.json")
+    
+    if anonymous_count > 0:
+        print(f"ISSUE: Found {anonymous_count} 'anonymous' location values in sessions.json")
+        issues_found += anonymous_count
+    else:
+        print("OK: No 'anonymous' location values found in sessions.json")
     
     return issues_found
 
