@@ -678,6 +678,30 @@
             }
         });
 
+        function getCanonicalStrandFilterKey(strandText) {
+            if (!strandText || typeof strandText !== 'string') {
+                // console.warn("getCanonicalStrandFilterKey: received non-string or empty strandText:", strandText);
+                return "unknown-strand";
+            }
+            // Match "1: Description" -> "strand1"
+            const prefixMatch = strandText.match(/^(\\d+):/);
+            if (prefixMatch) {
+                return `strand${prefixMatch[1]}`;
+            }
+            // Match "Strand N" -> "strandN" (case-insensitive for "Strand")
+            const strandNumMatch = strandText.match(/Strand\\s*(\\d+)/i);
+            if (strandNumMatch) {
+                return `strand${strandNumMatch[1]}`;
+            }
+            // Fallback: sanitize the text for use as a class name
+            // Convert to lowercase, replace spaces with hyphens, remove disallowed characters
+            let safeClass = strandText.toLowerCase()
+                                      .replace(/\\s+/g, '-')
+                                      .replace(/[^a-z0-9-]/g, '');
+            // If sanitization results in an empty string (e.g., strandText was just "."), use a default
+            return safeClass || 'unknown-strand';
+        }
+
         async function loadCalendarData() {
             const loadingIndicator = document.getElementById('loading');
             const calendarContainer = document.getElementById('calendar-grid-container');
@@ -851,7 +875,9 @@
 
         function createSessionCardForCalendar(session) {
             const card = document.createElement('div');
-            card.classList.add('session-block', 'mb-2', session.strand);
+            const strandClass = getCanonicalStrandFilterKey(session.strand); // Use canonical key
+            card.classList.add('session-block', 'mb-2', strandClass); // Add the sanitized/canonical class
+            
             card.style.width = '100%'; // Take full width of the table cell
             card.style.minHeight = '100px'; 
             card.style.cursor = 'pointer';
@@ -861,8 +887,9 @@
 
             const strandIndicator = document.createElement('div');
             strandIndicator.classList.add('strand-indicator');
-            // Ensure strand indicator color is applied based on strandId
-            strandIndicator.style.backgroundColor = getStrandColor(session.strand);
+            // REMOVED: strandIndicator.style.backgroundColor = getStrandColor(session.strand);
+            // Rely on CSS rules like .strand1 .strand-indicator, .strand2 .strand-indicator etc.
+            // based on the class added to 'card'.
             card.appendChild(strandIndicator);
 
             const body = document.createElement('div');
