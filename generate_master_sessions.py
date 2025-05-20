@@ -47,6 +47,46 @@ def fix_common_mojibake(text):
 
     return text
 
+def normalize_session_type(raw_type_string):
+    if pd.isna(raw_type_string) or not isinstance(raw_type_string, str):
+        return "default"
+    
+    s_type = str(raw_type_string).strip().lower()
+
+    if not s_type: # Handle empty string after strip
+        return "default"
+
+    # Order can be important here. More specific checks first.
+    # Checking for more complex/longer strings first
+    if "presentation but then participate in our learning lab protocol" in s_type:
+        return "presentation"
+    if "a combination - some presentation, and some chances for participants to engage" in s_type:
+        return "workshop"
+    if "a combination of a workshop and facilitated dicussion" in s_type: # Typo "dicussion" might be in source data
+        return "workshop" 
+    if "presentation with q&a and application activity" in s_type:
+        return "presentation"
+    if "presentation and q&a" in s_type:
+        return "presentation"
+    if "facilitated discussion" in s_type:
+        return "discussion"
+
+    # Simpler keyword checks
+    if "workshop" in s_type:
+        return "workshop"
+    if "presentation" in s_type: # Catches "presentation" if not caught by more specific above
+        return "presentation"
+    if "discussion" in s_type: # Catches "discussion" if not caught by "facilitated discussion"
+        return "discussion"
+    if "panel" in s_type:
+        return "panel"
+    if "keynote" in s_type: # Usually handled by isSpecialEvent, but good to have
+        return "keynote" 
+    
+    # If no keywords matched, return "default"
+    # print(f"Info: Session type '{raw_type_string}' normalized to 'default'")
+    return "default"
+
 def html_encode_but_preserve_quotes(text):
     """HTML escapes text but converts quote HTML entities back to actual quotes"""
     if pd.isna(text) or text is None: # Added check for None
@@ -238,10 +278,7 @@ def main():
             
             # Session Type
             _raw_session_type_for_type = row.get('What is the format of your session?')
-            if pd.isna(_raw_session_type_for_type) or not str(_raw_session_type_for_type).strip():
-                session['type'] = 'workshop' # Default if NaN or empty string
-            else:
-                session['type'] = str(_raw_session_type_for_type).strip().lower()
+            session['type'] = normalize_session_type(_raw_session_type_for_type) # MODIFIED to use normalize_session_type
             
             _raw_session_type_for_typeName = row.get('What is the format of your session?', 'Workshop')
             session['typeName'] = get_type_name(str(_raw_session_type_for_typeName) if pd.notna(_raw_session_type_for_typeName) else 'Workshop')

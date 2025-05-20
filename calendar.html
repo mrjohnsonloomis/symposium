@@ -630,8 +630,8 @@
         <div class="session-modal-content">
             <span class="close-modal" id="closeModal-calendar">&times;</span>
             <h3 class="modal-header-red" id="modalTitle-calendar"></h3>
-            <p class="text-muted mb-2"><strong>Presented by:</strong> <span id="modalPresenter-calendar"></span></p>
-            <p class="text-muted mb-2"><em><span id="modalOrganization-calendar"></span></em></p>
+            <!-- Replace old presenter/org p tags with a single container -->
+            <div id="modalPresenterOrg-calendar" class="mb-2"></div> 
             
             <div id="modalOccurrences-calendar" class="mb-3">
                 <!-- Occurrences will be listed here -->
@@ -905,87 +905,82 @@
         }
 
         function openSessionModalCalendar(session) {
+            const modal = document.getElementById('sessionModal-calendar'); // Corrected modal ID
             document.getElementById('modalTitle-calendar').textContent = session.title;
-            document.getElementById('modalPresenter-calendar').textContent = session.presenter || 'N/A';
-            document.getElementById('modalOrganization-calendar').textContent = session.organization || '';
-            // Ensure description is HTML decoded if it contains entities, or use textContent if it's plain text
-            const descriptionContent = session.description ? session.description.replace(/\\n/g, '<br>') : 'No description available.';
-            document.getElementById('modalDescription-calendar').innerHTML = descriptionContent; // Use innerHTML for <br>
-            
-            const typeElem = document.getElementById('modalType-calendar');
-            typeElem.textContent = session.typeName || session.type;
-            typeElem.className = 'tag'; 
-            if (session.type) {
-                if (session.type.toLowerCase().includes('workshop')) typeElem.classList.add('type-workshop');
-                else if (session.type.toLowerCase().includes('presentation')) typeElem.classList.add('type-presentation');
-                else if (session.type.toLowerCase().includes('discussion')) typeElem.classList.add('type-discussion');
-                else {
-                    typeElem.style.backgroundColor = getStrandColor(session.strand, true); // Use light strand color
-                    typeElem.style.color = (getStrandColor(session.strand) === 'var(--meadow)' || getStrandColor(session.strand) === 'var(--pelican)') ? 'var(--lc-gray)' : 'white';
-                }
-            }
 
-            const strandElem = document.getElementById('modalStrand-calendar');
-            strandElem.textContent = session.strandName || session.strand;
-            strandElem.className = 'tag';
-            const strandMainColor = getStrandColor(session.strand);
-            const strandLightColor = getStrandColor(session.strand, true);
-            strandElem.style.backgroundColor = strandLightColor;
-            // Determine text color for good contrast with light background
-            if (strandMainColor === 'var(--meadow)' || strandMainColor === 'var(--pelican)') { // If base color is light (meadow, pelican)
-                 strandElem.style.color = 'var(--lc-gray)';
-            } else { // For darker base colors (red, brick), light background still pairs well with dark text or white
-                 strandElem.style.color = 'var(--lc-gray)'; // Defaulting to dark gray for light backgrounds
-                 // Or, for specific light backgrounds that are still quite colorful:
-                 if (strandLightColor === 'var(--cupola-light)' || strandLightColor === 'var(--brick-light)') {
-                    // strandElem.style.color = 'white'; // if white text is preferred on these
-                 }
-            }
-
-
-            const occurrencesContainer = document.getElementById('modalOccurrences-calendar');
-            occurrencesContainer.innerHTML = '';
-            if (session.occurrences && session.occurrences.length > 0) {
-                const occurrencesTitle = document.createElement('strong');
-                occurrencesTitle.textContent = session.occurrences.length > 1 ? 'Occurrences:' : 'Time & Location:';
-                occurrencesContainer.appendChild(occurrencesTitle);
-                const ul = document.createElement('ul');
-                ul.classList.add('list-unstyled', 'ps-0', 'mt-1');
-                session.occurrences.forEach(occ => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<i class="bi bi-clock me-2"></i>${occ.timeBlock} <br><i class="bi bi-geo-alt-fill me-2"></i>${occ.location}`;
-                    if (session.currentOccurrence && occ.timeBlock === session.currentOccurrence.timeBlock && occ.location === session.currentOccurrence.location) {
-                        // Optionally highlight the specific occurrence that was clicked in the calendar view
-                        // li.classList.add('fw-bold'); 
+            // Presenter and Organization Formatting
+            let presenterHTML = '';
+            if (session.presenter && session.presenter.trim() !== '') {
+                const presenters = session.presenter.split(/,\s*(?![^()]*\))|\s+and\s+/i);
+                const organizations = session.organization ? session.organization.split(/,\s*(?![^()]*\))|\s+and\s+/i) : [];
+                
+                presenterHTML = presenters.map((name, index) => {
+                    let orgName = '';
+                    if (organizations.length === 1) {
+                        orgName = organizations[0];
+                    } else if (organizations.length > index) {
+                        orgName = organizations[index];
                     }
-                    ul.appendChild(li);
-                });
-                occurrencesContainer.appendChild(ul);
-            } else if (session.isSpecialEvent && session.timeBlock && session.location) {
-                 // Handle special events if they were to be shown in modal via a different path
-                const occurrencesTitle = document.createElement('strong');
-                occurrencesTitle.textContent = 'Time & Location:';
-                occurrencesContainer.appendChild(occurrencesTitle);
-                const p = document.createElement('p');
-                p.innerHTML = `<i class="bi bi-clock me-2"></i>${session.timeBlock} <br><i class="bi bi-geo-alt-fill me-2"></i>${session.location}`;
-                occurrencesContainer.appendChild(p);
+                    const org = orgName && orgName.trim() !== '' ? `<em>${orgName.trim()}</em>` : '';
+                    return `<strong>${name.trim()}</strong>${org ? ' ' + org : ''}`;
+                }).join(', ');
             }
+            document.getElementById('modalPresenterOrg-calendar').innerHTML = presenterHTML || 'Presenter TBD';
 
-            const tagsContainer = document.getElementById('modalTags-calendar');
-            tagsContainer.innerHTML = '';
-            if (session.tags && session.tags.length > 0) {
-                session.tags.forEach(tagText => {
-                    const tag = document.createElement('span');
-                    tag.classList.add('tag', 'tag-more');
-                    tag.textContent = tagText;
-                    tagsContainer.appendChild(tag);
-                });
+            // Occurrences: Time and Location
+            let occurrencesHTML = '';
+            if (session.occurrences && session.occurrences.length > 0) {
+                occurrencesHTML = session.occurrences.map(occurrence => {
+                    const time = occurrence.timeBlock || occurrence.time || 'Time TBD'; // Use timeBlock first
+                    const room = occurrence.location || occurrence.room || 'Location TBD'; // Use location first
+                    return `<div class="modal-meta-item">
+                                <i class="bi bi-clock-fill"></i> ${time}
+                                <span style="margin: 0 0.5em;">|</span>
+                                <i class="bi bi-geo-alt-fill"></i> ${room}
+                            </div>`;
+                }).join('');
+            } else { // Fallback for sessions without an occurrences array or if it's empty
+                const time = session.timeBlock || session.time || 'Time TBD';
+                const room = session.location || session.room || 'Location TBD';
+                occurrencesHTML = `
+                    <div class="modal-meta-item">
+                        <i class="bi bi-clock-fill"></i> ${time}
+                        <span style="margin: 0 0.5em;">|</span>
+                        <i class="bi bi-geo-alt-fill"></i> ${room}
+                    </div>`;
             }
+            // Corrected ID for occurrences display in calendar modal
+            document.getElementById('modalOccurrences-calendar').innerHTML = occurrencesHTML;
+            
+            const descriptionHTML = session.description_html || session.description || 'No description available.';
+            document.getElementById('modalDescription-calendar').innerHTML = descriptionHTML;
 
-            document.getElementById('sessionModal-calendar').style.display = 'flex';
-            setTimeout(() => {
-                 document.getElementById('sessionModal-calendar').classList.add('show');
-            }, 10); // Small delay for transition
+            document.getElementById('modalTags-calendar').innerHTML = `
+                <strong>Tags:</strong>
+                ${session.tags ? session.tags.map(tag => `<span class="tag">${tag}</span>`).join('') : 'None'}
+            `;
+            
+            // Type Badge
+            let typeClass = 'type-default';
+            let displayType = session.type || 'Session';
+            if (session.type) {
+                const typeNormalized = session.type.toLowerCase().replace(/\\s+/g, '-');
+                displayType = session.type;
+                // Basic type to class mapping (can be expanded)
+                if (typeNormalized.includes('workshop')) typeClass = 'type-workshop';
+                else if (typeNormalized.includes('presentation')) typeClass = 'type-presentation';
+                else if (typeNormalized.includes('discussion')) typeClass = 'type-discussion';
+                else if (typeNormalized.includes('panel')) typeClass = 'type-panel';
+                else if (typeNormalized.includes('keynote')) typeClass = 'type-keynote';
+                else if (typeNormalized.includes('facilitated')) typeClass = 'type-facilitated';
+                else if (typeNormalized.includes('special')) typeClass = 'type-special';
+            }
+            const typeBadgeContainer = document.getElementById('modalType-calendar');
+            typeBadgeContainer.innerHTML = `<strong>Type:</strong> <span class="session-type ${typeClass}">${displayType}</span>`;
+
+
+            modal.classList.add('show');
+            modal.style.display = 'flex';
         }
 
         function closeSessionModalCalendar() {

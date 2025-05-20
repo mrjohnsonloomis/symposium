@@ -79,9 +79,9 @@
          h3 { font-size: 1.75rem; font-weight: 500; }
          /* Filter titles use the default serif font now */
          h4.filter-title {
-             font-size: 1.1rem;
-             font-weight: 600; /* Semi-Bold for filter titles */
-             color: var(--lc-red);
+             font-size: 1.1rem; 
+             font-weight: 500; /* Medium weight */
+             color: var(--lc-gray); /* Use main gray color */
              margin-bottom: 0.75rem;
          }
          h5 { font-size: 1.15rem; font-weight: 500; margin-bottom: 0.25rem;} /* Session titles */
@@ -118,79 +118,164 @@
             color: var(--lc-red);
         }
 
-        .session-card {
+        /* Navigation tab styling */
+        .nav-tabs {
             margin-bottom: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: opacity 0.3s ease-in-out, transform 0.2s ease-out;
-            background-color: white;
-            overflow: hidden;
-        }
-        .session-card:hover {
-             transform: translateY(-3px);
-             box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            border-bottom: 2px solid var(--lc-red);
         }
 
-
-        .session-card .card-header {
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #eee;
-            padding: 0.6rem 1rem;
-        }
-
-        .tag { /* General tag styling */
-            display: inline-block;
-            padding: 0.25rem 0.6rem;
-            margin-right: 0.4rem;
-            margin-bottom: 0.4rem;
-            border-radius: 15px;
-            font-size: 0.75rem;
+        .nav-tabs .nav-link {
+            color: var(--lc-gray);
             font-weight: 500;
-            line-height: 1.2;
-            border: 1px solid transparent;
-            /* Inherits body font */
+            border: none;
+            padding: 0.75rem 1.5rem;
         }
 
-        /* Strand Tags in Header */
-        .tag.strand-ai-classroom { background-color: var(--cupola); color: white; }
-        .tag.strand-human-centered { background-color: var(--brick); color: white; }
-        .tag.strand-leadership { background-color: var(--lc-gray); color: white; }
-
-        /* Session Type Badges in Header */
-         .badge.session-type {
-             font-weight: 500;
-             font-size: 0.75rem;
-             padding: 0.25rem 0.6rem;
-             border-radius: 15px;
-             color: white;
-             /* Inherits body font */
-         }
-        .badge.type-workshop { background-color: var(--lc-red) !important; }
-        .badge.type-presentation { background-color: var(--meadow) !important; color: var(--lc-gray) !important; }
-        .badge.type-discussion { background-color: var(--brick) !important; }
-
-        /* Card Body and Borders */
-        .session-card .card-body {
-            padding: 0.75rem 1rem; /* Increased from 0.5rem 1rem */
-            border-left: 5px solid transparent;
+        .nav-tabs .nav-link.active {
+            color: white;
+            background-color: var(--lc-red);
         }
-        .session-card.strand1 .card-body { border-left-color: var(--cupola); }
-        .session-card.strand2 .card-body { border-left-color: var(--brick); }
-        .session-card.strand3 .card-body { border-left-color: var(--lc-gray); }
 
-
-        .filter-group {
+        .session-card {
             background-color: white;
-            padding: 1rem;
+            border: 1px solid #ddd;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            margin-bottom: 1rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
-         .filter-group-wrapper {
-            position: sticky;
-            top: 20px;
-         }
+        .session-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            z-index: 2;
+        }
+
+        .session-card .session-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--lc-gray);
+            /* padding-right: 90px; */ /* Removed padding */
+            /* NEW Flexbox solution */
+            display: flex;
+            justify-content: space-between; /* Pushes title and (future) badge apart */
+            align-items: flex-start; /* Align items at the top */
+            /* The title itself should not shrink if the badge is present */
+        }
+
+        .session-card .session-title > span { /* Wrap title text in a span for flex control */
+            flex-grow: 1; /* Allows title to take available space */
+            padding-right: 5px; /* Small space between title and where badge would be if inline */
+        }
+
+        .session-card .session-presenter {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 0.75rem;
+        }
+
+        .session-card .session-room,
+        .session-card .session-time { /* session-time might be new for index/schedule */
+            font-size: 0.85rem;
+            color: var(--lc-gray);
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .session-card .session-meta-item { /* For icon + text, e.g., room/time */
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+            color: var(--lc-gray);
+            font-weight: 500;
+        }
+        .session-card .session-meta-item i { /* For Bootstrap Icons */
+            margin-right: 0.4rem;
+            color: var(--lc-red);
+            font-size: 0.9em;
+            line-height: 1;
+        }
+
+        .session-card .session-tags {
+            margin-top: auto;
+            padding-top: 0.5rem;
+        }
+
+        /* Strand indicator on the left */
+        .session-card .strand-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+        }
+        .session-card.strand1 .strand-indicator { background-color: var(--cupola); }
+        .session-card.strand2 .strand-indicator { background-color: var(--brick); }
+        .session-card.strand3 .strand-indicator { background-color: var(--lc-gray); }
+        .session-card.strandSpecial .strand-indicator { background-color: var(--meadow); }
+
+        /* Session type badge on the top right */
+        .session-card .session-type {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+            line-height: 1;
+            /* text-transform: uppercase; */ /* REMOVED to prevent all caps */
+        }
+
+        .session-card .type-workshop { background-color: var(--lc-red); color: white; }
+        .session-card .type-presentation { background-color: var(--meadow); color: var(--lc-gray); }
+        .session-card .type-discussion { background-color: var(--brick); color: white; }
+        .session-card .type-panel { background-color: var(--river); color: white; }
+        .session-card .type-keynote { background-color: var(--lc-gray); color: white; }
+        .session-card .type-facilitated { background-color: var(--cupola); color: white; }
+        .session-card .type-special { background-color: var(--pelican); color: var(--lc-gray); }
+        .session-card .type-placeholder,
+        .session-card .type-default {
+             background-color: var(--pelican-light); color: var(--lc-gray);
+        }
+
+        /* === TAG STYLES (Derived from calendar.html) === */
+        .tag {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            line-height: 1;
+            border: 1px solid transparent;
+            background-color: var(--pelican-light);
+            color: var(--lc-gray);
+        }
+        .tag:hover {
+            background-color: var(--pelican);
+            border-color: var(--lc-gray);
+        }
+        /* === END TAG STYLES === */
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .session-card {
+                flex-direction: column;
+                height: auto;
+            }
+        }
 
         /* --- Filter Button Styles --- */
         .filter-buttons-container {
@@ -281,7 +366,7 @@
             /* Set max-height for collapsed state (e.g., approx 3 lines) */
             max-height: 4.5em; /* Adjust this value (line-height * lines) */
             transition: max-height 0.4s ease-in-out; /* Smooth transition */
-            cursor: pointer; /* Indicate it's clickable (optional) */
+            /* cursor: pointer; */ /* Removed, button handles click */
             margin-bottom: 0.5rem; /* Space before button */
             /* Add a fade-out effect when collapsed */
             -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
@@ -316,13 +401,16 @@
              background-color: transparent;
              border: 1px solid var(--lc-gray);
              color: var(--lc-gray);
-             padding: 0.2rem 0.6rem;
-             border-radius: 4px;
-             font-size: 0.75rem;
+             padding: 0.1rem 0.4rem; /* Made button smaller */
+             border-radius: 3px; /* Adjusted border-radius */
+             font-size: 0.65rem; /* Made button smaller */
              cursor: pointer;
              transition: background-color 0.2s, color 0.2s;
-             /* margin-top: 0; /* Removed top margin, handled by wrapper */
              font-weight: 400; /* Regular weight */
+             /* float: right; */ /* Removed float right for left alignment */
+             /* margin-top: 0.25rem; */ /* Removed margin-top */
+             margin-bottom: 0.5rem; /* Add some space below the button */
+             align-self: flex-start; /* Align button to the left within flex container */
          }
          .toggle-description:hover {
              background-color: var(--lc-gray);
@@ -486,25 +574,6 @@
 </ul>
 </div>
 </div>
-<style>
-        /* Navigation tab styling */
-        .nav-tabs {
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid var(--lc-red);
-        }
-
-        .nav-tabs .nav-link {
-            color: var(--lc-gray);
-            font-weight: 500;
-            border: none;
-            padding: 0.75rem 1.5rem;
-        }
-
-        .nav-tabs .nav-link.active {
-            color: white;
-            background-color: var(--lc-red);
-        }
-        </style>
 <div class="row">
 <div class="col-lg-3">
 <div class="filter-group-wrapper">
@@ -551,13 +620,7 @@
 <div class="alert alert-info hidden" id="no-results" role="alert" style="margin-top: 2rem; padding: 1.5rem; font-size: 1.1rem; display: none;">
         No sessions match the current filters.
     </div>
-<div class="row" id="sessions-container"><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">Expanding Inquiry: Using AI Tools to Create Simulations and Investigations</div><div class="session-presenter">Melissa Poole, Steve Armandt</div><div class="session-preview">AI-powered tools offer new possibilities for engaging students in inquiry-based learning across disciplines.</div></div><div class="session-card strand2" data-strand="strand2" data-type="workshop"><div class="session-title">Digital Dependency vs. Human Connection: Educational Strategies for the AI Character Era</div><div class="session-presenter">Suzanne Ellinwood</div><div class="session-preview">Workshop Proposal: Digital Dependency vs. Human Connection: Educational Strategies for the AI Character Era 
-The explosive growth of AI character...</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">Student Buy-In and "Ungrading" in the Humanities Classroom</div><div class="session-presenter">Caitie Cotton</div><div class="session-preview">A challenge posed by AI is how to grade given the concern that students are not submitting their own work.</div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation and q&amp;a"><div class="session-title">The Value of Struggle: Preserving Meaningful Learning in an AI Age</div><div class="session-presenter">Marta Napiorkowska</div><div class="session-preview">I present my recent article, "The Value of Struggle" (https://edu-ai.org/the-value-of-struggle-preserving-meaningful-learning-in-an-ai-age/), which...</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">Overcoming students’ initial reactions to AI through text-based experiments</div><div class="session-presenter">Kyle Conrau-Lewis</div><div class="session-preview">AI inspires awe in students and this first reaction presents one of the greatest challenges for writing instructors of all disciplines.</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">AI-Powered Pedagogy: Crafting Effective Prompts for Transformative Learning</div><div class="session-presenter">Maureen Gassert Lamb</div><div class="session-preview">As AI tools become increasingly integrated into classrooms, educators face a challenge: how to effectively prompt AI to generate meaningful,...</div></div><div class="session-card strand2" data-strand="strand2" data-type="facilitated discussion"><div class="session-title">Slavery and Loomis Chaffee: An Ethical History Project: Collaborating with Students to Make Meaning in and out of the Classroom</div><div class="session-presenter">Eric LaForest, Elliot Dial, Karen Parsons</div><div class="session-preview">After a brief presentation on Slavery and Loomis Chaffee: An Ethical History Project (linked below), this session will invite participants to begin...</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">Place-Based Education in the Era of AI</div><div class="session-presenter">Marley Matlack, Sarah Griggs</div><div class="session-preview">Place-based education invites students to engage deeply with the cultural, ecological, and historical dimensions of their local surroundings.</div></div><div class="session-card strand2" data-strand="strand2" data-type="workshop"><div class="session-title">Creating a Student Learning Praxis in the Age of AI</div><div class="session-presenter">Richard Scullin</div><div class="session-preview">This session provides teachers with a scalable unit plan that helps students develop their own philosophy and praxis of learning with generative AI.</div></div><div class="session-card strand2" data-strand="strand2" data-type="workshop, facilitated discussion"><div class="session-title">Metacognition and AI: Empowering High School Students to Become Strategic Learners in a Technological World</div><div class="session-presenter">Luke Peterson</div><div class="session-preview">This presentation will delve into the crucial role of metacognition in preparing high school students for a future where AI is prevalent.</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a, facilitated discussion"><div class="session-title">What's in a Name: Metaphors We Write By</div><div class="session-presenter">John Morrell</div><div class="session-preview">This session will interrogate the metaphors that shape our thinking about writing on the one hand, and those metaphors that frame our discussions...</div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation and q&amp;a"><div class="session-title">AI-Adapted Writing Assignments for Skill Development and AI Literacy </div><div class="session-presenter">Ron Spalletta</div><div class="session-preview">Two classes of high school seniors completed baseline and benchmark timed, in-class essays to determine skill development in response to a series of...</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">Lessons Learned from (Co-Lab)orating Across Schools</div><div class="session-presenter">Ned Heckman, Maureen Russo-Rodriguez</div><div class="session-preview">What happens when teachers from different schools come together to explore how AI can enhance their craft? In this interactive session, we’ll share...</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">Ctrl+Alt+Engage: Rebooting Classrooms with AI Simulations</div><div class="session-presenter">Steph Sperber</div><div class="session-preview">Educators across disciplines are grappling with how to maintain deep student engagement, foster critical thinking, and teach collaborative...</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">Better Together: How Human Connection Transforms AI into an Effective Educational Partner</div><div class="session-presenter">Kate Seyboth</div><div class="session-preview">AI tools have enormous potential in education, but many educators hesitate to fully embrace them due to concerns that they may hinder rather than...</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">Low-Tech Reading: Strategies for Engaging High-Tech Screenagers</div><div class="session-presenter">Lena Sadowitz</div><div class="session-preview">As AI tools reshape how our students approach reading, teachers are facing a familiar yet evolving challenge: are students even reading? We will...</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">What Learning Science Tells Us about Teaching with AI</div><div class="session-presenter">Peter Nilsson, Maya Bialik</div><div class="session-preview">When should students use AI in learning, and when should they not? How should we calibrate the right balance of tech-free and tech-enabled learning?...</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">Leverage AI to Support Teaching Your Passions</div><div class="session-presenter">Peter Nilsson, Maya Bialik</div><div class="session-preview">How can AI deepen our passion for our work and not distract us from our passions as educators?
-
-In this session, we look at generative AI as a...</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">How To Define and Draw Clear Lines for Appropriate AI Use </div><div class="session-presenter">Peter Nilsson, Maya Bialik</div><div class="session-preview">How can we help students most clearly determine when they should and should not use AI for learning?
-
-Most AI use policies today are built around...</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-title">Build-a-Bot Workshop: Make Your Own AI to Make Sense of AI</div><div class="session-presenter">Lista Lincoln</div><div class="session-preview">Introduction: 
-Teachers work tirelessly to help students use AI productively, ethically, and responsibly.</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation with q&amp;a"><div class="session-title">From Curiosity to Community: Launching a Teacher-Led Gen AI Professional Development Initiative</div><div class="session-presenter">Heidi Hojnicki, Dr. Rachel Heffner-Burns</div><div class="session-preview">The rapid evolution of Generative AI presents K-12 educators with both challenges and opportunities: to grow as professionals, to experiment with new...</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-title">Annie Murphy Paul Breakout Session: Deeper Dive into "Thinking with our Surroundings" from The Extended Mind</div><div class="session-presenter">Annie Murphy Paul</div><div class="session-preview">Keynote speaker Annie Murphy Paul will dive deeper into her work The Extended Mind, offering more thoughts about the middle section of the book:...</div></div><div class="session-card strand2" data-strand="strand2" data-type="facilitated discussion"><div class="session-title">Teaching Student Presentation Skills</div><div class="session-presenter">Scott MacClintic</div><div class="session-preview">As teachers, we frequently ask students to give presentations to their peers or outside audiences.</div></div><div class="session-card strand2" data-strand="strand2" data-type="workshop"><div class="session-title">Untethered Thinking: Design Thinking Frameworks for Tech-Free Student Brainstorms</div><div class="session-presenter">Jen Solomon</div><div class="session-preview">In a world where AI can generate ideas at the click of a button, it's more important than ever to empower students to think creatively and...</div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation and q&amp;a, facilitated discussion"><div class="session-title">Dangerous (Artificial) Minds: Engaging student critical thinking and analysis in their interactions with AI</div><div class="session-presenter">David Nurenberg</div><div class="session-preview">The problem: AI has rendered the traditional English essay, if not obsolete, at least highly problematic from an assessment perspective.</div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation and q&amp;a, facilitated discussion"><div class="session-title">Pre-Skilling for the Unknown: Building a Human-Centered AI Culture in Schools</div><div class="session-presenter">Meghan Chew, Sue Teyan, Erin O’Grady, Marc Maier, Nina Yuen</div><div class="session-preview">As generative AI rapidly transforms the educational landscape, many schools are racing to adopt tools without first establishing the culture,...</div></div><div class="session-card strand1" data-strand="strand1" data-type="facilitated discussion"><div class="session-title">Rethinking Creative and Critical Thinking in the Age of AI</div><div class="session-presenter">Adam Alsamadisi</div><div class="session-preview">As generative AI reshapes what students can produce in seconds, educators are being forced to reconsider the academic and intellectual values we’ve...</div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation and q&amp;a"><div class="session-title">Do Androids Dream: Teaching AI Literacy Through Literature</div><div class="session-presenter">Jennifer Blue, Anne Peterson</div><div class="session-preview">In the age of generative AI, English classrooms are key sites for developing students’ AI literacy.</div></div></div>
+<div class="row" id="sessions-container"></div>
 </div>
 </div>
 </div>
@@ -727,97 +790,121 @@ Teachers work tirelessly to help students use AI productively, ethically, and re
                 container.innerHTML = ''; // Clear existing sessions
 
                 if (sessionsToRender.length === 0) {
-                    // Keep this simple, applyFilters will handle the noResultsDiv visibility
-                    container.innerHTML = ''; // Ensure container is empty
+                    // applyFilters will handle the noResultsDiv visibility, so just ensure container is empty.
+                    container.innerHTML = ''; 
                     return;
                 }
 
                 sessionsToRender.forEach(session => {
+                    // Create a new div for each session card
                     const sessionCard = document.createElement('div');
-                    sessionCard.className = `col-12 session-card ${session.strand || ''}`; // Class for styling
-                    sessionCard.dataset.sessionId = session.id;
-                    sessionCard.dataset.strand = session.strand || ''; // For strand filtering
+                    // Changed to col-12 to make each card take the full width
+                    sessionCard.className = `col-12 mb-4 session-card-wrapper`; 
 
-                    // Populate timeblockGroups from occurrences
-                    let timeSlotGroups = [];
-                    if (session.occurrences && session.occurrences.length > 0) {
-                        const uniqueGroups = new Set();
-                        session.occurrences.forEach(occ => {
-                            if (occ.timeSlotGroup) { // timeSlotGroup should be "1", "2", or "3"
-                                uniqueGroups.add(occ.timeSlotGroup);
-                            }
-                        });
-                        timeSlotGroups = Array.from(uniqueGroups);
-                    }
-                    sessionCard.dataset.timeblockGroups = timeSlotGroups.join(',');
-
-                    // Populate tags
-                    sessionCard.dataset.tags = (session.tags && session.tags.length > 0) ? session.tags.map(tag => tag.trim()).join(',') : '';
-
-                    let occurrencesHtml = '';
-                    if (session.occurrences && session.occurrences.length > 0) {
-                        occurrencesHtml = session.occurrences.map(occ => 
-                            `<p class="card-text mb-1"><small class="text-muted"><strong>Time:</strong> ${occ.timeBlock} | <strong>Location:</strong> ${occ.location}</small></p>`
-                        ).join('');
-                    } else if (session.timeBlock && session.location) { // Fallback for special events or older structure
-                        occurrencesHtml = `<p class="card-text mb-1"><small class="text-muted"><strong>Time:</strong> ${session.timeBlock} | <strong>Location:</strong> ${session.location}</small></p>`;
-                    }
-
-
-                    let tagsHtml = '';
-                    if (session.tags && session.tags.length > 0) {
-                        tagsHtml = session.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ');
-                    }
-
-                    // Determine badge color based on session type
-                    let typeBadgeClass = 'type-default'; // A generic default
-                    if (session.type) {
-                        const typeCleaned = session.type.toLowerCase().replace(/[^a-z0-9]/g, '-');
-                        if (['workshop', 'presentation', 'discussion', 'presentation-and-q-a', 'facilitated-discussion', 'special'].includes(typeCleaned)) {
-                            typeBadgeClass = `type-${typeCleaned}`;
+                    // Determine strand class for border color
+                    let strandClass = '';
+                    if (session.strand) {
+                        const strandNormalized = session.strand.toLowerCase().replace(/\\s+/g, '');
+                        if (strandNormalized.includes('strand1') || strandNormalized.includes('aiandhumanity')) {
+                            strandClass = 'strand1';
+                        } else if (strandNormalized.includes('strand2') || strandNormalized.includes('rethinkingeducation')) {
+                            strandClass = 'strand2';
+                        } else if (strandNormalized.includes('strand3') || strandNormalized.includes('ethicalfuture')) {
+                            strandClass = 'strand3';
+                        } else if (session.type && session.type.toLowerCase().includes('keynote') || session.title.toLowerCase().includes('keynote') || session.title.toLowerCase().includes('welcome') || session.title.toLowerCase().includes('arrival')) {
+                            strandClass = 'strandSpecial'; // For Keynotes, Welcome, etc.
                         }
                     }
-                    
-                    // Add presenter and organization, handling cases where they might be missing
-                    let presenterHtml = '';
-                    if (session.presenter) {
-                        presenterHtml = `<h6 class="card-subtitle mb-2 text-muted">${session.presenter}</h6>`;
+
+
+                    // Determine type class for badge color
+                    let typeClass = 'type-default'; // Default class
+                    if (session.type) {
+                        const typeNormalized = session.type.toLowerCase().replace(/\\s+/g, '-');
+                        if (['workshop', 'presentation', 'discussion', 'panel', 'keynote', 'facilitated', 'special'].some(t => typeNormalized.includes(t))) {
+                            if (typeNormalized.includes('workshop')) typeClass = 'type-workshop';
+                            else if (typeNormalized.includes('presentation')) typeClass = 'type-presentation';
+                            else if (typeNormalized.includes('discussion')) typeClass = 'type-discussion';
+                            else if (typeNormalized.includes('panel')) typeClass = 'type-panel';
+                            else if (typeNormalized.includes('keynote')) typeClass = 'type-keynote';
+                            else if (typeNormalized.includes('facilitated')) typeClass = 'type-facilitated';
+                            else if (typeNormalized.includes('special')) typeClass = 'type-special';
+                            // Add more specific checks if needed
+                        } else {
+                            // Fallback for combined types or less common ones
+                            if (typeNormalized.includes('q&a')) typeClass = 'type-presentation'; // Treat Q&A as presentation
+                            else if (typeNormalized.includes('activity')) typeClass = 'type-workshop'; // Treat activity as workshop
+                        }
                     }
-                    if (session.organization) {
-                        presenterHtml += `<p class="card-text"><small class="text-muted">${session.organization}</small></p>`;
+
+
+                    // Presenter and Organization Formatting
+                    let presenterHTML = '';
+                    if (session.presenter && session.presenter.trim() !== '') {
+                        const presenters = session.presenter.split(/,\s*(?![^()]*\))|\s+and\s+/i); // Split by comma or 'and'
+                        const organizations = session.organization ? session.organization.split(/,\s*(?![^()]*\))|\s+and\s+/i) : [];
+                        
+                        presenterHTML = presenters.map((name, index) => {
+                            let orgName = '';
+                            if (organizations.length === 1) {
+                                orgName = organizations[0];
+                            } else if (organizations.length > index) {
+                                orgName = organizations[index];
+                            }
+                            const org = orgName && orgName.trim() !== '' ? `<em>${orgName.trim()}</em>` : '';
+                            return `<strong>${name.trim()}</strong>${org ? ' ' + org : ''}`;
+                        }).join(', ');
                     }
+
+
+                    // Occurrences: Time and Location
+                    let occurrencesHTML = '';
+                    if (session.occurrences && session.occurrences.length > 0) {
+                        occurrencesHTML = session.occurrences.map(occurrence => {
+                            const time = occurrence.timeBlock || occurrence.time || 'Time TBD';
+                            const room = occurrence.location || occurrence.room || 'Location TBD';
+                            return `<div class="session-meta-item">
+                                        <i class="bi bi-clock-fill"></i> ${time}
+                                        <span style="margin: 0 0.5em;">|</span>
+                                        <i class="bi bi-geo-alt-fill"></i> ${room}
+                                    </div>`;
+                        }).join('');
+                    } else { // Fallback for sessions without an occurrences array (older data structure)
+                        const time = session.time || 'Time TBD';
+                        const room = session.room || 'Location TBD';
+                        occurrencesHTML = `
+                            <div class="session-meta-item">
+                                <i class="bi bi-clock-fill"></i> ${time}
+                                <span style="margin: 0 0.5em;">|</span>
+                                <i class="bi bi-geo-alt-fill"></i> ${room}
+                            </div>`;
+                    }
+
+
+                    // Description with Read More/Less
+                    const descriptionHTML = session.description_html || session.description || 'No description available.';
+                    const uniqueDescId = `desc-${session.id || Math.random().toString(36).substr(2, 9)}`;
+                    const uniqueBtnId = `btn-${session.id || Math.random().toString(36).substr(2, 9)}`;
 
 
                     sessionCard.innerHTML = `
-                        <div class="card-header">
-                            <span class="badge session-type ${typeBadgeClass}">${session.typeName || session.type || 'Session'}</span>
-                            ${session.strandName ? `<span class="tag strand-${session.strand || 'general'}">${session.strandName}</span>` : ''}
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${session.title}</h5>
-                            ${presenterHtml}
-                            ${occurrencesHtml}
-                            <div class="session-description-wrapper">
-                                <div class="session-description-content">
-                                    ${session.description || session.preview || 'No description available.'}
-                                </div>
+                        <div class="session-card ${strandClass} ${typeClass}" data-session-id="${session.id}">
+                            <div class="strand-indicator"></div>
+                            <div class="session-type">${session.type || 'Session'}</div>
+                            <h5 class="session-title"><span>${session.title}</span></h5>
+                            <div class="session-presenter mb-2">${presenterHTML || 'Presenter TBD'}</div>
+                            ${occurrencesHTML}
+                            <div class="session-description-wrapper" id="${uniqueDescId}">
+                                <div class="session-description-content">${descriptionHTML}</div>
                             </div>
-                            <button class="btn btn-link btn-sm p-0 read-more-btn">Read more</button>
-                            <div class="mt-2">
-                                ${tagsHtml}
+                            <button class="toggle-description" id="${uniqueBtnId}" onclick="toggleDescription(event, '${uniqueDescId}', '${uniqueBtnId}')">Read more</button>
+                            <div style="clear: both;"></div> <!-- Clear float for the button -->
+                            <div class="session-tags mt-auto pt-2">
+                                <strong>Tags:</strong> ${session.tags ? session.tags.map(tag => `<span class="tag">${tag}</span>`).join('') : 'None'}
                             </div>
                         </div>
                     `;
-                    container.appendChild(sessionCard);
-                });
-
-                // Add event listeners for "Read more" buttons
-                document.querySelectorAll('.read-more-btn').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const wrapper = this.previousElementSibling; // The .session-description-wrapper
-                        wrapper.classList.toggle('expanded');
-                        this.textContent = wrapper.classList.contains('expanded') ? 'Read less' : 'Read more';
-                    });
+                    sessionsContainer.appendChild(sessionCard);
                 });
             }
 

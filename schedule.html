@@ -130,6 +130,7 @@
             margin-bottom: 6px;
             display: -webkit-box;
             -webkit-line-clamp: 3;
+            line-clamp: 3; /* ADDED for standard compliance */
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -139,6 +140,7 @@
             color: #666;
             display: -webkit-box;
             -webkit-line-clamp: 3;
+            line-clamp: 3; /* ADDED for standard compliance */
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -164,38 +166,94 @@
             max-height: 90vh;
             overflow-y: auto;
             border-radius: 8px;
-            padding: 1.5rem;
+            padding: 1.5rem; /* Existing padding */
             position: relative;
+            /* Add styles similar to session-card for consistency */
+            border: 1px solid #ddd;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12); /* Similar to card hover */
         }
 
-        .close-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: #999;
+        .session-modal-content .modal-title {
+            font-weight: 600;
+            font-size: 1.5rem; /* Larger for modal */
+            margin-bottom: 0.75rem;
+            color: var(--lc-gray);
+            padding-right: 50px; /* Space for close button */
         }
 
-        /* Strand color indicators */
-        .strand-indicator {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
+        .session-modal-content .modal-presenter {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 1rem;
         }
 
-        .strand1 .strand-indicator {
-            background-color: var(--cupola);
+        .session-modal-content .modal-meta-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--lc-gray);
+            font-weight: 500;
         }
 
-        .strand2 .strand-indicator {
-            background-color: var(--brick);
+        .session-modal-content .modal-meta-item i {
+            margin-right: 0.5rem;
+            color: var(--lc-red);
+            font-size: 1em;
         }
 
-        .strand3 .strand-indicator {
-            background-color: var(--lc-gray);
+        .session-modal-content .modal-description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--lc-gray);
+            white-space: pre-wrap;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .session-modal-content .modal-description p {
+            margin-bottom: 0.75em;
+        }
+        .session-modal-content .modal-description p:last-child {
+            margin-bottom: 0;
+        }
+
+        .session-modal-content .modal-tags-container {
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #eee;
+        }
+
+        .session-modal-content .modal-tags-container strong {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--lc-gray);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Modal specific type badge (if needed, or use general card styles) */
+        .session-modal-content .session-type-badge-modal {
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            /* color: white; // Color will be set by specific type classes */
+            line-height: 1;
+            display: inline-block; /* To sit alongside text like \"Type:\" */
+            margin-left: 0.5rem;
+        }
+
+        /* Add specific type badge colors for modal, similar to card badges */
+        .session-modal-content .type-workshop { background-color: var(--lc-red); color: white; }
+        .session-modal-content .type-presentation { background-color: var(--meadow); color: var(--lc-gray); }
+        .session-modal-content .type-discussion { background-color: var(--brick); color: white; }
+        .session-modal-content .type-panel { background-color: var(--river); color: white; }
+        .session-modal-content .type-keynote { background-color: var(--lc-gray); color: white; }
+        .session-modal-content .type-facilitated { background-color: var(--cupola); color: white; }
+        .session-modal-content .type-special { background-color: var(--pelican); color: var(--lc-gray); }
+        .session-modal-content .type-placeholder,
+        .session-modal-content .type-default {
+             background-color: var(--pelican-light); color: var(--lc-gray);
         }
 
         /* Navigation */
@@ -238,104 +296,140 @@
         }
 
         /* Tag styles */
+        /* REPLACE THE ORIGINAL .tag BLOCK WITH THIS NEW ONE: */
+        /* === TAG STYLES (Derived from calendar.html) === */
         .tag {
             display: inline-block;
-            padding: 0.25rem 0.6rem;
-            margin-right: 0.4rem;
-            margin-bottom: 0.4rem;
+            padding: 0.3rem 0.7rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
             border-radius: 15px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 500;
-            line-height: 1.2;
+            line-height: 1;
             border: 1px solid transparent;
-            background-color: #f0f0f0;
-        }
-
-        /* Session type badges */
-        .session-type {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            padding: 0.15rem 0.4rem;
-            border-radius: 3px;
-            font-size: 0.65rem;
-            font-weight: 500;
-        }
-
-        .type-workshop {
-            background-color: var(--lc-red);
-            color: white;
-        }
-
-        .type-presentation {
-            background-color: var(--meadow);
+            background-color: var(--pelican-light);
             color: var(--lc-gray);
         }
-
-        .type-discussion {
-            background-color: var(--brick);
-            color: white;
+        .tag:hover {
+            background-color: var(--pelican);
+            border-color: var(--lc-gray);
         }
+        /* === END TAG STYLES === */
+
+        /* Session type badges */
+        /* REPLACE THE ORIGINAL .session-type BLOCK (and .type-workshop, .type-presentation, .type-discussion) 
+           AS THESE ARE NOW HANDLED BY THE MORE SPECIFIC .session-card .session-type STYLES BELOW. */
 
         /* Styles for the session cards in Time View and Compact View */
+        /* REPLACE THE ORIGINAL .session-card and .session-card:hover BLOCKS WITH THIS NEW COMPREHENSIVE BLOCK: */
+        /* === SESSION CARD STYLES (Derived from calendar.html, adapted for schedule.html) === */
         .session-card {
             background-color: white;
-            border: 1px solid #eee; /* Consistent with other borders */
-            border-radius: 4px;
-            padding: 10px;
-            margin-bottom: 1rem; /* Space between cards */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            position: relative; /* For absolutely positioned child elements like strand-indicator and session-type */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: relative;
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* For consistent card height in rows */
         }
 
         .session-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            z-index: 2; /* Ensure hovered card is on top of others */
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            z-index: 2;
         }
 
-        /* Ensure session-room, session-title, session-presenter, session-type have some base styling if not already fully covered */
-        .session-card .session-room {
-            font-size: 0.8rem;
+        .session-card .session-title {
+            font-weight: 600;
+            font-size: 1.1rem; /* Consistent with calendar.html */
+            margin-bottom: 0.5rem;
+            color: var(--lc-gray);
+            /* Line clamping removed here; handled by card structure or JS if needed for cards */
+        }
+
+        .session-card .session-presenter {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 0.75rem;
+            /* Line clamping removed here */
+        }
+        
+        .session-card .session-room { /* For room display within a card */
+            font-size: 0.85rem;
             color: var(--lc-gray);
             margin-bottom: 0.25rem;
             font-weight: 500;
         }
-        /* .session-title, .session-presenter, .session-type styles are already defined and should work within .session-card */
-        
 
-        /* View toggle */
-        .view-toggle {
-            margin-bottom: 1rem;
-        }
-
-        .btn-view {
-            padding: 0.375rem 0.75rem;
-            border: 1px solid #ddd;
-            background-color: white;
+        .session-card .session-meta-item { /* For icon + text lines, e.g. room, time */
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
             color: var(--lc-gray);
-            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        .session-card .session-meta-item i { /* For Bootstrap Icons */
+            margin-right: 0.4rem;
+            color: var(--lc-red);
+            font-size: 0.9em; /* Relative to parent .session-meta-item */
+            line-height: 1;
         }
 
-        .btn-view:hover {
-            background-color: #f0f0f0;
+        .session-card .session-tags { /* Container for tags inside a card */
+            margin-top: auto; /* Pushes tags to the bottom of the card */
+            padding-top: 0.5rem; /* Space above the tags */
         }
 
-        .btn-view.active {
-            background-color: var(--lc-red);
-            color: white;
-            border-color: var(--lc-red);
+        /* Strand indicator on the left, specific to session-card */
+        .session-card .strand-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px; /* Wider than original general strand-indicator */
+            height: 100%;
         }
+        .session-card.strand1 .strand-indicator { background-color: var(--cupola); }
+        .session-card.strand2 .strand-indicator { background-color: var(--brick); }
+        .session-card.strand3 .strand-indicator { background-color: var(--lc-gray); }
+        .session-card.strandSpecial .strand-indicator { background-color: var(--meadow); } /* For special events like Keynote */
 
-        /* Room layout view */
-        .room-layout {
-            display: none;
+        /* Session type badge on the top right, specific to session-card */
+        .session-card .session-type {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem; /* Slightly larger and uppercase */
+            font-weight: 600;
+            color: white; /* Default text color for badges */
+            line-height: 1;
+            /* text-transform: uppercase; */ /* REMOVED to prevent all caps */
         }
+        /* Type specific styles, scoped to .session-card */
+        .session-card .type-workshop { background-color: var(--lc-red); color: white; }
+        .session-card .type-presentation { background-color: var(--meadow); color: var(--lc-gray); } /* Text color for light background */
+        .session-card .type-discussion { background-color: var(--brick); color: white; }
+        .session-card .type-panel { background-color: var(--river); color: white; } /* Added type */
+        .session-card .type-keynote { background-color: var(--lc-gray); color: white; } /* Added type */
+        .session-card .type-facilitated { background-color: var(--cupola); color: white; } /* Added type */
+        .session-card .type-special { background-color: var(--pelican); color: var(--lc-gray); } /* For special non-categorized like meals/breaks */
+        .session-card .type-placeholder, /* Fallback for undefined types */
+        .session-card .type-default {
+             background-color: var(--pelican-light); color: var(--lc-gray);
+        }
+        /* === END SESSION CARD STYLES === */
 
-        .compact-view .session-cell {
+        /* Compact view adjustments */
+        .compact-view .session-card {
             height: auto;
             min-height: 50px;
         }
@@ -381,7 +475,7 @@
 <div class="col-md-6 text-md-end">
 <div class="view-toggle btn-group">
 <button class="btn btn-view active" data-view="time">Time View</button>
-<button class="btn btn-view" data-view="compact">Compact View</button>
+<!-- Removed Compact View button as per changes -->
 </div>
 </div>
 </div>
@@ -391,7 +485,6 @@
 </div>
 </div>
 <div class="schedule-container time-view"><div class="time-block"><h2>8:00 - 9:00</h2><div class="sessions-container"><div class="session-card special" data-strand="special" data-type="special"><div class="session-room">Hubbard Auditorium</div><div class="session-title">Arrival &amp; Registration</div></div></div></div><div class="time-block"><h2>9:00 - 10:00</h2><div class="sessions-container"><div class="session-card special" data-strand="special" data-type="special"><div class="session-room">Hubbard Auditorium</div><div class="session-title">Welcome &amp; Keynote</div></div></div></div><div class="time-block"><h2>10:15 - 11:15</h2><div class="sessions-container"><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-room">Hubbard Auditorium</div><div class="session-title">Annie Murphy Paul Breakout Session: Deeper Dive into "Thinking with our Surroundings" from The Extended Mind</div><div class="session-presenter">Annie Murphy Paul</div><div class="session-type">Presentation and Q&amp;A</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-room">Pearse Hub for Innovation</div><div class="session-title">What Learning Science Tells Us about Teaching with AI</div><div class="session-presenter">Peter Nilsson, Maya Bialik</div><div class="session-type">Presentation and Q&amp;A</div></div><div class="session-card strand1" data-strand="strand1" data-type="facilitated discussion"><div class="session-room">Brush 2nd Floor</div><div class="session-title">Rethinking Creative and Critical Thinking in the Age of AI</div><div class="session-presenter">Adam Alsamadisi</div><div class="session-type">Facilitated Discussion</div></div><div class="session-card strand1" data-strand="strand1" data-type="a combination - some presentation, and some chances for participants to engage in the assignments/tools themselves to experience how they operate"><div class="session-room">Brush 201</div><div class="session-title">Dangerous (Artificial) Minds: Engaging student critical thinking and analysis in their interactions with AI</div><div class="session-presenter">David Nurenberg</div><div class="session-type">A combination - some presentation, and some chances for participants to engage in the assignments/tools themselves to experience how they operate</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-room">Brush 202</div><div class="session-title">Expanding Inquiry: Using AI Tools to Create Simulations and Investigations</div><div class="session-presenter">Melissa Poole, Steve Armandt</div><div class="session-type">Workshop</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-room">Brush 203</div><div class="session-title">Student Buy-In and "Ungrading" in the Humanities Classroom</div><div class="session-presenter">Caitie Cotton</div><div class="session-type">Presentation and Q&amp;A</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-room">Brush 302</div><div class="session-title">AI-Powered Pedagogy: Crafting Effective Prompts for Transformative Learning</div><div class="session-presenter">Maureen Gassert Lamb</div><div class="session-type">Workshop</div></div><div class="session-card strand2" data-strand="strand2" data-type="workshop"><div class="session-room">Brush 308</div><div class="session-title">Untethered Thinking: Design Thinking Frameworks for Tech-Free Student Brainstorms</div><div class="session-presenter">Jen Solomon</div><div class="session-type">Workshop</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-room">Brush 310</div><div class="session-title">Better Together: How Human Connection Transforms AI into an Effective Educational Partner</div><div class="session-presenter">Kate Seyboth</div><div class="session-type">Presentation and Q&amp;A</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-room">Brush 314</div><div class="session-title">Lessons Learned from (Co-Lab)orating Across Schools</div><div class="session-presenter">Ned Heckman, Maureen Russo-Rodriguez</div><div class="session-type">Workshop</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-room">Writing Center</div><div class="session-title">Overcoming studentsâ€™ initial reactions to AI through text-based experiments</div><div class="session-presenter">Kyle Conrau-Lewis</div><div class="session-type">Presentation and Q&amp;A</div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation and q&amp;a"><div class="session-room">Kravis Center</div><div class="session-title">The Value of Struggle: Preserving Meaningful Learning in an AI Age</div><div class="session-presenter">Marta Napiorkowska</div><div class="session-type">Presentation and Q&amp;A</div></div></div></div><div class="time-block"><h2>11:30 - 12:30</h2><div class="sessions-container"><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-room">Pearse Hub for Innovation</div><div class="session-title">Leverage AI to Support Teaching Your Passions</div><div class="session-presenter">Peter Nilsson, Maya Bialik</div><div class="session-type">Workshop</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-room">Brush 2nd Floor</div><div class="session-title">Low-Tech Reading: Strategies for Engaging High-Tech Screenagers</div><div class="session-presenter">Lena Sadowitz</div><div class="session-type">Presentation and Q&amp;A</div></div><div class="session-card strand3" data-strand="strand3" data-type="presentation with q&amp;a and application activity"><div class="session-room">Brush 201</div><div class="session-title">From Curiosity to Community: Launching a Teacher-Led Gen AI Professional Development Initiative</div><div class="session-presenter">Heidi Hojnicki, Dr. Rachel Heffner-Burns</div><div class="session-type">Presentation with Q&amp;A and Application Activity</div></div><div class="session-card strand2" data-strand="strand2" data-type="facilitated discussion"><div class="session-room">Brush 202</div><div class="session-title">Slavery and Loomis Chaffee: An Ethical History Project: Collaborating with Students to Make Meaning in and out of the Classroom</div><div class="session-presenter">Eric LaForest, Elliot Dial, Karen Parsons</div><div class="session-type">Facilitated Discussion</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-room">Brush 203</div><div class="session-title">Place-Based Education in the Era of AI</div><div class="session-presenter">Marley Matlack, Sarah Griggs</div><div class="session-type">Presentation and Q&amp;A</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-room">Brush 302</div><div class="session-title">AI-Powered Pedagogy: Crafting Effective Prompts for Transformative Learning</div><div class="session-presenter">Maureen Gassert Lamb</div><div class="session-type">Workshop</div></div><div class="session-card strand2" data-strand="strand2" data-type="workshop"><div class="session-room">Brush 306</div><div class="session-title">Creating a Student Learning Praxis in the Age of AI</div><div class="session-presenter">Richard Scullin</div><div class="session-type">Workshop</div></div><div class="session-card strand2" data-strand="strand2" data-type="a combination of a workshop and facilitated dicussion"><div class="session-room">Brush 308</div><div class="session-title">Metacognition and AI: Empowering High School Students to Become Strategic Learners in a Technological World</div><div class="session-presenter">Luke Peterson</div><div class="session-type">A combination of a workshop and facilitated dicussion</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-room">Brush 310</div><div class="session-title">Ctrl+Alt+Engage: Rebooting Classrooms with AI Simulations</div><div class="session-presenter">Steph Sperber</div><div class="session-type">Workshop</div></div><div class="session-card strand2" data-strand="strand2" data-type="workshop"><div class="session-room">Brush 314</div><div class="session-title">Digital Dependency vs. Human Connection: Educational Strategies for the AI Character Era</div><div class="session-presenter">Suzanne Ellinwood</div><div class="session-type">Workshop</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation / facilitated discussion"><div class="session-room">Writing Center</div><div class="session-title">What's in a Name: Metaphors We Write By</div><div class="session-presenter">John Morrell</div><div class="session-type">Presentation / Facilitated Discussion</div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation and q&amp;a"><div class="session-room">Kravis Center</div><div class="session-title">The Value of Struggle: Preserving Meaningful Learning in an AI Age</div><div class="session-presenter">Marta Napiorkowska</div><div class="session-type">Presentation and Q&amp;A</div></div></div></div><div class="time-block"><h2>1:30 - 2:30</h2><div class="sessions-container"><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-room">Pearse Hub for Innovation</div><div class="session-title">How To Define and Draw Clear Lines for Appropriate AI Use </div><div class="session-presenter">Peter Nilsson, Maya Bialik</div><div class="session-type">Workshop</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-room">Brush 2nd Floor</div><div class="session-title">Low-Tech Reading: Strategies for Engaging High-Tech Screenagers</div><div class="session-presenter">Lena Sadowitz</div><div class="session-type">Presentation and Q&amp;A</div></div><div class="session-card strand3" data-strand="strand3" data-type="presentation with q&amp;a and application activity"><div class="session-room">Brush 201</div><div class="session-title">From Curiosity to Community: Launching a Teacher-Led Gen AI Professional Development Initiative</div><div class="session-presenter">Heidi Hojnicki, Dr. Rachel Heffner-Burns</div><div class="session-type">Presentation with Q&amp;A and Application Activity</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-room">Brush 202</div><div class="session-title">Expanding Inquiry: Using AI Tools to Create Simulations and Investigations</div><div class="session-presenter">Melissa Poole, Steve Armandt</div><div class="session-type">Workshop</div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation but then participate in our learning lab protocol."><div class="session-room">Brush 203</div><div class="session-title">Pre-Skilling for the Unknown: Building a Human-Centered AI Culture in Schools</div><div class="session-presenter">Meghan Chew, Sue Teyan, Erin O’Grady, Marc Maier, Nina Yuen</div><div class="session-type">Presentation but then participate in our Learning Lab protocol.</div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation and q&amp;a"><div class="session-room">Brush 302</div><div class="session-title">AI-Adapted Writing Assignments for Skill Development and AI Literacy </div><div class="session-presenter">Ron Spalletta</div><div class="session-type">Presentation and Q&amp;A</div></div><div class="session-card strand2" data-strand="strand2" data-type="facilitated discussion"><div class="session-room">Brush 306</div><div class="session-title">Teaching Student Presentation Skills</div><div class="session-presenter">Scott MacClintic</div><div class="session-type">Facilitated Discussion</div></div><div class="session-card strand2" data-strand="strand2" data-type="a combination of a workshop and facilitated dicussion"><div class="session-room">Brush 308</div><div class="session-title">Metacognition and AI: Empowering High School Students to Become Strategic Learners in a Technological World</div><div class="session-presenter">Luke Peterson</div><div class="session-type">A combination of a workshop and facilitated dicussion</div></div><div class="session-card strand1" data-strand="strand1" data-type="workshop"><div class="session-room">Brush 310</div><div class="session-title">Build-a-Bot Workshop: Make Your Own AI to Make Sense of AI</div><div class="session-presenter">Lista Lincoln</div><div class="session-type">Workshop</div></div><div class="session-card strand2" data-strand="strand2" data-type="workshop"><div class="session-room">Brush 314</div><div class="session-title">Digital Dependency vs. Human Connection: Educational Strategies for the AI Character Era</div><div class="session-presenter">Suzanne Ellinwood</div><div class="session-type">Workshop</div></div><div class="session-card strand1" data-strand="strand1" data-type="presentation and q&amp;a"><div class="session-room">Writing Center</div><div class="session-title">Do Androids Dream: Teaching AI Literacy Through Literature</div><div class="session-presenter">Jennifer Blue, Anne Peterson</div><div class="session-type">Presentation and Q&amp;A</div></div><div class="session-card strand2" data-strand="strand2" data-type="presentation and q&amp;a"><div class="session-room">Kravis Center</div><div class="session-title">Student Buy-In and "Ungrading" in the Humanities Classroom</div><div class="session-presenter">Caitie Cotton</div><div class="session-type">Presentation and Q&amp;A</div></div></div></div></div>
-</div>
 <div class="session-modal" id="sessionModal">
 <div class="session-modal-content">
 <span class="close-modal" onclick="closeSessionModal()">×</span>
@@ -419,6 +512,15 @@
             const modalContent = document.getElementById('modalContent');
             const viewToggleButtons = document.querySelectorAll('.btn-view');
             const scheduleContainer = document.querySelector('.schedule-container');
+
+            // Remove Compact View Toggle related elements and listeners
+            const compactViewButton = document.querySelector('.btn-view[data-view="compact"]');
+            if (compactViewButton) {
+                compactViewButton.remove();
+            }
+            // If there was a parent .view-toggle.btn-group and only one button remains, 
+            // you might want to hide or restyle the group.
+            // For now, just removing the button is sufficient.
 
             // Store schedule data globally for access by render functions and modal
             window.masterScheduleData = [];
@@ -610,7 +712,8 @@
 
                                 const typeName = sessionOccurrence.typeName || sessionOccurrence.type || 'Session';
                                 const typeDiv = document.createElement('div');
-                                const typeClass = typeName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                                // Use the normalized sessionOccurrence.type for class generation
+                                const typeClass = (sessionOccurrence.type || 'default').toLowerCase().replace(/[^a-z0-9]/g, '-');
                                 typeDiv.className = `session-type type-${typeClass}`;
                                 typeDiv.textContent = typeName;
                                 card.appendChild(typeDiv);
@@ -694,8 +797,6 @@
             function openSessionModal(sessionId) {
                 if (!window.masterScheduleData || !sessionModal || !modalContent) return;
                 
-                // Ensure sessionId is treated as a string if IDs in JSON are strings, or number if numbers.
-                // Assuming IDs in sessions.json are numbers or can be coerced. If they are strings, use String(s.id) === String(sessionId)
                 const session = window.masterScheduleData.find(s => String(s.id) === String(sessionId));
 
                 if (!session) {
@@ -704,38 +805,115 @@
                     return;
                 }
 
+                // Normalize type for CSS class, similar to index.html and renderTimeView
+                const normalizedSessionTypeClass = (session.type || 'default').toLowerCase().replace(/[^a-z0-9]/g, '-');
+                const typeDisplayName = session.typeName || session.type || 'Session';
+
                 let occurrencesHTML = '';
                 if (session.isSpecialEvent && session.timeBlock && session.location) {
                      occurrencesHTML = `
-                        <p><strong>Time:</strong> ${session.timeBlock}</p>
-                        <p><strong>Location:</strong> ${session.location}</p>`;
+                        <div class="modal-meta-item"><i class="bi bi-calendar3"></i> ${session.timeBlock}</div>
+                        <div class="modal-meta-item"><i class="bi bi-geo-alt-fill"></i> ${session.location}</div>`;
                 } else if (session.occurrences && session.occurrences.length > 0) {
                     occurrencesHTML = session.occurrences.map(occ => `
-                        <p><strong>Time:</strong> ${occ.timeBlock} | <strong>Location:</strong> ${occ.location}</p>
+                        <div class="modal-meta-item">
+                            <i class="bi bi-calendar3"></i> ${occ.timeBlock} 
+                            <span style=\"margin: 0 0.5em;\">|</span> 
+                            <i class="bi bi-geo-alt-fill"></i> ${occ.location}
+                        </div>
                     `).join('');
                 } else {
-                    occurrencesHTML = '<p><em>Specific times and locations not available.</em></p>';
+                    occurrencesHTML = '<div class="modal-meta-item"><em>Specific times and locations not available.</em></div>';
                 }
 
-                const presenterName = session.presenter || (session.organization || 'N/A');
-                const contactEmailVal = session.contactEmail; // Assuming it might be null or "NaN" as string
+                const presenterName = session.presenter || '';
+                const organizationName = session.organization || '';
+                let presenterHTML = '';
+
+                if (presenterName) {
+                    const presenters = presenterName.split(/,\s*(?![^()]*\))|\s+and\s+/i);
+                    const organizations = organizationName ? organizationName.split(/,\s*(?![^()]*\))|\s+and\s+/i) : []; // Split by comma or 'and' for organizations
+                    
+                    presenterHTML = presenters.map((name, index) => {
+                        let org = '';
+                        if (organizations.length === 1) {
+                            org = organizations[0]; // Single org for all presenters
+                        } else if (organizations.length === presenters.length) {
+                            org = organizations[index]; // One-to-one mapping
+                        } else if (organizations.length > 0 && index === 0) {
+                            // Fallback: if org count doesn't match, assign first org to first presenter
+                            // or handle as per specific requirement (e.g., list all orgs for each)
+                            org = organizations[0]; 
+                        }
+                        return `<strong>${name.trim()}</strong>${org ? ` <em>${org.trim()}</em>` : ''}`;
+                    }).join(', '); // Join multiple presenters with a comma
+
+                    if (presenterHTML) {
+                        presenterHTML = `<div class="modal-presenter">${presenterHTML}</div>`;
+                    }
+                } else if (organizationName) { // Only organization is present
+                    presenterHTML = `<div class="modal-presenter"><em>${organizationName.trim()}</em></div>`;
+                }
+
+                const contactEmailVal = session.contactEmail;
                 const contactEmailHTML = (contactEmailVal && contactEmailVal !== "N/A" && contactEmailVal !== "NaN") 
-                    ? `<p><strong>Contact:</strong> <a href="mailto:${contactEmailVal}">${contactEmailVal}</a></p>` 
+                    ? `<div class="modal-meta-item"><i class="bi bi-envelope-fill"></i> <a href="mailto:${contactEmailVal}">${contactEmailVal}</a></div>` 
                     : '';
-                const description = session.description || 'No description available.';
-                const typeName = session.typeName || session.type || 'Session';
-                const strandDisplay = session.strand || (session.isSpecialEvent ? 'Special Event' : 'N/A');
+                
+                const descriptionHTML = (session.description_html || session.description || 'No description available.').replace(/\\n/g, '<br>');
+                
+                const strandDisplay = session.strandName || (session.isSpecialEvent ? 'Special Event' : 'N/A');
+                const strandClass = session.strand || (session.isSpecialEvent ? 'strandSpecial' : ''); // For strand indicator color
+
+                let tagsHTML = '';
+                if (session.tags && session.tags.length > 0) {
+                    tagsHTML = `
+                        <div class="modal-tags-container">
+                            <strong>Tags:</strong>
+                            ${session.tags.map(tag => `<span class="tag">${tag.trim()}</span>`).join(' ')}
+                        </div>`;
+                }
+
+                // Strand indicator div for the modal, similar to cards
+                const strandIndicatorHTML = (strandClass && strandClass !== 'special' && strandClass !== 'strandSpecial') ? 
+                                          `<div class="strand-indicator" style="position:absolute; top:0; left:0; width:8px; height:100%; background-color: var(--${strandClass.replace('strand', 'strand-color-')});"></div>` 
+                                          : '';
+                // Note: The var(--strand-color-X) would need to be defined in CSS or use direct color if not available.
+                // For simplicity, let's use the existing strand classes on a wrapper if possible, or inline style for directness.
+                // Corrected approach: use direct variable names from :root
+                let strandIndicatorColor = '';
+                if (strandClass === 'strand1') strandIndicatorColor = 'var(--cupola)';
+                else if (strandClass === 'strand2') strandIndicatorColor = 'var(--brick)';
+                else if (strandClass === 'strand3') strandIndicatorColor = 'var(--lc-gray)';
+                else if (strandClass === 'strandSpecial') strandIndicatorColor = 'var(--meadow)';
+
+                const modalStrandIndicatorHTML = strandIndicatorColor ? 
+                    `<div style="position:absolute; top:0; left:0; width:8px; height:100%; background-color: ${strandIndicatorColor}; border-top-left-radius: 8px; border-bottom-left-radius: 8px;"></div>` 
+                    : '';
 
                 modalContent.innerHTML = `
-                    <h3>${session.title || 'Untitled Session'}</h3>
-                    <p><strong>Presented by:</strong> ${presenterName}</p>
-                    ${contactEmailHTML}
-                    <p><strong>Type:</strong> ${typeName}</p>
-                    <p><strong>Strand:</strong> ${strandDisplay}</p>
-                    <div><strong>Occurrences:</strong> ${occurrencesHTML}</div>
-                    <hr>
-                    <p><strong>Description:</strong></p>
-                    <div>${description.replace(/\n/g, '<br>')}</div>
+                    ${modalStrandIndicatorHTML}
+                    <div style="padding-left: ${strandIndicatorColor ? '15px' : '0'};">
+                        <h3 class="modal-title">${session.title || 'Untitled Session'}</h3>
+                        ${presenterHTML}
+                        ${contactEmailHTML}
+
+                        <div class="modal-meta-item">
+                            <i class="bi bi-bookmark-fill"></i> 
+                            <strong>Type:</strong> 
+                            <span class="session-type-badge-modal type-${normalizedSessionTypeClass}">${typeDisplayName}</span>
+                        </div>
+                        <div class="modal-meta-item">
+                            <i class="bi bi-diagram-3-fill"></i> 
+                            <strong>Strand:</strong> ${strandDisplay}
+                        </div>
+                        
+                        <div style="margin-top: 0.5rem;"><strong>Occurrences:</strong></div>
+                        ${occurrencesHTML}
+                        
+                        <div class="modal-description">${descriptionHTML}</div>
+                        ${tagsHTML}
+                    </div>
                 `;
                 if (sessionModal) sessionModal.style.display = 'flex';
             }
@@ -751,22 +929,27 @@
             }
 
 
-            if (viewToggleButtons.length > 0 && scheduleContainer) {
-                viewToggleButtons.forEach(button => {
+            // Remove event listeners for view toggle if they exist and are no longer needed
+            // The original code iterates through viewToggleButtons. If one is removed, this loop might be fine,
+            // but it's cleaner to ensure we only attach to existing buttons or remove the logic if not needed.
+            const remainingViewToggleButtons = document.querySelectorAll('.btn-view');
+            if (remainingViewToggleButtons.length > 0 && scheduleContainer) {
+                remainingViewToggleButtons.forEach(button => {
                     button.addEventListener('click', function() {
-                        viewToggleButtons.forEach(btn => btn.classList.remove('active'));
+                        remainingViewToggleButtons.forEach(btn => btn.classList.remove('active'));
                         this.classList.add('active');
                         const view = this.dataset.view;
                         if (view === 'time') {
                             renderTimeView();
-                        } else if (view === 'compact') {
-                            renderCompactView();
-                        }
-                        // Add other views if necessary
+                        } 
+                        // Removed: else if (view === 'compact') { renderCompactView(); }
+                        // Ensure renderTimeView is the default and only view if compact is removed.
+                        // The default active state on "Time View" button should handle this.
                     });
                 });
-            } else {
-                console.warn("View toggle buttons or schedule container not found. View switching may not work.");
+            } else if (scheduleContainer) {
+                 // If no toggle buttons left, ensure Time View is rendered by default.
+                 // This is already handled by the initial load calling renderTimeView().
             }
 
             // Initial data load

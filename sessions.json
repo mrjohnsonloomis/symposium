@@ -65,7 +65,7 @@
         "timeBlock": "1:30 - 2:30"
       }
     ],
-    "type": "presentation and q&a",
+    "type": "presentation",
     "typeName": "Presentation and Q&A",
     "title": "Student Buy-In and \"Ungrading\" in the Humanities Classroom",
     "presenter": "Caitie Cotton",
@@ -90,7 +90,7 @@
         "timeBlock": "11:30 - 12:30"
       }
     ],
-    "type": "presentation and q&a",
+    "type": "presentation",
     "typeName": "Presentation and Q&A",
     "title": "The Value of Struggle: Preserving Meaningful Learning in an AI Age",
     "presenter": "Marta Napiorkowska",
@@ -111,7 +111,7 @@
         "timeBlock": "10:15 - 11:15"
       }
     ],
-    "type": "presentation and q&a",
+    "type": "presentation",
     "typeName": "Presentation and Q&A",
     "title": "Overcoming students’ initial reactions to AI through text-based experiments",
     "presenter": "Kyle Conrau-Lewis",
@@ -157,7 +157,7 @@
         "timeBlock": "11:30 - 12:30"
       }
     ],
-    "type": "facilitated discussion",
+    "type": "discussion",
     "typeName": "Facilitated Discussion",
     "title": "Slavery and Loomis Chaffee: An Ethical History Project: Collaborating with Students to Make Meaning in and out of the Classroom",
     "presenter": "Eric LaForest, Elliot Dial, Karen Parsons",
@@ -178,7 +178,7 @@
         "timeBlock": "11:30 - 12:30"
       }
     ],
-    "type": "presentation and q&a",
+    "type": "presentation",
     "typeName": "Presentation and Q&A",
     "title": "Place-Based Education in the Era of AI",
     "presenter": "Marley Matlack, Sarah Griggs",
@@ -224,7 +224,7 @@
         "timeBlock": "1:30 - 2:30"
       }
     ],
-    "type": "workshop, facilitated discussion",
+    "type": "discussion",
     "typeName": "Workshop, Facilitated Discussion",
     "title": "Metacognition and AI: Empowering High School Students to Become Strategic Learners in a Technological World",
     "presenter": "Luke Peterson",
@@ -245,7 +245,7 @@
         "timeBlock": "11:30 - 12:30"
       }
     ],
-    "type": "presentation and q&a, facilitated discussion",
+    "type": "presentation",
     "typeName": "Presentation and Q&A, Facilitated Discussion",
     "title": "What's in a Name: Metaphors We Write By",
     "presenter": "John Morrell",
@@ -266,7 +266,7 @@
         "timeBlock": "1:30 - 2:30"
       }
     ],
-    "type": "presentation and q&a",
+    "type": "presentation",
     "typeName": "Presentation and Q&A",
     "title": "AI-Adapted Writing Assignments for Skill Development and AI Literacy ",
     "presenter": "Ron Spalletta",
@@ -329,7 +329,7 @@
         "timeBlock": "10:15 - 11:15"
       }
     ],
-    "type": "presentation and q&a",
+    "type": "presentation",
     "typeName": "Presentation and Q&A",
     "title": "Better Together: How Human Connection Transforms AI into an Effective Educational Partner",
     "presenter": "Kate Seyboth",
@@ -354,7 +354,7 @@
         "timeBlock": "1:30 - 2:30"
       }
     ],
-    "type": "presentation and q&a",
+    "type": "presentation",
     "typeName": "Presentation and Q&A",
     "title": "Low-Tech Reading: Strategies for Engaging High-Tech Screenagers",
     "presenter": "Lena Sadowitz",
@@ -375,7 +375,7 @@
         "timeBlock": "10:15 - 11:15"
       }
     ],
-    "type": "presentation and q&a",
+    "type": "presentation",
     "typeName": "Presentation and Q&A",
     "title": "What Learning Science Tells Us about Teaching with AI",
     "presenter": "Peter Nilsson, Maya Bialik",
@@ -463,7 +463,7 @@
         "timeBlock": "1:30 - 2:30"
       }
     ],
-    "type": "presentation with q&a",
+    "type": "presentation",
     "typeName": "Presentation with Q&A",
     "title": "From Curiosity to Community: Launching a Teacher-Led Gen AI Professional Development Initiative",
     "presenter": "Heidi Hojnicki, Dr. Rachel Heffner-Burns",
@@ -484,7 +484,7 @@
         "timeBlock": "10:15 - 11:15"
       }
     ],
-    "type": "presentation and q&a",
+    "type": "presentation",
     "typeName": "Presentation and Q&A",
     "title": "Annie Murphy Paul Breakout Session: Deeper Dive into \"Thinking with our Surroundings\" from The Extended Mind",
     "presenter": "Annie Murphy Paul",
@@ -505,7 +505,7 @@
         "timeBlock": "1:30 - 2:30"
       }
     ],
-    "type": "facilitated discussion",
+    "type": "discussion",
     "typeName": "Facilitated Discussion",
     "title": "Teaching Student Presentation Skills",
     "presenter": "Scott MacClintic",
@@ -547,7 +547,7 @@
         "timeBlock": "10:15 - 11:15"
       }
     ],
-    "type": "presentation and q&a, facilitated discussion",
+    "type": "presentation",
     "typeName": "Presentation and Q&A, Facilitated Discussion",
     "title": "Dangerous (Artificial) Minds: Engaging student critical thinking and analysis in their interactions with AI",
     "presenter": "David Nurenberg",
@@ -568,7 +568,7 @@
         "timeBlock": "1:30 - 2:30"
       }
     ],
-    "type": "presentation and q&a, facilitated discussion",
+    "type": "presentation",
     "typeName": "Presentation and Q&A, Facilitated Discussion",
     "title": "Pre-Skilling for the Unknown: Building a Human-Centered AI Culture in Schools",
     "presenter": "Meghan Chew, Sue Teyan, Erin O’Grady, Marc Maier, Nina Yuen",
@@ -589,7 +589,7 @@
         "timeBlock": "10:15 - 11:15"
       }
     ],
-    "type": "facilitated discussion",
+    "type": "discussion",
     "typeName": "Facilitated Discussion",
     "title": "Rethinking Creative and Critical Thinking in the Age of AI",
     "presenter": "Adam Alsamadisi",
@@ -610,7 +610,7 @@
         "timeBlock": "1:30 - 2:30"
       }
     ],
-    "type": "presentation and q&a",
+    "type": "presentation",
     "typeName": "Presentation and Q&A",
     "title": "Do Androids Dream: Teaching AI Literacy Through Literature",
     "presenter": "Jennifer Blue, Anne Peterson",
