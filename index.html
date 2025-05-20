@@ -641,19 +641,32 @@
         // are loaded globally via the website's main CSS or a font service.
         document.addEventListener('DOMContentLoaded', function() {
             let allSessionData = []; // Store all sessions
+            let uniqueSortedTimeBlocks = []; // Store unique time blocks for filter population
             const sessionsContainer = document.getElementById('sessions-container');
-            // Corrected ID for searchInput
-            const searchInput = document.getElementById('search-input'); 
+            const searchInput = document.getElementById('search-input');
             const loadingElement = document.getElementById('loading');
             const noResultsDiv = document.getElementById('no-results');
 
             // Active filters state
             let activeFilters = {
                 strand: ['all'],
-                timeblock: ['all'], // Assuming timeblock filter might be added later
-                tag: ['all'] // Assuming tag filter might be added later
+                timeblock: ['all'],
+                tag: ['all']
             };
 
+            // --- Helper function for canonical strand keys ---
+            function getCanonicalStrandFilterKey(sessionStrandField) {
+                if (!sessionStrandField) return null;
+                const sLower = String(sessionStrandField).toLowerCase().trim();
+                // Directly check against the 'strand' field values like "strand1", "strand2"
+                if (sLower === 'strand1') return 'strand1';
+                if (sLower === 'strand2') return 'strand2';
+                // Add other explicit strand keys if they exist (e.g., 'strand3')
+                // Fallback for special events or other non-standard strand values if needed for grouping
+                if (sLower === 'special') return 'special'; // Example for special events if they need a filter key
+                return null; // Return null if no specific mapping recognized
+            }
+            
             // --- Function to fetch session data ---
             async function loadSessionData() {
                 if (loadingElement) loadingElement.style.display = 'block';
@@ -663,26 +676,50 @@
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     allSessionData = await response.json();
-                    console.log("Fetched sessions:", allSessionData);
 
                     if (!Array.isArray(allSessionData)) {
                         console.error("Fetched data is not an array:", allSessionData);
-                        allSessionData = []; // Fallback to empty array
-                        if (noResultsDiv) noResultsDiv.classList.remove('hidden');
-                        if (sessionsContainer) sessionsContainer.innerHTML = '<p class="text-danger text-center">Error: Session data is not in the expected format.</p>';
-                        if (loadingElement) loadingElement.style.display = 'none';
-                        return;
+                        allSessionData = []; 
+                        if (noResultsDiv) {
+                            noResultsDiv.textContent = 'Error: Session data is not in the expected format.';
+                            noResultsDiv.classList.remove('hidden');
+                        }
                     }
 
-                    populateStrandFilters(allSessionData); // Populate strand filters
-                    populateTagFilters(allSessionData); // Populate tag filters
-                    renderSessions(allSessionData);
-                    initializeFilterLogic(); 
+                    // Pre-process to find all unique time blocks
+                    const allTimeBlocksFromData = new Set();
+                    allSessionData.forEach(session => {
+                        if (session.isSpecialEvent && session.timeBlock) {
+                            allTimeBlocksFromData.add(String(session.timeBlock).trim());
+                        } else if (session.occurrences && Array.isArray(session.occurrences) && session.occurrences.length > 0) {
+                            session.occurrences.forEach(occ => {
+                                if (occ.timeBlock) {
+                                    allTimeBlocksFromData.add(String(occ.timeBlock).trim());
+                                }
+                            });
+                        }
+                    });
+                    uniqueSortedTimeBlocks = Array.from(allTimeBlocksFromData).sort((a, b) => {
+                        // Basic sort: assumes "HH:MM" format for start time
+                        const startTimeA = a.split(' - ')[0];
+                        const startTimeB = b.split(' - ')[0];
+                        return startTimeA.localeCompare(startTimeB);
+                    });
+
+
+                    populateStrandFilters(allSessionData);
+                    populateTimeBlockFilters();
+                    populateTagFilters(allSessionData);
+                    applyFilters(); 
 
                 } catch (error) {
                     console.error('Error loading session data:', error);
-                    if (sessionsContainer) sessionsContainer.innerHTML = '<p class="text-danger text-center">Could not load session data. Please try again later. Check browser console for details.</p>';
-                    if (noResultsDiv) noResultsDiv.classList.add('hidden'); 
+                    if (sessionsContainer) sessionsContainer.innerHTML = '<p class="text-danger text-center">Could not load session data. Please try again later.</p>';
+                    if (noResultsDiv) {
+                        noResultsDiv.textContent = 'Could not load session data. Please try again later.';
+                        noResultsDiv.classList.remove('hidden');
+                    }
+                    allSessionData = [];
                 } finally {
                     if (loadingElement) loadingElement.style.display = 'none';
                 }
@@ -690,79 +727,121 @@
 
             // --- Function to populate strand filters ---
             function populateStrandFilters(sessions) {
-                const strandFiltersContainer = document.querySelector('#strand-filters .filter-buttons-container');
+                const strandFiltersContainer = document.getElementById('strand-filters');
                 if (!strandFiltersContainer) {
-                    console.warn('Strand filters container not found.');
+                    console.warn('Strand filters container (#strand-filters) not found.');
                     return;
                 }
+                strandFiltersContainer.innerHTML = ''; 
 
-                strandFiltersContainer.innerHTML = ''; // Clear existing static buttons
+                const predefinedStrandsConfig = [
+                    { key: 'strand1', name: '1: AI in the Classroom', colorClassCss: 'color-1' },
+                    { key: 'strand2', name: '2: Human-Centered Innovation', colorClassCss: 'color-2' },
+                    // { key: 'special', name: 'Special Events', colorClassCss: 'color-5' } // Example if special events are filterable this way
+                ];
 
-                const uniqueStrands = {};
+                const availableStrandsDisplay = new Map();
                 sessions.forEach(session => {
-                    if (session.strand && session.strandName) {
-                        if (!uniqueStrands[session.strand]) {
-                            uniqueStrands[session.strand] = session.strandName;
+                    const canonicalKey = getCanonicalStrandFilterKey(session.strand);
+                    if (canonicalKey) {
+                        if (!availableStrandsDisplay.has(canonicalKey)) {
+                            const config = predefinedStrandsConfig.find(p => p.key === canonicalKey);
+                            availableStrandsDisplay.set(canonicalKey, {
+                                name: session.strandName || (config ? config.name : canonicalKey),
+                                colorClass: config ? config.colorClassCss : 'color-1' 
+                            });
+                        } else if (session.strandName && availableStrandsDisplay.get(canonicalKey).name === canonicalKey) {
+                             availableStrandsDisplay.get(canonicalKey).name = session.strandName;
                         }
                     }
                 });
-
-                // Add "All Strands" button
+                
                 const allButton = document.createElement('button');
-                allButton.className = 'btn-filter btn-filter-all active color-1'; // Default to active and color-1
+                allButton.className = 'btn btn-filter btn-filter-all active';
                 allButton.dataset.filter = 'all';
                 allButton.textContent = 'All Strands';
                 allButton.onclick = () => toggleFilter('strand', 'all', allButton);
                 strandFiltersContainer.appendChild(allButton);
 
-                // Add buttons for each unique strand
-                let colorIndex = 1;
-                Object.entries(uniqueStrands).forEach(([strandValue, strandName]) => {
-                    const strandButton = document.createElement('button');
-                    strandButton.className = `btn-filter color-${colorIndex}`;
-                    strandButton.dataset.filter = strandValue;
-                    strandButton.textContent = strandName;
-                    strandButton.onclick = () => toggleFilter('strand', strandValue, strandButton);
-                    strandFiltersContainer.appendChild(strandButton);
-                    colorIndex = colorIndex === 2 ? 1 : colorIndex + 1; // Cycle through color-1, color-2 for now
+                predefinedStrandsConfig.forEach(conf => {
+                    if (availableStrandsDisplay.has(conf.key)) {
+                        const strandData = availableStrandsDisplay.get(conf.key);
+                        const strandButton = document.createElement('button');
+                        strandButton.className = `btn btn-filter ${strandData.colorClass}`; 
+                        strandButton.dataset.filter = conf.key;
+                        strandButton.textContent = strandData.name;
+                        strandButton.onclick = () => toggleFilter('strand', conf.key, strandButton);
+                        strandFiltersContainer.appendChild(strandButton);
+                    }
+                });
+            }
+            
+            // --- Function to populate time block filters ---
+            function populateTimeBlockFilters() { 
+                const timeBlockFiltersContainer = document.getElementById('timeblock-filters');
+                if (!timeBlockFiltersContainer) {
+                    console.warn('Time block filters container (#timeblock-filters) not found.');
+                    return;
+                }
+                timeBlockFiltersContainer.innerHTML = ''; // Clear existing static buttons
+
+                const allButton = document.createElement('button');
+                allButton.className = 'btn btn-filter btn-filter-all active';
+                allButton.dataset.filter = 'all';
+                allButton.textContent = 'All Time Blocks';
+                allButton.onclick = () => toggleFilter('timeblock', 'all', allButton);
+                timeBlockFiltersContainer.appendChild(allButton);
+
+                const predefinedTimeBlocks = [
+                    { label: "Block 1", time: "10:15 - 11:15" },
+                    { label: "Block 2", time: "11:30 - 12:30" },
+                    { label: "Block 3", time: "1:30 - 2:30" }
+                ];
+
+                predefinedTimeBlocks.forEach((block, index) => {
+                    const timeBlockButton = document.createElement('button');
+                    // Cycle through 5 color classes for variety
+                    timeBlockButton.className = `btn btn-filter color-${(index % 5) + 1}`; 
+                    timeBlockButton.dataset.filter = block.time; // Use actual time string for filtering
+                    timeBlockButton.textContent = `${block.label} (${block.time})`; 
+                    timeBlockButton.onclick = () => toggleFilter('timeblock', block.time, timeBlockButton);
+                    timeBlockFiltersContainer.appendChild(timeBlockButton);
                 });
             }
 
-            // --- Function to populate tag filters (NEW) ---
+            // --- Function to populate tag filters ---
             function populateTagFilters(sessions) {
-                const tagFiltersContainer = document.querySelector('#tag-filters .filter-buttons-container');
+                const tagFiltersContainer = document.getElementById('tag-filters');
                 if (!tagFiltersContainer) {
-                    console.warn('Tag filters container not found.');
+                    console.warn('Tag filters container (#tag-filters) not found.');
                     return;
                 }
-
-                let allTagsButton = tagFiltersContainer.querySelector('.btn-filter-all[data-filter="all"]');
                 tagFiltersContainer.innerHTML = ''; 
-                if (allTagsButton) {
-                    tagFiltersContainer.appendChild(allTagsButton);
-                } else {
-                    allTagsButton = document.createElement('button');
-                    allTagsButton.className = 'btn-filter btn-filter-all active';
-                    allTagsButton.dataset.filter = 'all';
-                    allTagsButton.textContent = 'All Tags';
-                    allTagsButton.onclick = () => toggleFilter('tag', 'all', allTagsButton);
-                    tagFiltersContainer.appendChild(allTagsButton);
-                }
+
+                const allTagsButton = document.createElement('button');
+                allTagsButton.className = 'btn btn-filter btn-filter-all active';
+                allTagsButton.dataset.filter = 'all';
+                allTagsButton.textContent = 'All Tags';
+                allTagsButton.onclick = () => toggleFilter('tag', 'all', allTagsButton);
+                tagFiltersContainer.appendChild(allTagsButton);
 
                 const uniqueTags = new Set();
                 sessions.forEach(session => {
-                    if (session.tags && session.tags.length > 0) {
-                        session.tags.forEach(tag => uniqueTags.add(tag.trim()));
+                    if (session.tags && Array.isArray(session.tags)) {
+                        session.tags.forEach(tag => {
+                            const trimmedTag = String(tag).trim();
+                            if (trimmedTag) uniqueTags.add(trimmedTag);
+                        });
                     }
                 });
 
                 let colorIndex = 1;
                 Array.from(uniqueTags).sort().forEach(tagText => {
-                    const tagFilterValue = tagText.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-                    if (!tagFilterValue) return; // Skip empty tags
+                    const tagFilterValue = String(tagText).toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                    if (!tagFilterValue) return; 
 
                     const tagButton = document.createElement('button');
-                    tagButton.className = `btn-filter color-${((colorIndex - 1) % 5) + 1}`;
+                    tagButton.className = `btn btn-filter color-${((colorIndex - 1) % 5) + 1}`;
                     tagButton.dataset.filter = tagFilterValue;
                     tagButton.textContent = tagText;
                     tagButton.onclick = () => toggleFilter('tag', tagFilterValue, tagButton);
@@ -771,172 +850,119 @@
                 });
             }
 
-
-            // --- Function to initialize filter button logic (if not already part of toggleFilter) ---
-            function initializeFilterLogic() {
-                // Ensure the "All" buttons are set to active state by default
-                document.querySelectorAll('.btn-filter-all').forEach(button => {
-                    button.classList.add('active');
-                });
-            }
-
             // --- Function to render sessions ---
             function renderSessions(sessionsToRender) {
-                const container = document.getElementById('sessions-container');
-                if (!container) {
+                if (!sessionsContainer) {
                     console.error('Session container not found');
                     return;
                 }
-                container.innerHTML = ''; // Clear existing sessions
+                sessionsContainer.innerHTML = ''; 
 
-                if (sessionsToRender.length === 0) {
-                    // applyFilters will handle the noResultsDiv visibility, so just ensure container is empty.
-                    container.innerHTML = ''; 
+                if (!sessionsToRender || sessionsToRender.length === 0) {
                     return;
                 }
 
                 sessionsToRender.forEach(session => {
-                    // Create a new div for each session card
-                    const sessionCard = document.createElement('div');
-                    // Changed to col-12 to make each card take the full width
-                    sessionCard.className = `col-12 mb-4 session-card-wrapper`; 
+                    const sessionCardWrapper = document.createElement('div');
+                    sessionCardWrapper.className = 'col-12 mb-4 session-card-wrapper'; 
 
-                    // Determine strand class for border color
-                    let strandClass = '';
-                    if (session.strand) {
-                        const strandNormalized = session.strand.toLowerCase().replace(/\\s+/g, '');
-                        if (strandNormalized.includes('strand1') || strandNormalized.includes('aiandhumanity')) {
-                            strandClass = 'strand1';
-                        } else if (strandNormalized.includes('strand2') || strandNormalized.includes('rethinkingeducation')) {
-                            strandClass = 'strand2';
-                        } else if (strandNormalized.includes('strand3') || strandNormalized.includes('ethicalfuture')) {
-                            strandClass = 'strand3';
-                        } else if (session.type && session.type.toLowerCase().includes('keynote') || session.title.toLowerCase().includes('keynote') || session.title.toLowerCase().includes('welcome') || session.title.toLowerCase().includes('arrival')) {
-                            strandClass = 'strandSpecial'; // For Keynotes, Welcome, etc.
-                        }
+                    let determinedStrandKey = getCanonicalStrandFilterKey(session.strand);
+                    let visualStrandClass = determinedStrandKey || ''; 
+                    if (session.isSpecialEvent || (session.type && String(session.type).toLowerCase() === 'special')) {
+                        visualStrandClass = 'strandSpecial';
+                    } else if (!visualStrandClass && session.strand) {
+                         visualStrandClass = String(session.strand).toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
                     }
-
-
-                    // Determine type class for badge color
-                    let typeClass = 'type-default'; // Default class
+                    
+                    let typeClass = 'type-default';
                     if (session.type) {
-                        const typeNormalized = session.type.toLowerCase().replace(/\\s+/g, '-');
-                        if (['workshop', 'presentation', 'discussion', 'panel', 'keynote', 'facilitated', 'special'].some(t => typeNormalized.includes(t))) {
-                            if (typeNormalized.includes('workshop')) typeClass = 'type-workshop';
-                            else if (typeNormalized.includes('presentation')) typeClass = 'type-presentation';
-                            else if (typeNormalized.includes('discussion')) typeClass = 'type-discussion';
-                            else if (typeNormalized.includes('panel')) typeClass = 'type-panel';
-                            else if (typeNormalized.includes('keynote')) typeClass = 'type-keynote';
-                            else if (typeNormalized.includes('facilitated')) typeClass = 'type-facilitated';
-                            else if (typeNormalized.includes('special')) typeClass = 'type-special';
-                            // Add more specific checks if needed
-                        } else {
-                            // Fallback for combined types or less common ones
-                            if (typeNormalized.includes('q&a')) typeClass = 'type-presentation'; // Treat Q&A as presentation
-                            else if (typeNormalized.includes('activity')) typeClass = 'type-workshop'; // Treat activity as workshop
+                        const typeNormalized = String(session.typeName || session.type).toLowerCase().replace(/\s+/g, '-');
+                        const typeMappings = {
+                            'workshop': 'type-workshop', 'presentation': 'type-presentation', 
+                            'discussion': 'type-discussion', 'panel': 'type-panel', 
+                            'keynote': 'type-keynote', 'facilitated': 'type-facilitated', 
+                            'special': 'type-special', 'q&a': 'type-presentation', 'activity': 'type-workshop'
+                        };
+                        for (const keyword in typeMappings) {
+                            if (typeNormalized.includes(keyword)) {
+                                typeClass = typeMappings[keyword];
+                                break;
+                            }
                         }
                     }
 
-
-                    // Presenter and Organization Formatting
                     let presenterHTML = '';
-                    if (session.presenter && session.presenter.trim() !== '') {
-                        const presenters = session.presenter.split(/,\s*(?![^()]*\))|\s+and\s+/i); // Split by comma or 'and'
-                        const organizations = session.organization ? session.organization.split(/,\s*(?![^()]*\))|\s+and\s+/i) : [];
-                        
+                    if (session.presenter && String(session.presenter).trim() !== '') {
+                        const presenters = String(session.presenter).split(/,\s*(?![^()]*\))|\s+and\s+/i);
+                        const organizations = session.organization ? String(session.organization).split(/,\s*(?![^()]*\))|\s+and\s+/i) : [];
                         presenterHTML = presenters.map((name, index) => {
                             let orgName = '';
-                            if (organizations.length === 1) {
-                                orgName = organizations[0];
-                            } else if (organizations.length > index) {
-                                orgName = organizations[index];
-                            }
-                            const org = orgName && orgName.trim() !== '' ? `<em>${orgName.trim()}</em>` : '';
-                            return `<strong>${name.trim()}</strong>${org ? ' ' + org : ''}`;
+                            if (organizations.length === 1 && organizations[0].trim() !== '') orgName = organizations[0];
+                            else if (organizations.length > index && organizations[index].trim() !== '') orgName = organizations[index];
+                            const org = orgName ? `<em>${String(orgName).trim()}</em>` : '';
+                            return `<strong>${String(name).trim()}</strong>${org ? ' ' + org : ''}`;
                         }).join(', ');
                     }
 
-
-                    // Occurrences: Time and Location
                     let occurrencesHTML = '';
-                    if (session.occurrences && session.occurrences.length > 0) {
+                    if (session.isSpecialEvent && session.timeBlock && session.location) {
+                         occurrencesHTML = `<div class="session-meta-item"><i class="bi bi-clock-fill"></i> ${session.timeBlock} <span style="margin: 0 0.5em;">|</span> <i class="bi bi-geo-alt-fill"></i> ${session.location}</div>`;
+                    } else if (session.occurrences && session.occurrences.length > 0) {
                         occurrencesHTML = session.occurrences.map(occurrence => {
-                            const time = occurrence.timeBlock || occurrence.time || 'Time TBD';
-                            const room = occurrence.location || occurrence.room || 'Location TBD';
-                            return `<div class="session-meta-item">
-                                        <i class="bi bi-clock-fill"></i> ${time}
-                                        <span style="margin: 0 0.5em;">|</span>
-                                        <i class="bi bi-geo-alt-fill"></i> ${room}
-                                    </div>`;
+                            const time = occurrence.timeBlock || 'Time TBD';
+                            const room = occurrence.location || 'Location TBD';
+                            return `<div class="session-meta-item"><i class="bi bi-clock-fill"></i> ${time} <span style="margin: 0 0.5em;">|</span> <i class="bi bi-geo-alt-fill"></i> ${room}</div>`;
                         }).join('');
-                    } else { // Fallback for sessions without an occurrences array (older data structure)
-                        const time = session.time || 'Time TBD';
-                        const room = session.room || 'Location TBD';
-                        occurrencesHTML = `
-                            <div class="session-meta-item">
-                                <i class="bi bi-clock-fill"></i> ${time}
-                                <span style="margin: 0 0.5em;">|</span>
-                                <i class="bi bi-geo-alt-fill"></i> ${room}
-                            </div>`;
+                    } else { // Fallback for sessions without occurrences array but not special event (should be rare)
+                        const time = session.timeBlock || 'Time TBD';
+                        const room = session.location || session.room || 'Location TBD';
+                        occurrencesHTML = `<div class="session-meta-item"><i class="bi bi-clock-fill"></i> ${time} <span style="margin: 0 0.5em;">|</span> <i class="bi bi-geo-alt-fill"></i> ${room}</div>`;
                     }
 
-
-                    // Description with Read More/Less
                     const descriptionHTML = session.description_html || session.description || 'No description available.';
                     const uniqueDescId = `desc-${session.id || Math.random().toString(36).substr(2, 9)}`;
                     const uniqueBtnId = `btn-${session.id || Math.random().toString(36).substr(2, 9)}`;
 
-
-                    sessionCard.innerHTML = `
-                        <div class="session-card ${strandClass} ${typeClass}" data-session-id="${session.id}">
-                            <div class="strand-indicator"></div>
-                            <div class="session-type">${session.type || 'Session'}</div>
-                            <h5 class="session-title"><span>${session.title}</span></h5>
-                            <div class="session-presenter mb-2">${presenterHTML || 'Presenter TBD'}</div>
-                            ${occurrencesHTML}
-                            <div class="session-description-wrapper" id="${uniqueDescId}">
-                                <div class="session-description-content">${descriptionHTML}</div>
-                            </div>
-                            <button class="toggle-description" id="${uniqueBtnId}" onclick="toggleDescription(event, '${uniqueDescId}', '${uniqueBtnId}')">Read more</button>
-                            <div style="clear: both;"></div> <!-- Clear float for the button -->
-                            <div class="session-tags mt-auto pt-2">
-                                <strong>Tags:</strong> ${session.tags ? session.tags.map(tag => `<span class="tag">${tag}</span>`).join('') : 'None'}
-                            </div>
+                    const cardInnerDiv = document.createElement('div');
+                    cardInnerDiv.className = `session-card ${visualStrandClass} ${typeClass}`;
+                    cardInnerDiv.dataset.sessionId = session.id;
+                    
+                    cardInnerDiv.innerHTML = `
+                        <div class="strand-indicator"></div>
+                        <div class="session-type">${session.typeName || session.type || 'Session'}</div>
+                        <h5 class="session-title"><span>${session.title || 'Untitled Session'}</span></h5>
+                        <div class="session-presenter mb-2">${presenterHTML || 'Presenter TBD'}</div>
+                        ${occurrencesHTML}
+                        <div class="session-description-wrapper" id="${uniqueDescId}">
+                            <div class="session-description-content">${descriptionHTML}</div>
+                        </div>
+                        <button class="toggle-description" id="${uniqueBtnId}" onclick="toggleDescription(event, '${uniqueDescId}', '${uniqueBtnId}')">Read more</button>
+                        <div class="session-tags mt-auto pt-2">
+                            <strong>Tags:</strong> ${session.tags && Array.isArray(session.tags) && session.tags.length > 0 ? session.tags.map(tag => `<span class="tag">${String(tag).trim()}</span>`).join('') : 'None'}
                         </div>
                     `;
-                    sessionsContainer.appendChild(sessionCard);
+                    sessionCardWrapper.appendChild(cardInnerDiv);
+                    sessionsContainer.appendChild(sessionCardWrapper);
                 });
             }
 
-            loadSessionData();
-
-            // --- Function to toggle description visibility (NEW - uses CSS class) ---
-            window.toggleDescription = function(event, wrapperId) {
-                event.preventDefault();
-                const element = event.currentTarget;
-                const wrapper = document.getElementById(wrapperId); // Get the wrapper div
-                if (wrapper) {
-                    wrapper.classList.toggle('expanded'); // Toggle the class
-                    // Always update the toggle button text:
-                    const toggleButton = element.classList.contains('toggle-description')
-                        ? element
-                        : element.closest('.session-card').querySelector('.toggle-description');
-                    if (toggleButton) {
-                        const isExpanded = wrapper.classList.contains('expanded');
-                        toggleButton.textContent = isExpanded ? 'Show Less' : 'Read More';
-                    }
-                } else {
-                    console.warn("Could not find description wrapper for ID:", wrapperId);
+            window.toggleDescription = function(event, wrapperId, buttonId) {
+                event.preventDefault(); 
+                event.stopPropagation(); 
+                const wrapper = document.getElementById(wrapperId);
+                const toggleButton = document.getElementById(buttonId);
+                if (wrapper && toggleButton) {
+                    wrapper.classList.toggle('expanded');
+                    toggleButton.textContent = wrapper.classList.contains('expanded') ? 'Show Less' : 'Read More';
                 }
-            }
+            };
 
-            // --- Function to handle filter button clicks ---
             window.toggleFilter = function(group, value, element) {
                 const filterGroup = activeFilters[group];
                 const allButton = document.querySelector(`#${group}-filters .btn-filter-all`);
 
                 if (value === 'all') {
-                    if (!element.classList.contains('active')) {
+                    if (!element.classList.contains('active')) { 
                         document.querySelectorAll(`#${group}-filters .btn-filter`).forEach(btn => btn.classList.remove('active'));
                         element.classList.add('active');
                         activeFilters[group] = ['all'];
@@ -946,6 +972,7 @@
                         allButton.classList.remove('active');
                         activeFilters[group] = [];
                     }
+
                     if (element.classList.contains('active')) {
                         element.classList.remove('active');
                         activeFilters[group] = filterGroup.filter(f => f !== value);
@@ -953,122 +980,144 @@
                         element.classList.add('active');
                         activeFilters[group].push(value);
                     }
+
                     if (activeFilters[group].length === 0 && allButton) {
                         allButton.classList.add('active');
                         activeFilters[group] = ['all'];
                     }
                 }
                 applyFilters();
-            }
+            };
 
-            // --- Function to apply filters ---
             window.applyFilters = function() {
                 const searchTerm = searchInput.value.toLowerCase().trim();
-                let visibleCount = 0;
-                const allSessionCards = sessionsContainer.querySelectorAll('.session-card');
 
-                if (!allSessionData || allSessionData.length === 0) {
-                    if(loadingElement && loadingElement.style.display !== 'none') {
-                        return; 
+                if (!allSessionData) { 
+                    if (loadingElement && loadingElement.style.display !== 'none') return; 
+                    if (noResultsDiv) {
+                        noResultsDiv.textContent = "Session data not available.";
+                        noResultsDiv.classList.remove('hidden');
                     }
-                    noResultsDiv.classList.remove('hidden');
-                    if (sessionsContainer) sessionsContainer.innerHTML = ''; 
+                    if (sessionsContainer) sessionsContainer.innerHTML = '';
                     return;
                 }
                 
-                // If allSessionCards is empty but allSessionData has items, it means renderSessions hasn't run or cleared.
-                // This can happen if initial render is empty due to filters.
-                // The logic below iterates cards, so if no cards, nothing happens.
-                // noResultsDiv logic at the end handles this.
-
-                allSessionCards.forEach(card => {
-                    const cardStrand = card.dataset.strand;
-                    const cardTimeBlockGroups = (card.dataset.timeblockGroups || '').split(',').filter(g => g);
-                    const cardRawTags = (card.dataset.tags || '').split(',').filter(t => t);
-                    const cardFormattedTags = cardRawTags.map(tag => tag.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, ''));
-                    
+                const filteredSessions = allSessionData.filter(session => {
                     let showCard = true;
 
-                    // Strand Filter
-                    if (!activeFilters.strand.includes('all') && !activeFilters.strand.includes(cardStrand)) {
-                        showCard = false;
-                    }
-
-                    // Time Block Filter
-                    if (showCard && !activeFilters.timeblock.includes('all')) {
-                        if (cardTimeBlockGroups.length === 0 && !activeFilters.timeblock.includes('none')) { // 'none' could be a filter for sessions with no assigned timeblock
-                             // Or, if sessions without timeblocks should always be hidden by specific timeblock filters:
-                             showCard = false;
-                        } else if (activeFilters.timeblock.length > 0 && !activeFilters.timeblock.some(tb => cardTimeBlockGroups.includes(tb))) {
+                    // 1. Strand Filter
+                    const sessionStrandKey = getCanonicalStrandFilterKey(session.strand);
+                    if (activeFilters.strand.length > 0 && !activeFilters.strand.includes('all')) {
+                        if (!sessionStrandKey || !activeFilters.strand.includes(sessionStrandKey)) {
                             showCard = false;
                         }
                     }
 
-                    // Tag Filter
-                    if (showCard && !activeFilters.tag.includes('all')) {
-                        if (cardFormattedTags.length === 0 && !activeFilters.tag.includes('none')) { // Similar 'none' logic for tags
+                    // 2. Time Block Filter
+                    if (showCard && activeFilters.timeblock.length > 0 && !activeFilters.timeblock.includes('all')) {
+                        const sessionActualTimeBlocks = new Set();
+                        if (session.isSpecialEvent && session.timeBlock) {
+                            sessionActualTimeBlocks.add(String(session.timeBlock).trim());
+                        } else if (session.occurrences && Array.isArray(session.occurrences)) {
+                            session.occurrences.forEach(occ => {
+                                if (occ.timeBlock) sessionActualTimeBlocks.add(String(occ.timeBlock).trim());
+                            });
+                        }
+                        
+                        if (sessionActualTimeBlocks.size === 0 || !Array.from(sessionActualTimeBlocks).some(stb => activeFilters.timeblock.includes(stb))) {
                             showCard = false;
-                        } else if (activeFilters.tag.length > 0 && !activeFilters.tag.some(activeTag => cardFormattedTags.includes(activeTag))) {
+                        }
+                    }
+
+                    // 3. Tag Filter
+                    if (showCard && activeFilters.tag.length > 0 && !activeFilters.tag.includes('all')) {
+                        const sessionTagsFormatted = (session.tags && Array.isArray(session.tags)) ?
+                            session.tags.map(t => String(t).trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')).filter(Boolean)
+                            : [];
+                        if (sessionTagsFormatted.length === 0 || !activeFilters.tag.some(tagFilter => sessionTagsFormatted.includes(tagFilter))) {
                             showCard = false;
                         }
                     }
                     
-                    // Search Filter
+                    // 4. Search Term Filter
                     if (showCard && searchTerm !== '') {
-                        const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
-                        const presenter = card.querySelector('.card-subtitle')?.textContent.toLowerCase() || '';
-                        // Search the actual description content now
-                        const description = card.querySelector('.session-description-content')?.textContent.toLowerCase() || '';
-                        const tagsText = cardFormattedTags.join(' ').toLowerCase();
-                        const combinedText = `${title} ${presenter} ${description} ${tagsText}`; // Use full description for search
-                        if (!combinedText.includes(searchTerm)) showCard = false;
-                    }
-
-                    // Show/Hide Card & Collapse Description if hiding
-                    card.classList.toggle('hidden', !showCard);
-                    if (!showCard) {
-                        const wrapper = card.querySelector('.session-description-wrapper');
-                        if (wrapper && wrapper.classList.contains('expanded')) {
-                             wrapper.classList.remove('expanded');
-                             card.querySelector('.toggle-description').textContent = 'Read More';
+                        const title = (session.title || '').toLowerCase();
+                        let presenterText = '';
+                        if (session.presenter) {
+                            const presenters = String(session.presenter).split(/,\s*(?![^()]*\))|\s+and\s+/i);
+                            const organizations = session.organization ? String(session.organization).split(/,\s*(?![^()]*\))|\s+and\s+/i) : [];
+                            presenterText = presenters.map((name, index) => {
+                                let orgName = organizations.length === 1 ? organizations[0] : (organizations.length > index ? organizations[index] : '');
+                                return `${String(name).trim()} ${orgName ? String(orgName).trim() : ''}`;
+                            }).join(' ').toLowerCase();
                         }
-                    } else {
-                        visibleCount++;
+                        const descriptionText = (session.description_html || session.description || '').toLowerCase().replace(/<[^>]+>/g, ''); 
+                        const tagsText = (session.tags && Array.isArray(session.tags)) ? session.tags.join(' ').toLowerCase() : '';
+                        const typeText = (session.typeName || session.type || '').toLowerCase();
+                        const locationText = session.location ? String(session.location).toLowerCase() : 
+                                    (session.occurrences && session.occurrences.length > 0 ? session.occurrences.map(o => String(o.location || '').toLowerCase()).join(' ') : '');
+
+
+                        const combinedText = `${title} ${presenterText} ${descriptionText} ${tagsText} ${typeText} ${locationText}`;
+                        if (!combinedText.includes(searchTerm)) {
+                            showCard = false;
+                        }
                     }
+                    return showCard;
                 });
 
-                noResultsDiv.classList.toggle('hidden', visibleCount > 0);
-            }
+                renderSessions(filteredSessions);
 
-            // --- Function to reset filters ---
+                if (noResultsDiv) {
+                    const hasActiveSearchOrFilters = searchTerm !== '' ||
+                                           !activeFilters.strand.includes('all') ||
+                                           !activeFilters.timeblock.includes('all') ||
+                                           !activeFilters.tag.includes('all');
+                    
+                    const showNoResultsMessage = filteredSessions.length === 0 && (hasActiveSearchOrFilters || (allSessionData && allSessionData.length > 0 && !(loadingElement && loadingElement.style.display === 'block') ) );
+
+
+                    noResultsDiv.classList.toggle('hidden', !showNoResultsMessage);
+                    if (showNoResultsMessage) {
+                         noResultsDiv.textContent = "No sessions match the current filters.";
+                    } else if (allSessionData && allSessionData.length === 0 && (!loadingElement || loadingElement.style.display === 'none')) {
+                        noResultsDiv.textContent = "No sessions available at this time.";
+                        noResultsDiv.classList.remove('hidden'); 
+                    }
+                }
+            };
+
             window.resetAllFilters = function() {
                 activeFilters.strand = ['all'];
                 activeFilters.timeblock = ['all'];
                 activeFilters.tag = ['all'];
 
                 ['strand', 'timeblock', 'tag'].forEach(group => {
-                     document.querySelectorAll(`#${group}-filters .btn-filter`).forEach(button => {
-                         button.classList.toggle('active', button.dataset.filter === 'all');
-                     });
+                     const groupContainer = document.getElementById(`${group}-filters`);
+                     if (groupContainer) {
+                        groupContainer.querySelectorAll('.btn-filter').forEach(button => {
+                            button.classList.toggle('active', button.dataset.filter === 'all');
+                        });
+                     }
                  });
 
-                searchInput.value = '';
+                if (searchInput) searchInput.value = '';
                 applyFilters();
-            }
+            };
 
-            // --- Event Listeners ---
-            // Add null check for searchInput before adding event listeners
             if (searchInput) {
-                searchInput.addEventListener('input', applyFilters);
+                searchInput.addEventListener('input', () => { 
+                    applyFilters(); 
+                });
                 searchInput.addEventListener('keypress', (event) => {
                     if (event.key === 'Enter') {
-                        event.preventDefault();
+                        event.preventDefault(); 
                         applyFilters();
                     }
                 });
-            } else {
-                console.warn('Search input element not found. Search functionality will be disabled.');
             }
+            
+            loadSessionData();
 
         }); // End DOMContentLoaded
     </script>
