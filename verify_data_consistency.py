@@ -176,7 +176,7 @@ def check_data_sources():
     
     try:
         # Load the sessions.csv file
-        sessions_csv = pd.read_csv('sessions.csv', encoding='utf-8', engine='python')
+        sessions_csv = pd.read_csv('sessions.csv', encoding='utf-8', on_bad_lines='skip')
         
         # Load the schedule_by_id.xlsx file
         schedule_excel = pd.read_excel('schedule_by_id.xlsx')

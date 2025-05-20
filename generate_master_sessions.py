@@ -140,7 +140,7 @@ def main():
     try:
         # Read the input files with explicit encoding handling
         # Try 'latin1' (ISO-8859-1) as another common encoding that might handle the problematic characters.
-        sessions_csv = pd.read_csv('sessions.csv', encoding='latin1', engine='python')
+        sessions_csv = pd.read_csv('sessions.csv', encoding='utf-8', on_bad_lines='skip')
         schedule_excel = pd.read_excel('schedule_by_id.xlsx')
         
         # Check if files were read correctly
