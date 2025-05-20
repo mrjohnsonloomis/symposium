@@ -657,14 +657,18 @@
             // --- Helper function for canonical strand keys ---
             function getCanonicalStrandFilterKey(sessionStrandField) {
                 if (!sessionStrandField) return null;
-                const sLower = String(sessionStrandField).toLowerCase().trim();
-                // Directly check against the 'strand' field values like "strand1", "strand2"
-                if (sLower === 'strand1') return 'strand1';
-                if (sLower === 'strand2') return 'strand2';
-                // Add other explicit strand keys if they exist (e.g., 'strand3')
-                // Fallback for special events or other non-standard strand values if needed for grouping
-                if (sLower === 'special') return 'special'; // Example for special events if they need a filter key
-                return null; // Return null if no specific mapping recognized
+                const sTrimmed = String(sessionStrandField).trim();
+                if (sTrimmed.startsWith('1:')) return 'strand1';
+                if (sTrimmed.startsWith('2:')) return 'strand2';
+                // Add other mappings if necessary, e.g., for Strand 3, 4
+                // if (sTrimmed.startsWith('3:')) return 'strand3';
+                // if (sTrimmed.startsWith('4:')) return 'strand4';
+                
+                // This function is primarily for mapping actual strands from the CSV.
+                // Special events are usually identified by session.isSpecialEvent = true.
+                // The filtering logic in applyFilters might handle a 'special' filter key separately
+                // if a 'Special Events' filter button were to be added to the strand filters.
+                return null; 
             }
             
             // --- Function to fetch session data ---
@@ -837,12 +841,13 @@
 
                 let colorIndex = 1;
                 Array.from(uniqueTags).sort().forEach(tagText => {
-                    const tagFilterValue = String(tagText).toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                    // MODIFIED: Use the original tag text (trimmed, lowercased) for the filter value
+                    const tagFilterValue = String(tagText).trim().toLowerCase();
                     if (!tagFilterValue) return; 
 
                     const tagButton = document.createElement('button');
                     tagButton.className = `btn btn-filter color-${((colorIndex - 1) % 5) + 1}`;
-                    tagButton.dataset.filter = tagFilterValue;
+                    tagButton.dataset.filter = tagFilterValue; // Store the processed original tag text
                     tagButton.textContent = tagText;
                     tagButton.onclick = () => toggleFilter('tag', tagFilterValue, tagButton);
                     tagFiltersContainer.appendChild(tagButton);
@@ -866,12 +871,17 @@
                     const sessionCardWrapper = document.createElement('div');
                     sessionCardWrapper.className = 'col-12 mb-4 session-card-wrapper'; 
 
-                    let determinedStrandKey = getCanonicalStrandFilterKey(session.strand);
-                    let visualStrandClass = determinedStrandKey || ''; 
+                    let visualStrandClass = '';
                     if (session.isSpecialEvent || (session.type && String(session.type).toLowerCase() === 'special')) {
                         visualStrandClass = 'strandSpecial';
-                    } else if (!visualStrandClass && session.strand) {
-                         visualStrandClass = String(session.strand).toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                    } else {
+                        const determinedStrandKey = getCanonicalStrandFilterKey(session.strand);
+                        if (determinedStrandKey) {
+                            visualStrandClass = determinedStrandKey;
+                        }
+                        // If session.strand is something else and not a special event, 
+                        // visualStrandClass remains empty, so no specific strand color bar will be applied,
+                        // which is reasonable if it doesn't map to a defined strand.
                     }
                     
                     let typeClass = 'type-default';
@@ -999,94 +1009,80 @@
                         noResultsDiv.classList.remove('hidden');
                     }
                     if (sessionsContainer) sessionsContainer.innerHTML = '';
-                    return;
+                    return; // Exit if data isn't loaded
                 }
                 
-                const filteredSessions = allSessionData.filter(session => {
-                    let showCard = true;
+                let filteredSessions = allSessionData;
 
-                    // 1. Strand Filter
-                    const sessionStrandKey = getCanonicalStrandFilterKey(session.strand);
-                    if (activeFilters.strand.length > 0 && !activeFilters.strand.includes('all')) {
-                        if (!sessionStrandKey || !activeFilters.strand.includes(sessionStrandKey)) {
-                            showCard = false;
-                        }
-                    }
+                // Search filter (text input)
+                if (searchTerm) {
+                    filteredSessions = filteredSessions.filter(session => {
+                        const title = String(session.title || '').toLowerCase();
+                        const presenter = String(session.presenter || '').toLowerCase();
+                        const description = String(session.description || '').toLowerCase();
+                        const tags = Array.isArray(session.tags) ? session.tags.join(' ').toLowerCase() : '';
+                        return title.includes(searchTerm) || 
+                               presenter.includes(searchTerm) || 
+                               description.includes(searchTerm) ||
+                               tags.includes(searchTerm);
+                    });
+                }
 
-                    // 2. Time Block Filter
-                    if (showCard && activeFilters.timeblock.length > 0 && !activeFilters.timeblock.includes('all')) {
-                        const sessionActualTimeBlocks = new Set();
+                // Strand filter
+                if (!activeFilters.strand.includes('all')) {
+                    filteredSessions = filteredSessions.filter(session => {
+                        const canonicalKey = getCanonicalStrandFilterKey(session.strand);
+                        // A session passes if its canonical strand key is in the active strand filters.
+                        // Special events are not filtered by these strand keys unless a specific 'special' filter is added.
+                        return canonicalKey && activeFilters.strand.includes(canonicalKey);
+                    });
+                }
+
+                // Time block filter
+                if (!activeFilters.timeblock.includes('all')) {
+                    filteredSessions = filteredSessions.filter(session => {
+                        const sessionTimeBlocks = [];
                         if (session.isSpecialEvent && session.timeBlock) {
-                            sessionActualTimeBlocks.add(String(session.timeBlock).trim());
+                            sessionTimeBlocks.push(String(session.timeBlock).trim());
                         } else if (session.occurrences && Array.isArray(session.occurrences)) {
                             session.occurrences.forEach(occ => {
-                                if (occ.timeBlock) sessionActualTimeBlocks.add(String(occ.timeBlock).trim());
+                                if (occ.timeBlock) {
+                                    sessionTimeBlocks.push(String(occ.timeBlock).trim());
+                                }
                             });
                         }
-                        
-                        if (sessionActualTimeBlocks.size === 0 || !Array.from(sessionActualTimeBlocks).some(stb => activeFilters.timeblock.includes(stb))) {
-                            showCard = false;
-                        }
-                    }
+                        // Check if any of the session's time blocks match any of the active time block filters
+                        return activeFilters.timeblock.some(filterTime => sessionTimeBlocks.includes(filterTime));
+                    });
+                }
 
-                    // 3. Tag Filter
-                    if (showCard && activeFilters.tag.length > 0 && !activeFilters.tag.includes('all')) {
-                        const sessionTagsFormatted = (session.tags && Array.isArray(session.tags)) ?
-                            session.tags.map(t => String(t).trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')).filter(Boolean)
-                            : [];
-                        if (sessionTagsFormatted.length === 0 || !activeFilters.tag.some(tagFilter => sessionTagsFormatted.includes(tagFilter))) {
-                            showCard = false;
+                // Tag filter
+                if (!activeFilters.tag.includes('all')) {
+                    filteredSessions = filteredSessions.filter(session => {
+                        if (!session.tags || !Array.isArray(session.tags) || session.tags.length === 0) {
+                            return false; 
                         }
-                    }
-                    
-                    // 4. Search Term Filter
-                    if (showCard && searchTerm !== '') {
-                        const title = (session.title || '').toLowerCase();
-                        let presenterText = '';
-                        if (session.presenter) {
-                            const presenters = String(session.presenter).split(/,\s*(?![^()]*\))|\s+and\s+/i);
-                            const organizations = session.organization ? String(session.organization).split(/,\s*(?![^()]*\))|\s+and\s+/i) : [];
-                            presenterText = presenters.map((name, index) => {
-                                let orgName = organizations.length === 1 ? organizations[0] : (organizations.length > index ? organizations[index] : '');
-                                return `${String(name).trim()} ${orgName ? String(orgName).trim() : ''}`;
-                            }).join(' ').toLowerCase();
-                        }
-                        const descriptionText = (session.description_html || session.description || '').toLowerCase().replace(/<[^>]+>/g, ''); 
-                        const tagsText = (session.tags && Array.isArray(session.tags)) ? session.tags.join(' ').toLowerCase() : '';
-                        const typeText = (session.typeName || session.type || '').toLowerCase();
-                        const locationText = session.location ? String(session.location).toLowerCase() : 
-                                    (session.occurrences && session.occurrences.length > 0 ? session.occurrences.map(o => String(o.location || '').toLowerCase()).join(' ') : '');
-
-
-                        const combinedText = `${title} ${presenterText} ${descriptionText} ${tagsText} ${typeText} ${locationText}`;
-                        if (!combinedText.includes(searchTerm)) {
-                            showCard = false;
-                        }
-                    }
-                    return showCard;
-                });
+                        // A session passes if any of its tags (trimmed and lowercased) 
+                        // are present in the active tag filters.
+                        return session.tags.some(tag => {
+                            const sessionTagProcessed = String(tag).trim().toLowerCase();
+                            return activeFilters.tag.includes(sessionTagProcessed);
+                        });
+                    });
+                }
 
                 renderSessions(filteredSessions);
 
                 if (noResultsDiv) {
-                    const hasActiveSearchOrFilters = searchTerm !== '' ||
-                                           !activeFilters.strand.includes('all') ||
-                                           !activeFilters.timeblock.includes('all') ||
-                                           !activeFilters.tag.includes('all');
-                    
-                    const showNoResultsMessage = filteredSessions.length === 0 && (hasActiveSearchOrFilters || (allSessionData && allSessionData.length > 0 && !(loadingElement && loadingElement.style.display === 'block') ) );
-
-
-                    noResultsDiv.classList.toggle('hidden', !showNoResultsMessage);
-                    if (showNoResultsMessage) {
-                         noResultsDiv.textContent = "No sessions match the current filters.";
-                    } else if (allSessionData && allSessionData.length === 0 && (!loadingElement || loadingElement.style.display === 'none')) {
-                        noResultsDiv.textContent = "No sessions available at this time.";
-                        noResultsDiv.classList.remove('hidden'); 
+                    if (filteredSessions.length === 0) {
+                        noResultsDiv.classList.remove('hidden');
+                    } else {
+                        noResultsDiv.classList.add('hidden');
                     }
                 }
             };
 
+            // --- Function to reset all filters ---
             window.resetAllFilters = function() {
                 activeFilters.strand = ['all'];
                 activeFilters.timeblock = ['all'];

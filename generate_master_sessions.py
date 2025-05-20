@@ -96,14 +96,16 @@ def html_encode_but_preserve_quotes(text):
 
 def extract_tags(text):
     """Extract tags from a text field"""
-    if pd.isna(text):
+    if pd.isna(text) or not isinstance(text, str) or not text.strip(): # Check for NaN, not string, or empty string
         return []
     
-    # If the field already contains a comma-separated list, split it
-    if isinstance(text, str) and ',' in text:
-        return [tag.strip() for tag in text.split(',') if tag.strip()]
+    text = text.strip() # Ensure we work with a stripped version
     
-    return []
+    if ',' in text:
+        return [tag.strip() for tag in text.split(',') if tag.strip()]
+    else:
+        # If no comma, but the text itself is a valid tag (not empty)
+        return [text] # Return as a list containing the single tag
 
 def get_time_for_slot(slot_name):
     """Convert slot name to actual time range"""
@@ -178,16 +180,25 @@ def main():
     print("Processing session data...")
     
     try:
-        # Read the input files with explicit encoding handling
-        # Try 'latin1' (ISO-8859-1) as another common encoding that might handle the problematic characters.
-        sessions_csv = pd.read_csv('sessions.csv', encoding='utf-8', on_bad_lines='skip')
+        sessions_csv = pd.read_csv('sessions.csv', encoding='utf-8', on_bad_lines='warn')
         schedule_excel = pd.read_excel('schedule_by_id.xlsx')
         
-        # Check if files were read correctly
+        print(f"CSV Columns as read by pandas: {sessions_csv.columns.tolist()}")
         print(f"Read {len(sessions_csv)} sessions from CSV")
         print(f"Read {len(schedule_excel)} schedule rows from Excel")
+
+        # Determine the actual tags column name
+        identified_tags_col = None
+        for col_name in sessions_csv.columns:
+            if col_name.strip() == 'Tags': # .strip() handles potential leading/trailing whitespace/newlines
+                identified_tags_col = col_name # Use the original column name as found in sessions_csv.columns
+                print(f"INFO: Identified tags column as: '{identified_tags_col}' (original pandas name: '{col_name}')")
+                break
         
-        # Create a mapping of session IDs to room and time slot
+        if not identified_tags_col:
+            print(f"WARNING: 'Tags' column not found after checking all CSV columns: {sessions_csv.columns.tolist()}")
+            # Tags will be empty for all sessions if not found.
+
         session_schedule = {}
         
         # Create a list to store special events (non-session entries)
@@ -232,53 +243,50 @@ def main():
         sessions_json = []
         
         # First, process regular sessions from CSV
-        for _, row in sessions_csv.iterrows():
-            # Skip header rows or empty rows
-            if pd.isna(row.get('sessionID')) or not str(row.get('sessionID')).isdigit():
+        processed_session_ids = []
+        skipped_due_to_id = 0
+        skipped_due_to_strand = 0
+
+        for idx, row in sessions_csv.iterrows():
+            session_id_val = row.get('sessionID')
+            # Skip header rows or empty rows or non-numeric session IDs
+            if pd.isna(session_id_val) or not str(session_id_val).isdigit():
+                print(f"DEBUG: Skipping CSV row {idx+2} due to sessionID: '{session_id_val}' (type: {type(session_id_val)})")
+                skipped_due_to_id += 1
                 continue
                 
-            session_id = int(row['sessionID'])
-            
+            session_id = int(session_id_val)
+            session = {} # Initialize session dictionary HERE
+            session['id'] = session_id
+            session['isSpecialEvent'] = False # Default for CSV sessions
+
             # Get strand number from "Which strand will your presentation be in?" column
-            strand_text = row.get('Which strand will your presentation be in?', '')
+            raw_strand_column_value = row.get('Which strand will your presentation be in?')
+            print(f"DEBUG: Row {idx+2}, ID {session_id}: Raw value from 'Which strand will your presentation be in?' column: '{raw_strand_column_value}' (type: {type(raw_strand_column_value)})")
+
+            strand_text_raw = str(raw_strand_column_value) if pd.notna(raw_strand_column_value) else ''
+            strand_text = strand_text_raw.strip() # Apply strip()
             strand_number = '0' # Default if not found
             
-            if isinstance(strand_text, str) and 'Strand' in strand_text:
-                match = re.search(r'Strand\s+(\d+)', strand_text) # Changed to raw string
+            # Enhanced Debugging for strand processing
+            print(f"DEBUG: Row {idx+2}, ID {session_id}: Raw strand_text='{strand_text_raw}', Stripped strand_text='{strand_text}'")
+
+            if isinstance(strand_text, str) and strand_text.startswith('Strand'): # Check if it starts with 'Strand'
+                match = re.search(r'Strand\s*(\d+)', strand_text) # CORRECTED REGEX
                 if match:
                     strand_number = match.group(1)
-            
-            # DEBUG: Print session ID and extracted strand number
-            # print(f"Processing Session ID: {session_id}, Extracted Strand: {strand_number}")
+                    print(f"DEBUG: Row {idx+2}, ID {session_id}: Regex MATCHED. strand_number='{strand_number}'")
+                else:
+                    print(f"DEBUG: Row {idx+2}, ID {session_id}: Regex NO MATCH on '{strand_text}'.")
+            else:
+                print(f"DEBUG: Row {idx+2}, ID {session_id}: strand_text ('{strand_text}') not string or not starts with 'Strand'.")
 
-            # MODIFICATION: Filter for Strand 1 and Strand 2 only
-            if strand_number not in ['1', '2']:
-                # print(f"Skipping session ID {session_id} (Title: {row.get('Session Title', '')}) due to strand: {strand_number}")
-                continue
-            
+            session['strand'] = get_strand_name(strand_number) # Store full strand name
+            session['strand_number_debug'] = strand_number # Store raw extracted number for debugging
+
             # Extract session type
-            session_type = row.get('What is the format of your session?', 'Workshop')
-            
-            # Extract tags - handle column name with potential newline
-            tags_column = 'Tags\\n' if 'Tags\\n' in row.index else 'Tags'
-            tags_field = row.get(tags_column, '')
-            tags = extract_tags(tags_field)
-            
-            # Create session object
-            session = {
-                'id': session_id,
-                'strand': f'strand{strand_number}',
-                'strandName': get_strand_name(strand_number),
-                'tags': tags,
-                'isSpecialEvent': False,
-                'occurrences': [] # Initialize occurrences array
-            }
-
-            # Populate fields, converting NaN to None for JSON compatibility
-            
-            # Session Type
             _raw_session_type_for_type = row.get('What is the format of your session?')
-            session['type'] = normalize_session_type(_raw_session_type_for_type) # MODIFIED to use normalize_session_type
+            session['type'] = normalize_session_type(_raw_session_type_for_type)
             
             _raw_session_type_for_typeName = row.get('What is the format of your session?', 'Workshop')
             session['typeName'] = get_type_name(str(_raw_session_type_for_typeName) if pd.notna(_raw_session_type_for_typeName) else 'Workshop')
@@ -293,33 +301,54 @@ def main():
             _presenter_val = fix_common_mojibake(str(_presenter_val)) if pd.notna(_presenter_val) else None
             session['presenter'] = None if _presenter_val is None or str(_presenter_val).strip() == "" else html_encode_but_preserve_quotes(_presenter_val)
 
-            # Email
-            _email_val = row.get('E-mail address')
-            session['email'] = None if pd.isna(_email_val) or str(_email_val).strip() == "" else str(_email_val).strip()
-
             # Organization
-            _org_val = row.get('School or Organization')
-            _org_val = fix_common_mojibake(str(_org_val)) if pd.notna(_org_val) else None
-            session['organization'] = None if _org_val is None or str(_org_val).strip() == "" else html_encode_but_preserve_quotes(str(_org_val).strip())
-            
+            _organization_val = row.get('School or Organization')
+            _organization_val = fix_common_mojibake(str(_organization_val)) if pd.notna(_organization_val) else None
+            session['organization'] = None if _organization_val is None or str(_organization_val).strip() == "" else html_encode_but_preserve_quotes(_organization_val)
+
             # Description
-            _desc_val = row.get('Session Description')
-            _desc_val = fix_common_mojibake(str(_desc_val)) if pd.notna(_desc_val) else None
-            session['description'] = None if _desc_val is None or str(_desc_val).strip() == "" else html_encode_but_preserve_quotes(_desc_val)
+            _description_val = row.get('Session Description')
+            _description_val = fix_common_mojibake(str(_description_val)) if pd.notna(_description_val) else None
+            session['description'] = None if _description_val is None or str(_description_val).strip() == "" else html_encode_but_preserve_quotes(_description_val)
             
-            # Add preview field (based on the potentially None description)
-            # get_preview should operate on the fixed and HTML-encoded description if it also does HTML stripping
-            # However, get_preview strips HTML, so pass the fixed, raw description.
-            session['preview'] = get_preview(session['description']) # Pass the already processed description which had mojibake fixed
-            
-            # MODIFICATION: Populate occurrences array
+            session['descriptionPreview'] = get_preview(session['description'])
+
+            # Tags
+            if identified_tags_col: # Check if the tags column was found
+                tags_text = row.get(identified_tags_col, '') # Use the identified column name
+                session['tags'] = extract_tags(fix_common_mojibake(str(tags_text)) if pd.notna(tags_text) else '')
+            else:
+                session['tags'] = [] # Default to empty list if tags column wasn\'t found
+                print(f"DEBUG: Row {idx+2}, ID {session_id}: No identified_tags_col. Tags set to [].")
+
+            # Schedule information (location and time)
             if session_id in session_schedule:
                 session['occurrences'] = session_schedule[session_id]
-            # If session_id is not in session_schedule, 'occurrences' remains an empty list.
+                # For simplicity, take the first occurrence\'s time and location for top-level fields
+                # These might be overridden or handled differently in the JS rendering logic
+                session['location'] = session_schedule[session_id][0]['location']
+                session['timeBlock'] = session_schedule[session_id][0]['timeBlock']
+            else:
+                session['occurrences'] = []
+                session['location'] = "TBD"
+                session['timeBlock'] = "TBD"
+                print(f"WARNING: Session ID {session_id} from CSV not found in schedule_excel. Setting TBD.")
+
+            # MODIFICATION: Filter for Strand 1 and Strand 2 only - MOVED HERE
+            if strand_number not in ['1', '2']:
+                print(f"DEBUG: Row {idx+2}, ID {session_id}, Title '{session.get('title', 'N/A')}': SKIPPING due to final strand_number='{strand_number}' (after session object creation)")
+                skipped_due_to_strand += 1
+                continue
             
             sessions_json.append(session)
-            # The previous logic for creating multiple entries for multi-occurrence sessions is removed.
-            
+            processed_session_ids.append(session_id) # Keep track of processed IDs
+        
+        print(f"Skipped {skipped_due_to_id} rows due to ID issues.")
+        print(f"DEBUG: Total CSV rows processed for session data: {len(processed_session_ids)}")
+        print(f"DEBUG: Session IDs processed: {processed_session_ids}")
+        print(f"DEBUG: Rows skipped due to sessionID issues: {skipped_due_to_id}")
+        print(f"DEBUG: Rows skipped due to strand issues: {skipped_due_to_strand}")
+        
         # Then, add special events (structure remains unchanged for special events)
         for event in special_events:
             session = {
