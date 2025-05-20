@@ -599,56 +599,7 @@
             </div>
         </div>
 
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <h2>Conference Calendar</h2>
-            </div>
-            <div class="col-md-6 text-md-end">
-                <div class="calendar-view-toggle btn-group">
-                    <button class="btn btn-view active" data-view="standard">Standard View</button>
-                    <button class="btn btn-view" data-view="condensed">Condensed View</button>
-                </div>
-            </div>
-        </div>
-        
         <div class="row">
-            <div class="col-lg-3">
-                <div class="calendar-filters">
-                    <h4 class="filter-title">Filter by Strand</h4>
-                    <div class="filter-buttons-container" id="strand-filters">
-                        <button class="btn btn-filter btn-filter-all active" data-filter="all" onclick="toggleFilter('strand', 'all', this)">All Strands</button>
-                        <button class="btn btn-filter" data-filter="strand1" onclick="toggleFilter('strand', 'strand1', this)">1: AI in the Classroom</button>
-                        <button class="btn btn-filter" data-filter="strand2" onclick="toggleFilter('strand', 'strand2', this)">2: Human-Centered Innovation</button>
-                    </div>
-                    
-                    <h4 class="filter-title">Filter by Type</h4>
-                    <div class="filter-buttons-container" id="type-filters">
-                        <button class="btn btn-filter btn-filter-all active" data-filter="all" onclick="toggleFilter('type', 'all', this)">All Types</button>
-                        <button class="btn btn-filter" data-filter="type-workshop" onclick="toggleFilter('type', 'type-workshop', this)">Workshop</button>
-                        <button class="btn btn-filter" data-filter="type-presentation" onclick="toggleFilter('type', 'type-presentation', this)">Presentation</button>
-                        <button class="btn btn-filter" data-filter="type-discussion" onclick="toggleFilter('type', 'type-discussion', this)">Discussion</button>
-                    </div>
-                    
-                    <h4 class="filter-title">Filter by Room</h4>
-                    <div class="filter-buttons-container" id="room-filters">
-                        <button class="btn btn-filter btn-filter-all active" data-filter="all" onclick="toggleFilter('room', 'all', this)">All Rooms</button>
-                        <!-- Room filters will be populated by JavaScript -->
-                    </div>
-                    
-                    <h4 class="filter-title">Search</h4>
-                    <div class="input-group mb-3">
-                        <input type="text" id="search-input" class="form-control" placeholder="Search sessions...">
-                        <button class="btn btn-outline-secondary" type="button" id="search-button">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                    
-                    <button id="clear-filters-button" class="btn btn-outline-danger w-100" onclick="resetAllFilters()">
-                        Clear All Filters
-                    </button>
-                </div>
-            </div>
-            
             <div class="col-lg-9">
                 <div id="loading">
                     <div class="spinner-border" role="status">
@@ -669,18 +620,7 @@
     </div>
     
     <div class="container mt-4 mb-5">
-        <h1 class="mb-4 text-center header-red">Symposium Calendar</h1>
-
-        <!-- Filter Controls Removed -->
-
-        <div id="loading" class="text-center my-5">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p>Loading calendar data...</p>
-        </div>
-
-        <div class="calendar-container hidden" id="calendar-grid-container">
+        <div id="calendar-grid-container" class="calendar-container hidden">
             <!-- Calendar grid will be populated here -->
         </div>
     </div>
