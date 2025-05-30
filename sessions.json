@@ -116,59 +116,6 @@
     "timeBlock": "10:15 - 11:15"
   },
   {
-    "id": 5,
-    "isSpecialEvent": false,
-    "strand": "2: Human-Centered Innovation",
-    "strand_number_debug": "2",
-    "type": "presentation",
-    "typeName": "Presentation and Q&A",
-    "title": "Overcoming students’ initial reactions to AI through text-based experiments",
-    "presenter": "Kyle Conrau-Lewis",
-    "organization": "Taft School",
-    "description": "AI inspires awe in students and this first reaction presents one of the greatest challenges for writing instructors of all disciplines. Students are often mesmerized by the instantaneous display of sophisticated vocabulary, rhetorical fluency and encyclopedic knowledge (notwithstanding hallucinations). Programs like ChatGPT can distill complex ideas in syntactically smooth prose while students at all levels, still honing their compositional skills and grappling with new texts and concepts, naturally produce rough ideas with cumbersome phrasing. Comparing AI output with their own drafts, many students express humility and even despondence, with variations of “I could never write anything like that”. Our current educational crisis, therefore, is not simply a matter of combating academic plagiarism but, more fundamentally, of uplifting students self-perceptions. \n\nIn my own classes (Grade 12 English Literature), I have used AI writing to help my students become more critical readers of AI, to see through its well-constructed prose and to question the core argument and its use of evidence. Text-based exercises (for example, role-playing, script-doctoring, flipped storytelling) can reveal unpredictable gaps in an LLM’s proficiency at textual reasoning. Students quickly learn to detect uses of textual evidence that are vague, or rote. By positioning students as reviewers and arbiters of AI-generated language, we can help students to recover confidence in their own competencies and analytical thinking. To reframe things more optimistically, the uneven abilities of AI present new opportunities for students to practice the art of close reading and reassert their own expertise.",
-    "descriptionPreview": "AI inspires awe in students and this first reaction presents one of the greatest challenges for writing instructors of all disciplines.",
-    "tags": [
-      "Humanities",
-      "Curriculum Design"
-    ],
-    "occurrences": [
-      {
-        "location": "Writing Center",
-        "timeBlock": "10:15 - 11:15"
-      }
-    ],
-    "location": "Writing Center",
-    "timeBlock": "10:15 - 11:15"
-  },
-  {
-    "id": 6,
-    "isSpecialEvent": false,
-    "strand": "1: AI in the Classroom",
-    "strand_number_debug": "1",
-    "type": "workshop",
-    "typeName": "Workshop",
-    "title": "AI-Powered Pedagogy: Crafting Effective Prompts for Transformative Learning",
-    "presenter": "Maureen Gassert Lamb",
-    "organization": "Miss Porter's School",
-    "description": "As AI tools become increasingly integrated into classrooms, educators face a challenge: how to effectively prompt AI to generate meaningful, high-quality responses that support student learning. Many teachers struggle with vague or ineffective prompts, leading to unreliable AI-generated content that lacks educational value. This session introduces the C.L.E.A.R. Prompt Creator Protocol, a framework designed to help educators craft precise and effective AI prompts. Rather than focusing on specific AI tools, this method ensures that teachers can apply the same structured approach across different platforms—whether using ChatGPT, Claude, Gemini, or school-based AI systems. From STEM to humanities, teachers can design prompts that guide AI to generate content-specific outputs.\n\nParticipants will explore hands-on activities using the C.L.E.A.R. framework:\nClarity: Crafting precise prompts that yield useful AI-generated responses.\nLayout: Structuring AI interactions for different learning objectives (e.g., quizzes, dialogues, essays).\nExamples: Providing AI with models to enhance the quality of responses.\nAim: Defining educational goals to align AI-generated content with learning outcomes.\nRelevance: Ensuring prompts reflect contextual needs and student engagement strategies.\n\nAttendees will practice designing AI prompts for lesson planning, assessment creation, and student engagement, ensuring they leave with practical, classroom-ready applications.",
-    "descriptionPreview": "As AI tools become increasingly integrated into classrooms, educators face a challenge: how to effectively prompt AI to generate meaningful,...",
-    "tags": [
-      "AI Skills"
-    ],
-    "occurrences": [
-      {
-        "location": "Brush 302",
-        "timeBlock": "10:15 - 11:15"
-      },
-      {
-        "location": "Brush 302",
-        "timeBlock": "11:30 - 12:30"
-      }
-    ],
-    "location": "Brush 302",
-    "timeBlock": "10:15 - 11:15"
-  },
-  {
     "id": 7,
     "isSpecialEvent": false,
     "strand": "2: Human-Centered Innovation",
@@ -176,7 +123,7 @@
     "type": "discussion",
     "typeName": "Facilitated Discussion",
     "title": "Slavery and Loomis Chaffee: An Ethical History Project: Collaborating with Students to Make Meaning in and out of the Classroom",
-    "presenter": "Eric LaForest, Elliot Dial, Karen Parsons",
+    "presenter": "Eric LaForest, Elliott Dial, Karen Parsons",
     "organization": "Loomis Chaffee",
     "description": "After a brief presentation on Slavery and Loomis Chaffee: An Ethical History Project (linked below), this session will invite participants to begin to design similar projects that center student-faculty collaboration on projects that involve research and community engagement. We hope to have an open conversation about what a project like ours might look like at your school. Practical considerations on implementing years-long projects or completing historical research could be addressed, but our hope is to focus primarily on the ways this kind of collaborative, values-driven work can be meaningful for all involved in this current moment. \n\nhttps://loomisethicalhistory.squarespace.com/ ",
     "descriptionPreview": "After a brief presentation on Slavery and Loomis Chaffee: An Ethical History Project (linked below), this session will invite participants to begin...",
@@ -332,8 +279,8 @@
     "title": "Lessons Learned from (Co-Lab)orating Across Schools",
     "presenter": "Ned Heckman, Maureen Russo-Rodriguez",
     "organization": "Loomis Chaffee, St. Mark's School",
-    "description": null,
-    "descriptionPreview": "",
+    "description": "What happens when teachers from different schools come together to explore how AI can enhance their craft? In this interactive session, we'll share takeaways from Co-Lab, an interschool collaboration that gives educators space to test and reflect on AI's role in everything from assessment design to personalization to student engagement. After a quick overview of how Co-Lab works and how you can join our next exploration with colleagues from around the country, we'll model the process ourselves, diving into prompts from explorations on topics to improve our teaching, using AI tools live, and reflecting on what we learn together. Come ready to collaborate, experiment, and imagine what's possible when teachers lead the way in maximizing our students' learning.",
+    "descriptionPreview": "What happens when teachers from different schools come together to explore how AI can enhance their craft? In this interactive session, we'll share...",
     "tags": [
       "Professional Development",
       "AI Skills"
@@ -723,7 +670,7 @@
     "timeBlock": "1:30 - 2:30"
   },
   {
-    "id": "special_29_Arrival_&_Registrati",
+    "id": "special_27_Arrival_&_Registrati",
     "strand": "special",
     "strandName": "Special Event",
     "type": "special",
@@ -742,7 +689,7 @@
     "isSpecialEvent": true
   },
   {
-    "id": "special_30_Welcome_&_Keynote",
+    "id": "special_28_Welcome_&_Keynote",
     "strand": "special",
     "strandName": "Special Event",
     "type": "special",
@@ -761,7 +708,7 @@
     "isSpecialEvent": true
   },
   {
-    "id": "special_31_Closing",
+    "id": "special_29_Closing",
     "strand": "special",
     "strandName": "Special Event",
     "type": "special",
