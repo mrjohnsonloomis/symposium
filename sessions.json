@@ -116,6 +116,59 @@
     "timeBlock": "10:15 - 11:15"
   },
   {
+    "id": 5,
+    "isSpecialEvent": false,
+    "strand": "2: Human-Centered Innovation",
+    "strand_number_debug": "2",
+    "type": "presentation",
+    "typeName": "Presentation and Q&A",
+    "title": "Overcoming students’ initial reactions to AI through text-based experiments",
+    "presenter": "Kyle Conrau-Lewis",
+    "organization": "Taft School",
+    "description": "AI inspires awe in students and this first reaction presents one of the greatest challenges for writing instructors of all disciplines. Students are often mesmerized by the instantaneous display of sophisticated vocabulary, rhetorical fluency and encyclopedic knowledge (notwithstanding hallucinations). Programs like ChatGPT can distill complex ideas in syntactically smooth prose while students at all levels, still honing their compositional skills and grappling with new texts and concepts, naturally produce rough ideas with cumbersome phrasing. Comparing AI output with their own drafts, many students express humility and even despondence, with variations of “I could never write anything like that”. Our current educational crisis, therefore, is not simply a matter of combating academic plagiarism but, more fundamentally, of uplifting students’ self-perceptions. \n\nIn my own classes (Grade 12 English Literature), I have used AI writing to help my students become more critical readers of AI, to see through its well-constructed prose and to question the core argument and its use of evidence. Text-based exercises (for example, role-playing, script-doctoring, flipped storytelling) can reveal unpredictable gaps in an LLM’s proficiency at textual reasoning. Students quickly learn to detect uses of textual evidence that are vague, or rote. By positioning students as reviewers and arbiters of AI-generated language, we can help students to recover confidence in their own competencies and analytical thinking. To reframe things more optimistically, the uneven abilities of AI present new opportunities for students to practice the art of close reading and reassert their own expertise.",
+    "descriptionPreview": "AI inspires awe in students and this first reaction presents one of the greatest challenges for writing instructors of all disciplines.",
+    "tags": [
+      "Humanities",
+      "Curriculum Design"
+    ],
+    "occurrences": [
+      {
+        "location": "Writing Center",
+        "timeBlock": "10:15 - 11:15"
+      }
+    ],
+    "location": "Writing Center",
+    "timeBlock": "10:15 - 11:15"
+  },
+  {
+    "id": 6,
+    "isSpecialEvent": false,
+    "strand": "1: AI in the Classroom",
+    "strand_number_debug": "1",
+    "type": "workshop",
+    "typeName": "Workshop",
+    "title": "AI-Powered Pedagogy: Crafting Effective Prompts for Transformative Learning",
+    "presenter": "Maureen Gassert Lamb",
+    "organization": "Miss Porter's School",
+    "description": "As AI tools become increasingly integrated into classrooms, educators face a challenge: how to effectively prompt AI to generate meaningful, high-quality responses that support student learning. Many teachers struggle with vague or ineffective prompts, leading to unreliable AI-generated content that lacks educational value. This session introduces the C.L.E.A.R. Prompt Creator Protocol, a framework designed to help educators craft precise and effective AI prompts. Rather than focusing on specific AI tools, this method ensures that teachers can apply the same structured approach across different platforms—whether using ChatGPT, Claude, Gemini, or school-based AI systems. From STEM to humanities, teachers can design prompts that guide AI to generate content-specific outputs. Participants will explore hands-on activities using the C.L.E.A.R. framework: Clarity: Crafting precise prompts that yield useful AI-generated responses. Layout: Structuring AI interactions for different learning objectives (e.g., quizzes, dialogues, essays). Examples: Providing AI with models to enhance the quality of responses. Aim: Defining educational goals to align AI-generated content with learning outcomes. Relevance: Ensuring prompts reflect contextual needs and student engagement strategies. Attendees will practice designing AI prompts for lesson planning, assessment creation, and student engagement, ensuring they leave with practical, classroom-ready applications.",
+    "descriptionPreview": "As AI tools become increasingly integrated into classrooms, educators face a challenge: how to effectively prompt AI to generate meaningful,...",
+    "tags": [
+      "AI Skills"
+    ],
+    "occurrences": [
+      {
+        "location": "Brush 302",
+        "timeBlock": "10:15 - 11:15"
+      },
+      {
+        "location": "Brush 302",
+        "timeBlock": "11:30 - 12:30"
+      }
+    ],
+    "location": "Brush 302",
+    "timeBlock": "10:15 - 11:15"
+  },
+  {
     "id": 7,
     "isSpecialEvent": false,
     "strand": "2: Human-Centered Innovation",
@@ -671,7 +724,7 @@
     "timeBlock": "1:30 - 2:30"
   },
   {
-    "id": "special_27_Arrival_&_Registrati",
+    "id": "special_29_Arrival_&_Registrati",
     "strand": "special",
     "strandName": "Special Event",
     "type": "special",
@@ -690,7 +743,7 @@
     "isSpecialEvent": true
   },
   {
-    "id": "special_28_Welcome_&_Keynote",
+    "id": "special_30_Welcome_&_Keynote",
     "strand": "special",
     "strandName": "Special Event",
     "type": "special",
@@ -709,7 +762,7 @@
     "isSpecialEvent": true
   },
   {
-    "id": "special_29_Closing",
+    "id": "special_31_Closing",
     "strand": "special",
     "strandName": "Special Event",
     "type": "special",
