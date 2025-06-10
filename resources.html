@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shared Resources - New Paths Forward: AI, Humanity, and the Next Era of Education</title>
+<!-- Add favicon -->
+<link href="favicon.ico" rel="icon" type="image/x-icon"/>
+<!-- Fallback text-based favicon if favicon.ico doesn't exist -->
+<link href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90' font-family='serif' font-weight='bold' fill='%2398252b'&gt;LC&lt;/text&gt;&lt;/svg&gt;" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet"/>
+<style>
+        /* Loomis Chaffee Brand Colors */
+        :root {
+            --lc-red: #98252b;
+            --lc-gray: #323e47;
+            --cupola: #5CB8B7;
+            --cupola-light: #A0D2D1;
+            --river: #4E738A;
+            --river-light: #92A6B5;
+            --meadow: #FFDD7F;
+            --meadow-light: #FFE8B0;
+            --brick: #C25131;
+            --brick-light: #E1947D;
+            --accent-red: #FC5A5C;
+            --pelican: #d1d5d8;
+            --pelican-light: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Financier Display', Georgia, serif;
+            color: var(--lc-gray);
+            background-color: #f9f9f9;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        h1, h2, h3, h4, h5 {
+             font-weight: 400;
+        }
+         h1 { font-size: 2.5rem; font-weight: 600; }
+         h2 { font-size: 2rem; font-weight: 500; }
+         h3 { font-size: 1.75rem; font-weight: 500; }
+         h4 { font-size: 1.1rem; font-weight: 500; }
+
+        .lc-header {
+            background-color: var(--lc-red);
+            color: white;
+            padding: 1rem 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .lc-header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .lc-logo {
+            height: 60px;
+            width: auto;
+        }
+
+        .header-red {
+            color: var(--lc-red);
+        }
+
+        /* Navigation tab styling */
+        .nav-tabs {
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--lc-red);
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--lc-gray);
+            font-weight: 500;
+            border: none;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: white;
+            background-color: var(--lc-red);
+        }
+
+        /* Resource card styling */
+        .resource-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+
+        .resource-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--lc-gray);
+        }
+
+        .resource-presenter {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 0.75rem;
+        }
+
+        .resource-meta {
+            font-size: 0.85rem;
+            color: var(--lc-gray);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .resource-meta .badge {
+            background-color: var(--pelican);
+            color: var(--lc-gray);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .download-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            background-color: var(--lc-red);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s;
+        }
+
+        .download-btn:hover {
+            background-color: #7a1e22;
+            color: white;
+            text-decoration: none;
+        }
+
+        .download-btn i {
+            font-size: 0.9em;
+        }
+
+        /* Search and filter styling */
+        .search-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .search-input {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            border-color: var(--lc-red);
+            box-shadow: 0 0 0 0.2rem rgba(152, 37, 43, 0.25);
+        }
+
+        /* Loading and empty states */
+        .loading-state, .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--lc-gray);
+        }
+
+        .loading-state .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: var(--lc-red);
+        }
+
+        footer {
+            background-color: var(--lc-gray);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .strand-indicator {
+            width: 4px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .strand1 .strand-indicator { background-color: var(--cupola); }
+        .strand2 .strand-indicator { background-color: var(--brick); }
+        .strand3 .strand-indicator { background-color: var(--lc-gray); }
+        .strandSpecial .strand-indicator { background-color: var(--meadow); }
+
+        .resource-card {
+            position: relative;
+            padding-left: 2rem;
+        }
+    </style>
+</head>
+<body>
+<header class="lc-header">
+<div class="container">
+<a href="#" onclick="location.reload(); return false;">
+<img alt="Loomis Chaffee Logo" class="lc-logo" onerror="this.style.display='none'; console.error('Logo image not found.');" src="logo.png"/>
+</a>
+</div>
+</header>
+
+<div class="container py-4">
+<div class="row mb-4">
+<div class="col-12">
+<ul class="nav nav-tabs">
+<li class="nav-item">
+<a class="nav-link" href="index.html">Session Listing</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="schedule.html">Schedule</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="calendar.html">Calendar View</a>
+</li>
+<li class="nav-item">
+<a class="nav-link active" href="resources.html">Shared Resources</a>
+</li>
+</ul>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12">
+<h2 class="mb-3 header-red">Shared Resources</h2>
+<p class="lead mb-4">Download session materials, handouts, and additional resources shared by presenters.</p>
+
+<div class="alert alert-info mb-4" role="alert">
+<i class="bi bi-info-circle me-2"></i>
+<strong>Attribution & Usage Notice:</strong> These materials are shared by presenters for educational purposes. Please provide proper attribution when using these resources and do not transform or distribute without explicit consent from the presenter.
+</div>
+
+<div class="search-section">
+<div class="row">
+<div class="col-md-8">
+<input type="text" class="form-control search-input" id="searchInput" placeholder="Search sessions, presenters, or topics...">
+</div>
+<div class="col-md-4">
+<select class="form-control search-input" id="strandFilter">
+<option value="all">All Strands</option>
+<option value="strand1">1: AI in the Classroom</option>
+<option value="strand2">2: Human-Centered Innovation</option>
+</select>
+</div>
+</div>
+</div>
+
+<div id="loadingState" class="loading-state">
+<div class="spinner-border" role="status">
+<span class="visually-hidden">Loading...</span>
+</div>
+<p class="mt-3">Loading resources...</p>
+</div>
+
+<div id="emptyState" class="empty-state" style="display: none;">
+<i class="bi bi-folder2-open" style="font-size: 3rem; color: var(--pelican); margin-bottom: 1rem;"></i>
+<h4>No Resources Available</h4>
+<p>Session resources will appear here as they become available.</p>
+</div>
+
+<div id="noResultsState" class="empty-state" style="display: none;">
+<i class="bi bi-search" style="font-size: 3rem; color: var(--pelican); margin-bottom: 1rem;"></i>
+<h4>No Matching Resources</h4>
+<p>Try adjusting your search terms or filters.</p>
+</div>
+
+<div id="resourcesContainer">
+<!-- Resources will be dynamically populated here -->
+</div>
+
+</div>
+</div>
+</div>
+
+<footer>
+<div class="container">
+<div class="row">
+<div class="col-md-8">
+<h4>Loomis Chaffee</h4>
+<p class="mb-0">4 Batchelder Road, Windsor, CT 06095</p>
+</div>
+</div>
+</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let allSessions = [];
+    let availableResources = [];
+    let filteredResources = [];
+
+    const loadingState = document.getElementById('loadingState');
+    const emptyState = document.getElementById('emptyState');
+    const noResultsState = document.getElementById('noResultsState');
+    const resourcesContainer = document.getElementById('resourcesContainer');
+    const searchInput = document.getElementById('searchInput');
+    const strandFilter = document.getElementById('strandFilter');
+
+    // Load session data and scan for resources
+    async function loadData() {
+        try {
+            // Load sessions data
+            const response = await fetch('sessions.json');
+            if (!response.ok) throw new Error('Failed to load sessions');
+            allSessions = await response.json();
+
+            // Scan for available resource files (now synchronous)
+            scanResourceFiles();
+            
+            // Initial render
+            applyFilters();
+        } catch (error) {
+            console.error('Error loading data:', error);
+            showEmptyState();
+        } finally {
+            loadingState.style.display = 'none';
+        }
+    }
+
+    // Scan the resources folder for PDF files
+    function scanResourceFiles() {
+        availableResources = [];
+        
+        // Known available files based on your current resources folder
+        const knownFiles = [
+            { sessionId: 2, files: ['new_paths_forward_2a.pdf', 'new_paths_forward_2b.pdf', 'new_paths_forward_2c.pdf'] },
+            { sessionId: 4, files: ['new_paths_forward_4.pdf'] },
+            { sessionId: 6, files: ['new_paths_forward_6.pdf'] },
+            { sessionId: 9, files: ['new_paths_forward_9.pdf'] },
+            { sessionId: 11, files: ['new_paths_forward_11.pdf'] },
+            { sessionId: 13, files: ['new_paths_forward_13.pdf'] },
+            { sessionId: 15, files: ['new_paths_forward_15.pdf'] },
+            { sessionId: 16, files: ['new_paths_forward_16.pdf'] },
+            { sessionId: 24, files: ['new_paths_forward_24.pdf'] },
+            { sessionId: 28, files: ['new_paths_forward_28.pdf'] }
+        ];
+        
+        // Match known files with sessions
+        for (const fileGroup of knownFiles) {
+            const session = allSessions.find(s => s.id === fileGroup.sessionId);
+            if (session) {
+                const resourceFiles = fileGroup.files.map(filename => ({
+                    filename: filename,
+                    displayName: getDisplayName(filename, fileGroup.sessionId),
+                    url: `resources/${filename}`
+                }));
+                
+                availableResources.push({
+                    session: session,
+                    files: resourceFiles
+                });
+            }
+        }
+    }
+
+    // Get display name for a file
+    function getDisplayName(filename, sessionId) {
+        const baseFilename = `new_paths_forward_${sessionId}`;
+        if (filename === `${baseFilename}.pdf`) {
+            return 'Session Materials';
+        }
+        // Extract letter from filename (e.g., 'a' from 'new_paths_forward_2a.pdf')
+        const letter = filename.slice(-5, -4);
+        return `Materials ${letter.toUpperCase()}`;
+    }
+
+    // Get strand class for styling
+    function getStrandClass(session) {
+        if (session.isSpecialEvent) return 'strandSpecial';
+        const strand = String(session.strand || '').trim();
+        if (strand.startsWith('1:')) return 'strand1';
+        if (strand.startsWith('2:')) return 'strand2';
+        return 'strand1'; // default
+    }
+
+    // Render resources
+    function renderResources() {
+        if (filteredResources.length === 0) {
+            if (availableResources.length === 0) {
+                showEmptyState();
+            } else {
+                showNoResultsState();
+            }
+            return;
+        }
+
+        hideAllStates();
+        
+        const html = filteredResources.map(resource => {
+            const session = resource.session;
+            const strandClass = getStrandClass(session);
+            
+            const downloadButtons = resource.files.map(file => 
+                `<a href="${file.url}" class="download-btn" download>
+                    <i class="bi bi-download"></i>
+                    ${file.displayName}
+                </a>`
+            ).join('');
+
+            const timeInfo = session.isSpecialEvent && session.timeBlock ? 
+                session.timeBlock : 
+                (session.occurrences && session.occurrences.length > 0 ? 
+                    session.occurrences.map(occ => occ.timeBlock).join(', ') : 
+                    'Time TBD');
+
+            const locationInfo = session.isSpecialEvent && session.location ? 
+                session.location : 
+                (session.occurrences && session.occurrences.length > 0 ? 
+                    session.occurrences.map(occ => occ.location).join(', ') : 
+                    'Location TBD');
+
+            return `
+                <div class="resource-card ${strandClass}">
+                    <div class="strand-indicator"></div>
+                    <div class="resource-title">${session.title || 'Untitled Session'}</div>
+                    <div class="resource-presenter">${session.presenter || 'Presenter TBD'}</div>
+                    <div class="resource-meta">
+                        <span class="badge">${session.typeName || session.type || 'Session'}</span>
+                        <span class="badge">${session.strand || 'General'}</span>
+                        <span class="badge"><i class="bi bi-clock"></i> ${timeInfo}</span>
+                        <span class="badge"><i class="bi bi-geo-alt"></i> ${locationInfo}</span>
+                    </div>
+                    <div class="download-links">
+                        ${downloadButtons}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        resourcesContainer.innerHTML = html;
+    }
+
+    // Apply search and filter
+    function applyFilters() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const selectedStrand = strandFilter.value;
+
+        filteredResources = availableResources.filter(resource => {
+            const session = resource.session;
+            
+            // Search filter
+            if (searchTerm) {
+                const searchableText = [
+                    session.title,
+                    session.presenter,
+                    session.description,
+                    session.strand,
+                    ...(session.tags || [])
+                ].join(' ').toLowerCase();
+                
+                if (!searchableText.includes(searchTerm)) {
+                    return false;
+                }
+            }
+
+            // Strand filter
+            if (selectedStrand !== 'all') {
+                const sessionStrand = String(session.strand || '').trim();
+                if (selectedStrand === 'strand1' && !sessionStrand.startsWith('1:')) return false;
+                if (selectedStrand === 'strand2' && !sessionStrand.startsWith('2:')) return false;
+            }
+
+            return true;
+        });
+
+        renderResources();
+    }
+
+    // State management
+    function showEmptyState() {
+        hideAllStates();
+        emptyState.style.display = 'block';
+    }
+
+    function showNoResultsState() {
+        hideAllStates();
+        noResultsState.style.display = 'block';
+    }
+
+    function hideAllStates() {
+        emptyState.style.display = 'none';
+        noResultsState.style.display = 'none';
+        resourcesContainer.innerHTML = '';
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', applyFilters);
+    strandFilter.addEventListener('change', applyFilters);
+
+    // Initialize
+    loadData();
+});
+</script>
+</body>
+</html>
